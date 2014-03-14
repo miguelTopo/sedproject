@@ -106,9 +106,9 @@ public class ReportBean extends BackingBean implements IReport {
 
 	public void processDegreeFile() {
 		try {
-			for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
+//			for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
 
-				Iterator<Row> ri = this.wbDegree.getSheetAt(j).rowIterator();
+				Iterator<Row> ri = this.wbDegree.getSheetAt(0).rowIterator();
 
 				System.out.println("start process file "
 						+ System.currentTimeMillis());
@@ -128,33 +128,53 @@ public class ReportBean extends BackingBean implements IReport {
 
 					int i = 0;
 					this.student = new Student();
+					
+					int iteration = 0;
 
 					for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
-						if (i > 10)
+						if (++iteration > 20)
 							break;
+						if ((i >= 0 && i <= 1) || i == 13 || i >= 26){
+							Cell c = iterator.next();
 
-						Cell c = iterator.next();
-						int cellType = c.getCellType();
+							String value = null;
+							Double doubleValue = null;
+							System.out.println("iteracion"+i);
 
-						String value = null;
-						Double doubleValue = null;
+							switch (c.getCellType()) {
+							case Cell.CELL_TYPE_NUMERIC:
+								doubleValue = c.getNumericCellValue();
+								System.out.println(doubleValue);
+								break;
+							case Cell.CELL_TYPE_STRING:
+								value = c.getStringCellValue();
+								System.out.println(value);
+								break;
+							case Cell.CELL_TYPE_BOOLEAN:
+								System.out.println("estamos en boolean ");
+								break;
+							case Cell.CELL_TYPE_FORMULA:
+								System.out.println("estamos en formula");
+								break;
 
-						if (cellType == Cell.CELL_TYPE_NUMERIC) {
-							doubleValue = c.getNumericCellValue();
-							System.out.println(doubleValue);
-						} else if (cellType == Cell.CELL_TYPE_STRING) {
-							value = c.getStringCellValue();
-							System.out.println(value);
+							default:
+
+								break;
+							}
+
+							// //////////////////////////
+							 if (value != null || doubleValue != null) {
+							 validateInsertRow(value, doubleValue, i);
+							 }
 						}
-						// //////////////////////////
-						if (value != null || doubleValue != null) {
-							validateInsertRow(value, doubleValue, i);
-						}
+
+
+						
 
 					}
 				}
 
-			}
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,7 +187,8 @@ public class ReportBean extends BackingBean implements IReport {
 		try {
 			boolean validCell = false;
 			if (column == 2) {
-				validCell = (stringValue != null && !stringValue.trim().isEmpty()) ? true : false;
+				validCell = (stringValue != null && !stringValue.trim()
+						.isEmpty()) ? true : false;
 			} else {
 				validCell = (numericValue != null) ? true : false;
 			}
@@ -175,22 +196,24 @@ public class ReportBean extends BackingBean implements IReport {
 				switch (column) {
 				case 0:
 					System.out.println("columna 0");
-//					if (!FieldValidator.isNumeric(numericValue.toString())) {
-//						this.student.getInvalidColumn().add(new Integer(column));
-//					}
+					// if (!FieldValidator.isNumeric(numericValue.toString())) {
+					// this.student.getInvalidColumn().add(new Integer(column));
+					// }
 					break;
 				case 1:
 					System.out.println("columna 1");
-					String identification = String.valueOf(numericValue.intValue());
+					String identification = String.valueOf(numericValue
+							.intValue());
 					this.student.setIdentification(identification);
 
 					break;
-				case 2:
+				case 13:
+					this.student.setName(stringValue);
 					System.out.println("columna 2 puesto");
 					break;
-				case 3:
+				case 26:
 					System.out.println("columna 3 nota p1");
-					if(validateNote(numericValue))
+					if (validateNote(numericValue))
 						this.student.getQualification().setP1(numericValue);
 					break;
 				case 4:
@@ -203,7 +226,7 @@ public class ReportBean extends BackingBean implements IReport {
 				default:
 					break;
 				}
-			}else{
+			} else {
 				this.student.getInvalidColumn().add(new Integer(column));
 			}
 
@@ -215,7 +238,8 @@ public class ReportBean extends BackingBean implements IReport {
 
 	public boolean validateNote(Double numericValue) {
 		try {
-			return (numericValue.doubleValue()< 0.0 || numericValue.doubleValue() > 5.0) ? false : true; 
+			return (numericValue.doubleValue() < 0.0 || numericValue
+					.doubleValue() > 5.0) ? false : true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
