@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<f:view>
+
+	<h:head>
+	</h:head>
+	<h:body>
+		<h:panelGroup>
+			<p:growl id="generalGrowl" globalOnly="true" sticky="true"
+				showDetail="true" autoUpdate="true" />
+			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog" header="Procesando..." resizable="false" draggable="false">
+				
+			</p:dialog>
+			<ui:include src="/WEB-INF/includes/content/header.xhtml" />
+			<div id="content">
+				<div id="contentInside">
+					<p:outputPanel id="panelStack">
+						<ui:insert name="main">...</ui:insert>
+					</p:outputPanel>
+				</div>
+			</div>
+			<ui:include src="/WEB-INF/includes/content/footer.xhtml" />
+		</h:panelGroup>
+	</h:body>
+</f:view>
+</html>
