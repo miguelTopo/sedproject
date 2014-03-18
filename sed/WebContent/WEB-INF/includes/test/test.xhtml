@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<p:outputPanel>
+		<p:outputPanel rendered="#{testBean.showList}">
+			<ui:include src="/WEB-INF/includes/test/testList.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel rendered="#{testBean.showAdd}">
+			<ui:include src="/WEB-INF/includes/test/addTest.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel rendered="#{testBean.showDetail}">
+			<ui:include src="/WEB-INF/includes/test/detailTest.xhtml" />
+		</p:outputPanel>
+	</p:outputPanel>
+</f:view>
+</html>

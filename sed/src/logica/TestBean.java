@@ -1,40 +1,80 @@
 package logica;
 
-import java.io.File;
+
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import co.edu.udistrital.core.common.controller.BackingBean;
+
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
 @ViewScoped
-public class TestBean {
-	
+@URLMapping(id = "testBean", pattern = "/portal/test", viewId = "/pages/test/test.jspx")
+public class TestBean extends BackingBean {
+
+	private boolean showList = false, showAdd = false, showDetail = false;
+
 	public TestBean() {
-		
-	}
-	
-	public void handleFileUpload(FileUploadEvent event){
 		try {
-			System.out.println("aqui paso algo");
-			UploadedFile file = event.getFile();
-			Workbook wb = null;
-			if(file.getFileName().endsWith(".xlsx"))
-			 wb = WorkbookFactory.create(file.getInputstream());
-			else if(file.getFileName().endsWith(".xls"))
-				wb = new XSSFWorkbook(file.getInputstream()); 
-			if(wb!=null)
-			System.out.println("Workbook dej{o de ser nulo ");
-				
-			
+			setShowList(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	public void goDetail() {
+		try {
+			hideAll();
+			setShowDetail(true);
+			setPanelView("detailTest", "Detallar test", "TestBean");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goAdd() {
+		try {
+			hideAll();
+			setShowAdd(true);
+			setPanelView("addTest", "Detallar test", "TestBean");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void hideAll() {
+		try {
+			this.showAdd = this.showDetail = this.showList = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isShowList() {
+		return showList;
+	}
+
+	public void setShowList(boolean showList) {
+		this.showList = showList;
+	}
+
+	public boolean isShowAdd() {
+		return showAdd;
+	}
+
+	public void setShowAdd(boolean showAdd) {
+		this.showAdd = showAdd;
+	}
+
+	public boolean isShowDetail() {
+		return showDetail;
+	}
+
+	public void setShowDetail(boolean showDetail) {
+		this.showDetail = showDetail;
+	}
+
 
 }
