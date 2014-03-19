@@ -13,8 +13,12 @@
 		<h:panelGroup>
 			<p:growl id="generalGrowl" globalOnly="true" sticky="true"
 				showDetail="true" autoUpdate="true" />
-			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog" header="Procesando..." resizable="false" draggable="false">
-				
+			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog"
+				closable="false" header="Procesando..." resizable="false"
+				draggable="false" modal="true">
+				<div align="center">
+					<p:graphicImage value="../css/images/loading.gif" />
+				</div>
 			</p:dialog>
 			<ui:include src="/WEB-INF/includes/content/header.xhtml" />
 			<div id="content">

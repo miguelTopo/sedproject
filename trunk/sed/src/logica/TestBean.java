@@ -18,7 +18,7 @@ public class TestBean extends BackingBean {
 
 	public TestBean() {
 		try {
-			setShowList(true);
+			setShowList(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
