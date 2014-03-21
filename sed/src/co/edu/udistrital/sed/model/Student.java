@@ -24,9 +24,12 @@ public class Student extends AParameter implements Serializable {
 	private static final long serialVersionUID = 5559474476366015511L;
 
 	private String identification;
-	
+	private Long idCourse;
+
 	private transient Qualification qualification;
-	private transient List<Integer>invalidColumn;
+	private transient List<Integer> invalidColumn;
+	private transient String courseName;
+	
 	public Student() {
 		try {
 
@@ -112,6 +115,25 @@ public class Student extends AParameter implements Serializable {
 		this.dateChange = dateChange;
 	}
 
+	@Column(name = "idCourse", nullable = false)
+	public Long getIdCourse() {
+		return idCourse;
+	}
+	
+
+	public void setIdCourse(Long idCourse) {
+		this.idCourse = idCourse;
+	}
+	
+	@Transient
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
 	@Transient
 	public Qualification getQualification() {
 		return qualification;
@@ -120,6 +142,7 @@ public class Student extends AParameter implements Serializable {
 	public void setQualification(Qualification qualification) {
 		this.qualification = qualification;
 	}
+
 	@Transient
 	public List<Integer> getInvalidColumn() {
 		return invalidColumn;
