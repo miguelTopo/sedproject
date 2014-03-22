@@ -4,14 +4,42 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
 	<display-name>sed</display-name>
+
+	<context-param>
+		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>client</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>primefaces.SUBMIT</param-name>
+		<param-value>partial</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+	
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+	
 	<filter>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
@@ -24,71 +52,26 @@
 			<param-value>C:/opt/sed/temp</param-value>
 		</init-param>
 	</filter>
+	
 	<filter-mapping>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jspx</url-pattern>
 	</servlet-mapping>
+	
 	<context-param>
 		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	<filter>
-		<filter-name>Pretty Filter</filter-name>
-		<filter-class>com.ocpsoft.pretty.PrettyFilter</filter-class>
-		<async-supported>true</async-supported>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>Pretty Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>ERROR</dispatcher>
-		<dispatcher>ASYNC</dispatcher>
-	</filter-mapping>
-	<session-config>
-		<session-timeout>30</session-timeout>
-	</session-config>
-	<context-param>
-		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
-		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>client</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
-		<param-value>false</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.SUBMIT</param-name>
-		<param-value>partial</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
-		<param-value>false</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-		<param-value>.xhtml</param-value>
-	</context-param>
-	<context-param>
-		<param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-		<param-value>resources.application</param-value>
-	</context-param>
-
-	<listener>
-		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-	</listener>
+		
 </web-app>

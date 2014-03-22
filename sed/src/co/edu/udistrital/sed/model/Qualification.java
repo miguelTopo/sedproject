@@ -93,7 +93,7 @@ public class Qualification extends AParameter implements Serializable {
 		this.userChange = userChange;
 	}
 
-	@Column(name = "dateCreation", length = 15)
+	@Column(name = "dateChange", length = 15)
 	public String getDateChange() {
 		return this.dateChange;
 	}

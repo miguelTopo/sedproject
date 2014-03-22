@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 	<h:form>
-		<p:fileUpload fileUploadListener="#{reportBean.handleFileUpload()}"
+		<p:fileUpload fileUploadListener="#{reportBean.handleFileUpload}"
 			auto="true" />
 			<p:commandButton value="agregar" action="#{reportBean.test}"/>
 

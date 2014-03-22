@@ -1,7 +1,5 @@
 package co.edu.udistrital.sed.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,10 +11,9 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "course")
-public class Course extends AParameter implements Serializable {
+@Table(name = "Course")
+public class Course extends AParameter {
 
-	private String description;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -55,7 +52,6 @@ public class Course extends AParameter implements Serializable {
 
 	public void setUserCreation(String userCreation) {
 		this.userCreation = userCreation;
-
 	}
 
 	@Column(name = "dateCreation", nullable = false, length = 15)
@@ -65,34 +61,23 @@ public class Course extends AParameter implements Serializable {
 
 	public void setDateCreation(String dateCreation) {
 		this.dateCreation = dateCreation;
-
 	}
 
-	@Column(name = "userChange", length = 50)
 	public String getUserChange() {
 		return this.userChange;
 	}
 
+	@Column(name = "userChange", length = 50)
 	public void setUserChange(String userChange) {
 		this.userChange = userChange;
 	}
 
-	@Column(name = "dateCreation", length = 15)
 	public String getDateChange() {
 		return this.dateChange;
 	}
 
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
-	}
-
-	@Column(name = "description", length = 500)
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 }
