@@ -135,7 +135,6 @@ public abstract class BackingBean implements Serializable {
 			return courseList;
 		} catch (Exception e) {
 			throw e;
-			// e.printStackTrace();
 		}
 	}
 
