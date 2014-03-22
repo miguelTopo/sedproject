@@ -14,6 +14,8 @@ import co.edu.udistrital.core.common.model.AParameter;
 @Table(name = "Course")
 public class Course extends AParameter {
 
+	private Long idGrade;
+
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -79,5 +81,15 @@ public class Course extends AParameter {
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
 	}
+
+	@Column(nullable = false)
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
+
 
 }

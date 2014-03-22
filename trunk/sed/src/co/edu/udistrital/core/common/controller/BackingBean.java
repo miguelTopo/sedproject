@@ -1,16 +1,21 @@
 package co.edu.udistrital.core.common.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 import org.primefaces.context.RequestContext;
 
 import co.edu.udistrital.core.common.list.BeanList;
 import co.edu.udistrital.core.login.controller.PanelStackBean;
+import co.edu.udistrital.sed.model.Course;
+import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
+import co.edu.udistrital.sed.model.TimeZone;
 
 public abstract class BackingBean implements Serializable {
 
@@ -24,6 +29,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public void addInfoMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail));
@@ -32,6 +38,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public void addWarnMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
@@ -40,6 +47,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public void addErrorMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail));
@@ -48,6 +56,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public void addFatalMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, summary, detail));
@@ -56,6 +65,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public static FacesContext getFacesContext() {
 		try {
 			return FacesContext.getCurrentInstance();
@@ -65,14 +75,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<Subject> getSubjectList() {
-		try {
-			return BeanList.getSubjectList();
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
+	/** @author MTorres */
 	public void setPanelView(String page, String title, String beanName) {
 		try {
 			String prefix = null;
@@ -91,6 +94,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public static RequestContext getRequestContext() {
 		try {
 			return RequestContext.getCurrentInstance();
@@ -100,6 +104,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
 	public PanelStackBean getPanelStackBean() {
 		try {
 			if (panelStackBean == null) {
@@ -120,6 +125,50 @@ public abstract class BackingBean implements Serializable {
 		this.panelStackBean = panelStackBean;
 	}
 
+	public List<Course> loadCourseListByGrade(Long idGrade) {
+		try {
+			List<Course> courseList = new ArrayList<Course>();
+			for (Course c : getCourseList()) {
+				if (c.getIdGrade().equals(idGrade))
+					courseList.add(c);
+			}
+			return courseList;
+		} catch (Exception e) {
+			throw e;
+			// e.printStackTrace();
+		}
+	}
 
+	public List<Subject> getSubjectList() {
+		try {
+			return BeanList.getSubjectList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<Course> getCourseList() {
+		try {
+			return BeanList.getCourseList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<TimeZone> getTimeZoneList() {
+		try {
+			return BeanList.getTimeZoneList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<Grade> getGradeList() {
+		try {
+			return BeanList.getGradeList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
 }

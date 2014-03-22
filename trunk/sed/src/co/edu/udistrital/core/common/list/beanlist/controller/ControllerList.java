@@ -8,6 +8,8 @@ import org.hibernate.Transaction;
 import co.edu.udistrital.core.common.controller.Controller;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.CourseDAO;
+import co.edu.udistrital.sed.model.Grade;
+import co.edu.udistrital.sed.model.GradeDAO;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.sed.model.SubjectDAO;
 import co.edu.udistrital.sed.model.TimeZone;
@@ -55,6 +57,23 @@ public class ControllerList extends Controller {
 	/** @author MTorres */
 	public List<TimeZone> loadTimeZoneList() throws Exception {
 		TimeZoneDAO dao = new TimeZoneDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	public List<Grade> loadGradeList() throws Exception{
+		GradeDAO dao = new GradeDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();
