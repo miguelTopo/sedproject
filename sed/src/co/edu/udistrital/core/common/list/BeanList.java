@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 
 import co.edu.udistrital.core.common.list.beanlist.controller.ControllerList;
 import co.edu.udistrital.sed.model.Course;
+import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.sed.model.TimeZone;
 
@@ -15,11 +16,17 @@ import co.edu.udistrital.sed.model.TimeZone;
 @ApplicationScoped
 public class BeanList implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6631727569215723693L;
+
 	private static ControllerList controller;
 
 	private static List<Subject> subjectList;
 	private static List<Course> courseList;
 	private static List<TimeZone> timeZoneList;
+	private static List<Grade> gradeList;
 
 	static {
 		initializeList();
@@ -30,9 +37,20 @@ public class BeanList implements Serializable {
 		try {
 			controller = new ControllerList();
 			loadSubjectList();
+			loadGradeList();
 			loadCourseList();
 			loadTimeZoneList();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** @author MTorres */
+	public static void loadGradeList() {
+		try {
+			if (gradeList == null)
+				gradeList = controller.loadGradeList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,6 +109,15 @@ public class BeanList implements Serializable {
 	public static void setTimeZoneList(List<TimeZone> timeZoneList) {
 		BeanList.timeZoneList = timeZoneList;
 	}
+
+	public static List<Grade> getGradeList() {
+		return gradeList;
+	}
+
+	public static void setGradeList(List<Grade> gradeList) {
+		BeanList.gradeList = gradeList;
+	}
+
 
 
 }
