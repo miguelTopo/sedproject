@@ -4,10 +4,44 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
-	<h:form>
-		<p:fileUpload fileUploadListener="#{reportBean.handleFileUpload}"
-			auto="true" />
-			<p:commandButton value="agregar" action="#{reportBean.test}"/>
+	<h:form id="addReportForm">
+		<p:panel header="Reporte de cortes y seguimiento de estudiantes">
+			<table width="100%" cellpadding="3" cellspacing="3">
+				<tr>
+					<td width="5%" />
+					<td width="90%" />
+					<td width="5%" />
+				</tr>
+				<tr>
+					<td />
+					<td>En este modulo usted podrá descargar y posteriormente
+						cargar los datos correspondientes a las notas de los estudiantes
+						desde grado sexto a once. Si usted no sabe cual es el archivo que
+						debe cargar, por favor dé clic <p:commandLink
+							action="#{reportBean.showDownloadFilePanel}"
+							update=":addReportForm:opPanelFile">
+							<h:outputText value="aqui" />.
+						</p:commandLink>
+					</td>
+					<td />
+				</tr>
+				<tr>
+					<td />
+					<td><p:outputPanel id="opPanelFile">
+							<p:outputPanel rendered="#{reportBean.showDownloadFile}">
+								<ui:include src="/WEB-INF/includes/report/panelFile.xhtml" />
+							</p:outputPanel>
+						</p:outputPanel></td>
+				</tr>
+				<tr>
+					<td />
+					<td><p:fileUpload
+							fileUploadListener="#{reportBean.handleFileUpload}"
+							label="Seleccionar" auto="true" /></td>
+				</tr>
 
+			</table>
+
+		</p:panel>
 	</h:form>
 </f:view>

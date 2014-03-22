@@ -1,0 +1,37 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<table width="100%">
+		<tr>
+			<td width="5%" />
+			<td width="15%" />
+			<td width="15%" />
+			<td width="60%" />
+			<td width="5%" />
+		</tr>
+		<tr>
+			<td />
+			<td colspan="3">Por favor seleccione el grado del cual desea
+				descargar el archivo guia.</td>
+			<td />
+		</tr>
+		<tr>
+			<td />
+			<td>Grado:</td>
+			<td><p:selectOneMenu>
+					<f:selectItem itemValue="0" itemLabel="Seleccione uno" />
+					<f:selectItems value="#{reportBean.gradeList}" var="g"
+						itemLabel="#{g.name}" itemValue="#{g.id}" />
+				</p:selectOneMenu></td>
+				<td>
+					<p:commandButton value="Descargar">
+					
+					</p:commandButton>
+				</td>
+		</tr>
+
+	</table>
+</f:view>

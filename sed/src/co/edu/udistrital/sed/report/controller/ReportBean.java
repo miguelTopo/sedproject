@@ -33,7 +33,7 @@ public class ReportBean extends BackingBean implements IReport {
 	 */
 	private static final long serialVersionUID = 6964596552007842254L;
 
-	private boolean showAdd = false;
+	private boolean showAdd = false, showDownloadFile = false;
 
 	private List<String> basicInformation;
 
@@ -54,7 +54,7 @@ public class ReportBean extends BackingBean implements IReport {
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
 			System.out.println("ingresando ");
-			if (event != null) { 
+			if (event != null) {
 				UploadedFile inputFile = event.getFile();
 				if (inputFile != null) {
 					if (inputFile.getFileName().endsWith(".xls"))
@@ -235,6 +235,14 @@ public class ReportBean extends BackingBean implements IReport {
 
 	}
 
+	public void showDownloadFilePanel() {
+		try {
+			setShowDownloadFile(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public boolean validateNote(Double numericValue) {
 		try {
 			return (numericValue.doubleValue() < 0.0 || numericValue.doubleValue() > 5.0) ? false : true;
@@ -243,8 +251,8 @@ public class ReportBean extends BackingBean implements IReport {
 			throw e;
 		}
 	}
-	
-	public void test (){
+
+	public void test() {
 		try {
 			System.out.println("INgresando carajo");
 		} catch (Exception e) {
@@ -259,5 +267,14 @@ public class ReportBean extends BackingBean implements IReport {
 	public void setShowAdd(boolean showAdd) {
 		this.showAdd = showAdd;
 	}
+
+	public boolean isShowDownloadFile() {
+		return showDownloadFile;
+	}
+
+	public void setShowDownloadFile(boolean showDownloadFile) {
+		this.showDownloadFile = showDownloadFile;
+	}
+
 
 }

@@ -6,8 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
-
-	<h:head>
+<h:head>
+	<link type="text/css" rel="stylesheet" href="../css/sedStyle.css" />
 	</h:head>
 	<h:body>
 		<h:panelGroup>
@@ -21,7 +21,7 @@
 				</div>
 			</p:dialog>
 			<ui:include src="/WEB-INF/includes/content/header.xhtml" />
-			<div id="content">
+			<div id="content" style="padding-left: 7%; padding-right: 7%;">
 				<div id="contentInside">
 					<p:outputPanel id="panelStack">
 						<ui:insert name="main">...</ui:insert>
