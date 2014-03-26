@@ -6,12 +6,64 @@
 <f:view>
 	<h:form id="studentListForm">
 		<p:panel header="Listado de Estudiantes">
-		<table>
-			<tr>
-			
-			</tr>
-			
-		</table>
+			<table width="100%">
+				<tr>
+					<td width="10%" />
+					<td width="20%" />
+					<td width="20%" />
+					<td width="20%" />
+					<td width="20%" />
+					<td width="10%" />
+				</tr>
+				<tr>
+					<td />
+					<td>Grado</td>
+					<td><p:selectOneMenu value="#{studentBean.grade}">
+							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
+							<f:selectItems value="#{studentBean.gradeList}" var="g"
+								itemValue="#{g.id}" itemLabel="#{g.name}" />
+							<p:ajax listener="#{studentBean.handleGradeChange}"
+								update=":studentListForm:somStdCourse" />
+						</p:selectOneMenu></td>
+					<td>Curso</td>
+
+					<td><p:selectOneMenu id="somStdCourse"  disabled="#{empty studentBean.courseTmpList}"
+							value="#{studentBean.course}">
+							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
+							<f:selectItems value="#{studentBean.courseTmpList}" var="c"
+								itemLabel="#{c.name}" itemValue="#{c.id}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="4">
+						<p:dataTable id="dtStudent"   var="std" value="#{studentBean.studentList}">
+							<p:column headerText="Identificación">
+							<h:outputText value="#{std.identification}" />
+							</p:column>
+
+							<p:column headerText="Nombre">
+							<h:outputText value="#{std.name}" />
+							</p:column>
+
+							<p:column headerText="Curso">
+							<h:outputText value="#{std.courseName}" />
+							</p:column>
+						</p:dataTable>
+						</td>
+						</tr>
+						<tr>
+						<td/>
+						<td colspan="4">
+						<div align="center">
+					<p:commandButton value="Ver Estudiantes"
+							action="#{studentBean.loadStudentList}"	
+							update="studentListForm:dtStudent">
+						</p:commandButton>
+						</div></td>
+						
+				</tr>
+			</table>
 		</p:panel>
 	</h:form>
 </f:view>
