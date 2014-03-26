@@ -29,6 +29,7 @@ public class Student extends AParameter implements Serializable {
 	private transient Qualification qualification;
 	private transient List<Integer> invalidColumn;
 	private transient String courseName;
+	private transient Long idGrade;
 	
 	public Student() {
 		try {
@@ -50,7 +51,7 @@ public class Student extends AParameter implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "identification", nullable = false, unique = true, length = 50)
+	@Column(name = "identification", nullable = false, length = 50)
 	public String getIdentification() {
 		return this.identification;
 	}
@@ -151,5 +152,15 @@ public class Student extends AParameter implements Serializable {
 	public void setInvalidColumn(List<Integer> invalidColumn) {
 		this.invalidColumn = invalidColumn;
 	}
+
+	@Transient
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
+	
 
 }
