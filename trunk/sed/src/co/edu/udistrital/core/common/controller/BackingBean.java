@@ -1,13 +1,13 @@
 package co.edu.udistrital.core.common.controller;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 import org.primefaces.context.RequestContext;
 
 import co.edu.udistrital.core.common.list.BeanList;
@@ -15,10 +15,15 @@ import co.edu.udistrital.core.login.controller.PanelStackBean;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
+import co.edu.udistrital.sed.model.SubjectGrade;
 import co.edu.udistrital.sed.model.TimeZone;
 
 public abstract class BackingBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8403730495105725673L;
 	private PanelStackBean panelStackBean;
 
 	public BackingBean() {
@@ -125,6 +130,7 @@ public abstract class BackingBean implements Serializable {
 		this.panelStackBean = panelStackBean;
 	}
 
+	/** @author MTorres */
 	public List<Course> loadCourseListByGrade(Long idGrade) {
 		try {
 			List<Course> courseList = new ArrayList<Course>();
@@ -137,6 +143,22 @@ public abstract class BackingBean implements Serializable {
 			throw e;
 		}
 	}
+
+	/** @author MTorres */
+	public String loadSubjectListByGrade(Long idGrade) {
+		try {
+			for (SubjectGrade sg : getSubjectGradeList()) {
+				if (sg.getIdGrade().equals(idGrade))
+					return sg.getIdSubjectList();
+			}
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	// ////////----------getters and setters----------//////////
 
 	public List<Subject> getSubjectList() {
 		try {
@@ -165,6 +187,14 @@ public abstract class BackingBean implements Serializable {
 	public List<Grade> getGradeList() {
 		try {
 			return BeanList.getGradeList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<SubjectGrade> getSubjectGradeList() {
+		try {
+			return BeanList.getSubjectGradeList();
 		} catch (Exception e) {
 			throw e;
 		}

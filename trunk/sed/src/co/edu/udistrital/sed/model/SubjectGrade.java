@@ -1,45 +1,29 @@
 package co.edu.udistrital.sed.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "student")
-public class Student extends AParameter implements Serializable {
-
+@Table(name = "SubjectGrade")
+public class SubjectGrade extends AParameter implements Serializable {
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5559474476366015511L;
+	private static final long serialVersionUID = 3011641245144913865L;
+	
+	private Long idGrade;
+	private String idSubjectList;
 
-	private String identification;
-	private Long idCourse;
-
-	private transient String courseName;
-	private transient Long idGrade;
-
-	private transient List<Integer> invalidColumn;
-	private transient List<Qualification> qualificationList;
-
-	public Student() {
-		try {
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -51,15 +35,6 @@ public class Student extends AParameter implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	@Column(name = "identification", nullable = false, length = 50)
-	public String getIdentification() {
-		return this.identification;
-	}
-
-	public void setIdentification(String identification) {
-		this.identification = identification;
 	}
 
 	@Column(name = "name", nullable = false, length = 200)
@@ -118,37 +93,7 @@ public class Student extends AParameter implements Serializable {
 		this.dateChange = dateChange;
 	}
 
-	@Column(name = "idCourse", nullable = false)
-	public Long getIdCourse() {
-		return idCourse;
-	}
-
-
-	public void setIdCourse(Long idCourse) {
-		this.idCourse = idCourse;
-	}
-
-	@Transient
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
-
-	@Transient
-	public List<Integer> getInvalidColumn() {
-		if (invalidColumn == null)
-			invalidColumn = new ArrayList<Integer>();
-		return invalidColumn;
-	}
-
-	public void setInvalidColumn(List<Integer> invalidColumn) {
-		this.invalidColumn = invalidColumn;
-	}
-
-	@Transient
+	@Column(name = "idGrade", nullable = false)
 	public Long getIdGrade() {
 		return idGrade;
 	}
@@ -157,13 +102,13 @@ public class Student extends AParameter implements Serializable {
 		this.idGrade = idGrade;
 	}
 
-	@Transient
-	public List<Qualification> getQualificationList() {
-		return qualificationList;
+	@Column(name = "idSubjectList", nullable = false, length = 100)
+	public String getIdSubjectList() {
+		return idSubjectList;
 	}
 
-	public void setQualificationList(List<Qualification> qualificationList) {
-		this.qualificationList = qualificationList;
+	public void setIdSubjectList(String idSubjectList) {
+		this.idSubjectList = idSubjectList;
 	}
 
 
