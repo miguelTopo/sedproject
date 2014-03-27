@@ -24,15 +24,10 @@ public class Qualification extends AParameter implements Serializable {
 	private Long idStudent;
 	private Long idSubject;
 	private Long idCourse;
-	private Double p1;
-	private Double p2;
-	private Double p3;
-	private Double p4;
-	private Double p5;
-	private Double p6;
-	private Double pf;
-	private Double pm;
-	private Double au;
+	private Double c1;
+	private Double c2;
+	private Double c3;
+	private Double cf;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -129,85 +124,40 @@ public class Qualification extends AParameter implements Serializable {
 		this.idCourse = idCourse;
 	}
 
-	@Column(name = "p1")
-	public Double getP1() {
-		return p1;
+	@Column(name = "c1")
+	public Double getC1() {
+		return c1;
 	}
 
-	public void setP1(Double p1) {
-		this.p1 = p1;
+	public void setC1(Double c1) {
+		this.c1 = c1;
 	}
 
-	@Column(name = "p2")
-	public Double getP2() {
-		return p2;
+	@Column(name = "c2")
+	public Double getC2() {
+		return c2;
 	}
 
-	public void setP2(Double p2) {
-		this.p2 = p2;
+	public void setC2(Double c2) {
+		this.c2 = c2;
 	}
 
-	@Column(name = "p3")
-	public Double getP3() {
-		return p3;
+	@Column(name = "c3")
+	public Double getC3() {
+		return c3;
 	}
 
-	public void setP3(Double p3) {
-		this.p3 = p3;
+	public void setC3(Double c3) {
+		this.c3 = c3;
 	}
 
-	@Column(name = "p4")
-	public Double getP4() {
-		return p4;
+	@Column(name = "cf")
+	public Double getCf() {
+		return cf;
 	}
 
-	public void setP4(Double p4) {
-		this.p4 = p4;
-	}
-
-	@Column(name = "p5")
-	public Double getP5() {
-		return p5;
-	}
-
-	public void setP5(Double p5) {
-		this.p5 = p5;
-	}
-
-	@Column(name = "p6")
-	public Double getP6() {
-		return p6;
-	}
-
-	public void setP6(Double p6) {
-		this.p6 = p6;
-	}
-
-	@Column(name = "pf")
-	public Double getPf() {
-		return pf;
-	}
-
-	public void setPf(Double pf) {
-		this.pf = pf;
-	}
-
-	@Column(name = "pm")
-	public Double getPm() {
-		return pm;
-	}
-
-	public void setPm(Double pm) {
-		this.pm = pm;
-	}
-
-	@Column(name = "au")
-	public Double getAu() {
-		return au;
-	}
-
-	public void setAu(Double au) {
-		this.au = au;
+	public void setCf(Double cf) {
+		this.cf = cf;
 	}
 
 }

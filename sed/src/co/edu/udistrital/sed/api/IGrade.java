@@ -1,7 +1,6 @@
-package co.edu.udistrital.sed.report.api;
+package co.edu.udistrital.sed.api;
 
 public interface IGrade {
-
 	public static Long SIXTH_GRADE = Long.valueOf(1);
 	public static Long SEVENTH_GRADE = Long.valueOf(2);
 	public static Long EIGHTH_GRADE = Long.valueOf(3);
