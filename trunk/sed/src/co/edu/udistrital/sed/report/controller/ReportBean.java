@@ -14,6 +14,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -21,6 +23,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.excel.ManageExcel;
 import co.edu.udistrital.sed.model.Student;
+import co.edu.udistrital.sed.report.api.IGrade;
 import co.edu.udistrital.sed.report.api.IReport;
 
 @ManagedBean
@@ -35,10 +38,15 @@ public class ReportBean extends BackingBean implements IReport {
 
 	private boolean showAdd = false, showDownloadFile = false;
 
+	private Long idGrade;
+
 	private List<String> basicInformation;
 
 	// POI
 	private Workbook wbDegree;
+
+	// Primefaces
+	private StreamedContent file;
 
 	// User
 	private Student student;
@@ -135,40 +143,39 @@ public class ReportBean extends BackingBean implements IReport {
 				int iteration = 0;
 
 				for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
-					if (++iteration > 20)
+					Cell c = iterator.next();
+
+					String value = null;
+					Double doubleValue = null;
+					System.out.println("iteracion" + i);
+					if (i >= 13)
+						System.out.println("aqui vamos");
+
+
+
+					switch (c.getCellType()) {
+						case Cell.CELL_TYPE_NUMERIC:
+							doubleValue = c.getNumericCellValue();
+							System.out.println(doubleValue);
 						break;
-					if ((i >= 0 && i <= 1) || i == 13 || i >= 26) {
-						Cell c = iterator.next();
+						case Cell.CELL_TYPE_STRING:
+							value = c.getStringCellValue();
+							System.out.println(value);
+						break;
+						case Cell.CELL_TYPE_BOOLEAN:
+							System.out.println("estamos en boolean ");
+						break;
+						case Cell.CELL_TYPE_FORMULA:
+							System.out.println("estamos en formula");
+						break;
 
-						String value = null;
-						Double doubleValue = null;
-						System.out.println("iteracion" + i);
+						default:
 
-						switch (c.getCellType()) {
-							case Cell.CELL_TYPE_NUMERIC:
-								doubleValue = c.getNumericCellValue();
-								System.out.println(doubleValue);
-							break;
-							case Cell.CELL_TYPE_STRING:
-								value = c.getStringCellValue();
-								System.out.println(value);
-							break;
-							case Cell.CELL_TYPE_BOOLEAN:
-								System.out.println("estamos en boolean ");
-							break;
-							case Cell.CELL_TYPE_FORMULA:
-								System.out.println("estamos en formula");
-							break;
+						break;
+					}
 
-							default:
-
-							break;
-						}
-
-						// //////////////////////////
-						if (value != null || doubleValue != null) {
-							validateInsertRow(value, doubleValue, i);
-						}
+					if (value != null || doubleValue != null) {
+						validateInsertRow(value, doubleValue, i);
 					}
 
 
@@ -211,15 +218,28 @@ public class ReportBean extends BackingBean implements IReport {
 						System.out.println("columna 2 puesto");
 					break;
 					case 26:
-						System.out.println("columna 3 nota p1");
+					case 30:
+					case 34:
+					case 38:
+					case 42:
+						System.out.println("Notas correspondientes a corte 1");
 						if (validateNote(numericValue))
 							this.student.getQualification().setP1(numericValue);
 					break;
-					case 4:
-						System.out.println("columna 4 nota p2");
+					case 27:
+					case 31:
+					case 35:
+					case 39:
+					case 43:
+						System.out.println("Notas correspondientes a corte 2");
 					break;
-					case 5:
-						System.out.println("columna 5");
+
+					case 28:
+					case 32:
+					case 36:
+					case 40:
+					case 44:
+						System.out.println("Notas correspondientes a corte 3");
 					break;
 
 					default:
@@ -276,5 +296,37 @@ public class ReportBean extends BackingBean implements IReport {
 		this.showDownloadFile = showDownloadFile;
 	}
 
+	public StreamedContent getFile() {
+		try {
+			String fileName = "";
+			String fileOutputName = "";
+			if (this.idGrade != null) {
+				if (this.idGrade.equals(0L)) {
+					addWarnMessage("Descagar archivo guia", "Por favor seleccione un curso para descargar el archivo correspondiente");
+					return null;
+				} else if (this.idGrade.equals(IGrade.SIXTH_GRADE)) {
+					fileName = "frmSixth.xlsx";
+					fileOutputName = "plantilla-grado-sexto.xlsx";
+				}
 
+			}
+			file = new DefaultStreamedContent(this.getClass().getResourceAsStream(fileName), "application/xls", fileOutputName);
+			return file;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public void setFile(StreamedContent file) {
+		this.file = file;
+	}
+
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
 }
