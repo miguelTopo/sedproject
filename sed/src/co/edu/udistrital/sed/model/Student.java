@@ -1,6 +1,7 @@
 package co.edu.udistrital.sed.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -146,6 +147,8 @@ public class Student extends AParameter implements Serializable {
 
 	@Transient
 	public List<Integer> getInvalidColumn() {
+		if(invalidColumn == null)
+			invalidColumn = new ArrayList<Integer>();
 		return invalidColumn;
 	}
 

@@ -21,14 +21,14 @@
 		<tr>
 			<td />
 			<td>Grado:</td>
-			<td><p:selectOneMenu>
+			<td><p:selectOneMenu value="#{reportBean.idGrade}">
 					<f:selectItem itemValue="0" itemLabel="Seleccione uno" />
 					<f:selectItems value="#{reportBean.gradeList}" var="g"
 						itemLabel="#{g.name}" itemValue="#{g.id}" />
 				</p:selectOneMenu></td>
 				<td>
-					<p:commandButton value="Descargar">
-					
+					<p:commandButton value="Descargar" ajax="false" icon="ui-icon-arrowstop-1-s">
+						<p:fileDownload value="#{reportBean.file}"/>
 					</p:commandButton>
 				</td>
 		</tr>
