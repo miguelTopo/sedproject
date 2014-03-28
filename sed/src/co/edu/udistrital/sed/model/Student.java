@@ -159,7 +159,9 @@ public class Student extends AParameter implements Serializable {
 
 	@Transient
 	public List<Qualification> getQualificationList() {
-		return qualificationList;
+		if(this.qualificationList == null)
+			this.qualificationList = new ArrayList<Qualification>();
+		return this.qualificationList;
 	}
 
 	public void setQualificationList(List<Qualification> qualificationList) {
