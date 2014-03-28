@@ -2,24 +2,24 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
                                          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-	<session-factory name="sed">
-		<property name="show_sql">true</property>
-		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.password">topo</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="connection.url">jdbc:mysql://localhost:3306/sed</property>
-		<property name="connection.pool_size">1</property>
-		<property name="current_session_context_class">thread</property>
-		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
-		<property name="hbm2ddl.auto">update</property>
-
-		<mapping class="co.edu.udistrital.sed.model.Course" />
-		<mapping class="co.edu.udistrital.sed.model.Grade" />
-		<mapping class="co.edu.udistrital.sed.model.KnowledArea" />
-		<mapping class="co.edu.udistrital.sed.model.Qualification" />
-		<mapping class="co.edu.udistrital.sed.model.Student" />
-		<mapping class="co.edu.udistrital.sed.model.Subject" />
-		<mapping class="co.edu.udistrital.sed.model.TimeZone" />
-	</session-factory>
+ <session-factory name="sed">
+  <property name="show_sql">true</property>
+  <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+  <property name="hibernate.connection.password">topo</property>
+  <property name="hibernate.connection.username">root</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  <property name="connection.url">jdbc:mysql://localhost:3306/sed</property>
+  <property name="connection.pool_size">1</property>
+  <property name="current_session_context_class">thread</property>
+  <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+  <property name="hbm2ddl.auto">update</property>
+  <mapping class="co.edu.udistrital.sed.model.Course"/>
+  <mapping class="co.edu.udistrital.sed.model.Grade"/>
+  <mapping class="co.edu.udistrital.sed.model.KnowledArea"/>
+  <mapping class="co.edu.udistrital.sed.model.Qualification"/>
+  <mapping class="co.edu.udistrital.sed.model.Student"/>
+  <mapping class="co.edu.udistrital.sed.model.Subject"/>
+  <mapping class="co.edu.udistrital.sed.model.TimeZone"/>
+  <mapping class="co.edu.udistrital.sed.model.SubjectGrade"/>
+ </session-factory>
 </hibernate-configuration>

@@ -2,7 +2,6 @@ package co.edu.udistrital.sed.report.controller;
 
 import java.util.ArrayList;
 
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +24,7 @@ import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.excel.ManageExcel;
 import co.edu.udistrital.sed.api.ICourt;
 import co.edu.udistrital.sed.api.IGrade;
+import co.edu.udistrital.sed.model.Qualification;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.report.api.IReport;
 
@@ -38,11 +38,18 @@ public class ReportBean extends BackingBean implements IReport {
 	 */
 	private static final long serialVersionUID = 6964596552007842254L;
 
+	// Primitives
 	private boolean showAdd = false, showDownloadFile = false;
+	private int invalidStudent;
+
 
 	private Long idGrade;
+	private Long idSelectedGrade;
+	private String studentName;
+	private String studentIdentification;
 
 	private List<String> basicInformation;
+	private List<Long> idSubjectGradeList;
 
 	// POI
 	private Workbook wbDegree;
@@ -52,10 +59,11 @@ public class ReportBean extends BackingBean implements IReport {
 
 	// UserList
 	private List<Student> properStudentList;
-	private List<Student> invalidStudentList;
+	private List<Student> totalStudentList;
 
 	// User
 	private Student student;
+	private Qualification qualification;
 
 	public ReportBean() {
 		try {
@@ -68,7 +76,15 @@ public class ReportBean extends BackingBean implements IReport {
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
 			System.out.println("ingresando ");
+			if (this.idSelectedGrade == null || this.idSelectedGrade.equals(0L)) {
+				addWarnMessage("Agregar Archivo",
+					"Para poder subir el archivo es necesario que indique el grado al cual quiere subir la información.");
+				return;
+			}
+
 			if (event != null) {
+				loadSubjectList(this.idSelectedGrade);
+
 				UploadedFile inputFile = event.getFile();
 				if (inputFile != null) {
 					if (inputFile.getFileName().endsWith(".xls"))
@@ -77,13 +93,26 @@ public class ReportBean extends BackingBean implements IReport {
 						this.wbDegree = ManageExcel.parseXLSXFile(inputFile.getInputstream());
 
 					if (this.wbDegree != null) {
-						getDataBasicDegreeFile();
 						processDegreeFile();
 					} else {
 						addFatalMessage("Subir Archivo",
 							"Se ha producido un error al tratar de subir el archivo. Por favor consulte al administrador del sistema");
 					}
 				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void loadSubjectList(Long idGrade) {
+		try {
+			this.idSubjectGradeList = new ArrayList<>();
+			String[] idSubList = loadSubjectListByGrade(idGrade).trim().split(",");
+
+			for (String s : idSubList) {
+				idSubjectGradeList.add(Long.valueOf(s));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -124,70 +153,106 @@ public class ReportBean extends BackingBean implements IReport {
 
 	public void processDegreeFile() {
 		try {
-			// for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
+//			for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
 
-			Iterator<Row> ri = this.wbDegree.getSheetAt(0).rowIterator();
+				getDataBasicDegreeFile();
 
-			System.out.println("start process file " + System.currentTimeMillis());
-			ri.next();
-			ri.next();
-			ri.next();
-			ri.next();
-			ri.next();
-			ri.next();
-			ri.next();
-			ri.next();
-			ri.next();
-			while (ri != null && ri.hasNext()) {
-				Row r = (Row) ri.next();
+				Iterator<Row> ri = this.wbDegree.getSheetAt(0).rowIterator();
 
-				Iterator<Cell> ci = r.cellIterator();
-
-				int i = 0;
-				this.student = new Student();
+				System.out.println("start process file " + System.currentTimeMillis());
+				ri.next();
+				ri.next();
+				ri.next();
+				ri.next();
+				ri.next();
+				ri.next();
+				ri.next();
+				ri.next();
+				ri.next();
+				int conteo = 0;
+				invalidData: while (ri != null && ri.hasNext()) {
 
 
-				for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
-					Cell c = iterator.next();
-					if (i == 1 || i == 13 || i >= 27) {
-						String value = null;
-						Double doubleValue = null;
+					Row r = (Row) ri.next();
+					if (++conteo == 7)
+						System.out.println("al parecer aqui es...");
 
-						switch (c.getCellType()) {
-							case Cell.CELL_TYPE_NUMERIC:
-								doubleValue = c.getNumericCellValue();
-								System.out.println(doubleValue);
-							break;
-							case Cell.CELL_TYPE_STRING:
-								value = c.getStringCellValue();
-								System.out.println(value);
-							break;
-							case Cell.CELL_TYPE_BOOLEAN:
-								System.out.println("estamos en boolean ");
-							break;
-							case Cell.CELL_TYPE_FORMULA:
-								System.out.println("estamos en formula");
-							break;
-							default:
-							break;
-						}
+					Iterator<Cell> ci = r.cellIterator();
 
-						if (value != null || doubleValue != null) {
-							validateInsertRow(value, doubleValue, i);
+					int i = 0;
+					this.student = new Student();
+					int countSave = 0;
+
+					this.qualification = new Qualification();
+
+					for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
+						Cell c = iterator.next();
+						if (i == 1 || i == 13 || i >= 27) {
+
+							if (i == 27 || i == 31 || i == 35 || i == 39 || i == 43)
+								countSave = 0;
+
+							if (i >= 27 && ++countSave == 4 && this.student != null) {
+								addDataStudent();
+							}
+							String value = null;
+							Double doubleValue = null;
+
+							switch (c.getCellType()) {
+								case Cell.CELL_TYPE_NUMERIC:
+									doubleValue = c.getNumericCellValue();
+									System.out.println(doubleValue);
+								break;
+								case Cell.CELL_TYPE_STRING:
+									value = c.getStringCellValue();
+									System.out.println(value);
+								break;
+								case Cell.CELL_TYPE_BOOLEAN:
+									System.out.println("estamos en boolean ");
+								break;
+								case Cell.CELL_TYPE_FORMULA:
+									System.out.println("estamos en formula");
+								break;
+								default:
+								break;
+							}
+							if (i >= 1 && value == null && doubleValue == null)
+								break invalidData;
+
+							if (value != null || doubleValue != null) {
+								validateInsertRow(value, doubleValue, i);
+							}
 						}
 					}
 				}
-				if (!this.student.getInvalidColumn().isEmpty())
-					getInvalidStudentList().add(this.student);
-				else
-					getProperStudentList().add(this.student);
-			}
 
-			// }
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/** @author MTorres */
+	private void addDataStudent() {
+		try {
+			if (this.student.getInvalidColumn().isEmpty()) {
+				this.qualification.setIdSubject(this.idSubjectGradeList.get(student.getQualificationList().size()));
+				this.student.getQualificationList().add(this.qualification);
+				
+				getProperStudentList().add(this.student);
+			} else
+				this.invalidStudent++;
+
+			getTotalStudentList().add(this.student);
+			this.student = null;
+			this.student = new Student();
+			this.student.setIdentification(this.studentIdentification);
+			this.student.setName(this.studentName);
+		} catch (Exception e) {
+			throw e;
+		}
+
 	}
 
 	/** @author MTorres */
@@ -203,12 +268,12 @@ public class ReportBean extends BackingBean implements IReport {
 				switch (column) {
 					case 1:
 						System.out.println("columna 1");
-						String identification = String.valueOf(numericValue.intValue());
-						this.student.setIdentification(identification);
-
+						this.studentIdentification = String.valueOf(numericValue.intValue());
+						this.student.setIdentification(this.studentIdentification);
 					break;
 					case 13:
-						this.student.setName(stringValue);
+						this.studentName = stringValue;
+						this.student.setName(this.studentName);
 						System.out.println("columna 2 puesto");
 					break;
 					case 27:
@@ -216,10 +281,18 @@ public class ReportBean extends BackingBean implements IReport {
 					case 35:
 					case 39:
 					case 43:
+					case 47:
+					case 51:
+					case 55:
+					case 59:
+					case 63:
+					case 67:
+					case 71:
+					case 75:
 						System.out.println("Notas correspondientes a corte 1");
 						if (validateNote(numericValue, ICourt.FIRST_COURT))
-//							this.student.getQualification().setC1(numericValue);
-//						else
+							this.qualification.setC1(numericValue);
+						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 28:
@@ -227,10 +300,18 @@ public class ReportBean extends BackingBean implements IReport {
 					case 36:
 					case 40:
 					case 44:
+					case 48:
+					case 52:
+					case 56:
+					case 60:
+					case 64:
+					case 68:
+					case 72:
+					case 76:
 						System.out.println("Notas correspondientes a corte 2");
 						if (validateNote(numericValue, ICourt.SECOND_COURT))
-//							this.student.getQualification().setC2(numericValue);
-//						else
+							this.qualification.setC2(numericValue);
+						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 29:
@@ -238,10 +319,18 @@ public class ReportBean extends BackingBean implements IReport {
 					case 37:
 					case 41:
 					case 45:
+					case 49:
+					case 53:
+					case 57:
+					case 61:
+					case 65:
+					case 69:
+					case 73:
+					case 77:
 						System.out.println("Notas correspondientes a corte 3");
 						if (validateNote(numericValue, ICourt.THIRD_COURT))
-//							this.student.getQualification().setC3(numericValue);
-//						else
+							this.qualification.setC3(numericValue);
+						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 30:
@@ -249,9 +338,17 @@ public class ReportBean extends BackingBean implements IReport {
 					case 38:
 					case 42:
 					case 46:
+					case 50:
+					case 54:
+					case 58:
+					case 62:
+					case 66:
+					case 70:
+					case 74:
+					case 78:
 						if (validateNote(numericValue, ICourt.THIRD_COURT))
-//							this.student.getQualification().setCf(numericValue);
-//						else
+							this.qualification.setCf(numericValue);
+						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 
@@ -267,6 +364,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 	}
 
+	/** @author MTorres */
 	public void showDownloadFilePanel() {
 		try {
 			setShowDownloadFile(true);
@@ -294,14 +392,6 @@ public class ReportBean extends BackingBean implements IReport {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-		}
-	}
-
-	public void test() {
-		try {
-			System.out.println("INgresando carajo");
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -365,14 +455,23 @@ public class ReportBean extends BackingBean implements IReport {
 		this.properStudentList = properStudentList;
 	}
 
-	public List<Student> getInvalidStudentList() {
-		if (this.invalidStudentList == null)
-			this.invalidStudentList = new ArrayList<Student>();
-		return this.invalidStudentList;
+	public List<Student> getTotalStudentList() {
+		if (this.totalStudentList == null)
+			this.totalStudentList = new ArrayList<Student>();
+		return this.totalStudentList;
 	}
 
-	public void setInvalidStudentList(List<Student> invalidStudentList) {
-		this.invalidStudentList = invalidStudentList;
+	public void setTotalStudentList(List<Student> totalStudentList) {
+		this.totalStudentList = totalStudentList;
 	}
+
+	public Long getIdSelectedGrade() {
+		return idSelectedGrade;
+	}
+
+	public void setIdSelectedGrade(Long idSelectedGrade) {
+		this.idSelectedGrade = idSelectedGrade;
+	}
+
 
 }
