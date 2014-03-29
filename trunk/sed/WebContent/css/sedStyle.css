@@ -49,7 +49,7 @@ a {
 }
 
 #footerDiv {
-	background-color: red;
 	padding-bottom: 10px;
 	padding-top: 10px;
+	height: 30px;
 }

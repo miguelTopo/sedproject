@@ -6,13 +6,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
-<h:head>
-	<link type="text/css" rel="stylesheet" href="../css/sedStyle.css" />
+	<h:head>
+		<link type="text/css" rel="stylesheet" href="../css/sedStyle.css" />
+		<f:loadBundle basename="co.edu.udistrital.core.common.util.resource.webMessages" var="bundle" />
 	</h:head>
 	<h:body>
 		<h:panelGroup>
 			<p:growl id="generalGrowl" globalOnly="true" sticky="true"
-				showDetail="true" autoUpdate="true" />
+				life="6000" showDetail="true" autoUpdate="true" />
 			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog"
 				closable="false" header="Procesando..." resizable="false"
 				draggable="false" modal="true">

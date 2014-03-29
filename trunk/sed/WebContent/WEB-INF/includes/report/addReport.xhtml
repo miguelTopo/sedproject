@@ -1,11 +1,11 @@
-<f:view xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
 	<h:form id="addReportForm">
-		<p:panel header="Reporte de cortes y seguimiento de estudiantes">
+		<p:panel header="#{bundle['page.report.labelHeadAdd']}">
 			<table width="100%" cellpadding="3" cellspacing="3">
 				<tr>
 					<td width="5%" />
@@ -17,62 +17,79 @@
 				</tr>
 				<tr>
 					<td />
-					<td colspan="4">En este modulo usted podrá descargar y
-						posteriormente cargar los datos correspondientes a las notas de
-						los estudiantes desde grado sexto a once. Si usted no sabe cual es
-						el archivo que debe cargar, por favor dé clic <p:commandLink
-							action="#{reportBean.showDownloadFilePanel}"
-							update=":addReportForm:opPanelFile">
-							<h:outputText value="aqui" />
-						</p:commandLink>. De lo contrario puede proceder a subir el archivo
-						correspondiente.
+					<td colspan="4">
+						#{bundle['page.report.labelUploadFileGuide']}
+							<p:commandLink action="#{reportBean.showDownloadFilePanel}" update=":addReportForm:opPanelFile">
+								<h:outputText value="#{bundle['page.core.labelHere']}" />
+							</p:commandLink>
+						#{bundle['page.report.labelUploadEndFileGuide']}
 					</td>
 					<td />
 				</tr>
 				<tr>
 					<td />
-					<td colspan="4"><p:outputPanel id="opPanelFile">
+					<td colspan="4">
+						<p:outputPanel id="opPanelFile">
 							<p:outputPanel rendered="#{reportBean.showDownloadFile}">
 								<ui:include src="/WEB-INF/includes/report/panelFile.xhtml" />
 							</p:outputPanel>
-						</p:outputPanel></td>
+						</p:outputPanel>
+					</td>
 				</tr>
 				<tr>
-					<td><p:spacer height="30" /></td>
+					<td>
+						<p:spacer height="30" />
+					</td>
 				</tr>
 				<tr>
 					<td />
-					<td colspan="4">Los campos marcados con (*) son obligatorios.</td>
+					<td colspan="4">
+						#{bundle['page.core.labelDataObligatory']}
+					</td>
 					<td />
 				</tr>
 				<tr>
 					<td />
-					<td align="center">Grado:</td>
-					<td><p:selectOneMenu value="#{reportBean.idSelectedGrade}"
-							style="width:98%;">
-							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
+					<td align="center">
+						#{bundle['page.sed.labelGrade']}:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{reportBean.idSelectedGrade}" style="width:98%;">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{reportBean.gradeList}" var="g"
 								itemLabel="#{g.name}" itemValue="#{g.id}" />
 							<p:ajax global="false" update=":addReportForm:fileUploadOp" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
+					</td>
 				</tr>
 				<tr>
-					<td><p:spacer height="20" /></td>
+					<td>
+						<p:spacer height="20" />
+					</td>
 				</tr>
 				<tr>
 					<td />
-					<td colspan="2"><p:outputPanel id="fileUploadOp">
+					<td colspan="2">
+						<p:outputPanel id="fileUploadOp">
 							<p:outputPanel rendered="#{!empty reportBean.idSelectedGrade and reportBean.idSelectedGrade ne 0}">
-								<p:fileUpload dragDropSupport="true" onstart="statusDialog.show();" oncomplete="statusDialog.hide();"
+								<p:fileUpload mode="advanced" dragDropSupport="false" multiple="false" sizeLimit="1000000000" fileLimit="1"
+									invalidSizeMessage="#{bundle['page.core.file.labelMaxSize']}" 
+									invalidFileMessage="#{bundle['page.core.file.labelNotAllowed']}"
+									fileLimitMessage="#{bundle['page.core.file.labelMaxNumber']}"
+									errorMessageDelay="#{bundle['page.core.file.labelErrorDelay']}"
+									sizeExceedMessage="#{bundle['page.core.file.labelOutsize']}"
 									fileUploadListener="#{reportBean.handleFileUpload}"
-									label="Seleccionar" auto="true" />
+									cancelLabel="#{bundle['page.core.labelCancel']}" deletelabel="#{bundle['page.core.labelDelete']}"
+									uploadLabel="#{bundle['page.core.file.labelUpload']}" label="#{bundle['page.core.labelSelect']}"
+									onstart="statusDialog.show();"
+									oncomplete="statusDialog.hide();"
+									allowTypes="/(\.|\/)(xls|xlsx)$/" />
 							</p:outputPanel>
-						</p:outputPanel></td>
-
+						</p:outputPanel>
+					</td>
 				</tr>
-
 			</table>
-
 		</p:panel>
 	</h:form>
 </f:view>
+</html>
