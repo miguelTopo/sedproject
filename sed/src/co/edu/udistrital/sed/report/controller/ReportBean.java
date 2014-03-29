@@ -6,7 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,8 +19,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
-import com.ocpsoft.pretty.faces.annotation.URLMapping;
-
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.excel.ManageExcel;
 import co.edu.udistrital.sed.api.ICourt;
@@ -28,8 +27,10 @@ import co.edu.udistrital.sed.model.Qualification;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.report.api.IReport;
 
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
+
 @ManagedBean
-@ViewScoped
+@SessionScoped
 @URLMapping(id = "addReport", pattern = "/portal/reporte", viewId = "/pages/report/report.jspx")
 public class ReportBean extends BackingBean implements IReport {
 
@@ -42,12 +43,13 @@ public class ReportBean extends BackingBean implements IReport {
 	private boolean showAdd = false, showDownloadFile = false;
 	private int invalidStudent;
 
-
+	// Java Object
 	private Long idGrade;
 	private Long idSelectedGrade;
 	private String studentName;
 	private String studentIdentification;
 
+	// Java Object List
 	private List<String> basicInformation;
 	private List<Long> idSubjectGradeList;
 
@@ -61,18 +63,20 @@ public class ReportBean extends BackingBean implements IReport {
 	private List<Student> properStudentList;
 	private List<Student> totalStudentList;
 
-	// User
+	// User Object
 	private Student student;
 	private Qualification qualification;
 
 	public ReportBean() {
 		try {
 			setShowAdd(true);
+			setShowDownloadFile(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/** @author MTorres */
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
 			System.out.println("ingresando ");
@@ -81,7 +85,6 @@ public class ReportBean extends BackingBean implements IReport {
 					"Para poder subir el archivo es necesario que indique el grado al cual quiere subir la información.");
 				return;
 			}
-
 			if (event != null) {
 				loadSubjectList(this.idSelectedGrade);
 
@@ -94,6 +97,21 @@ public class ReportBean extends BackingBean implements IReport {
 
 					if (this.wbDegree != null) {
 						processDegreeFile();
+
+						if (this.totalStudentList != null && this.properStudentList != null) {
+							if (this.totalStudentList.size() == this.properStudentList.size()) {
+								System.out.println("Vamos a guardar a estos chinos");
+							} else {
+								addFatalMessage("Cargar archivo",
+									"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
+								return;
+							}
+						} else {
+							addFatalMessage("Cargar archivo",
+								"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
+							return;
+						}
+						cleanVarList();
 					} else {
 						addFatalMessage("Subir Archivo",
 							"Se ha producido un error al tratar de subir el archivo. Por favor consulte al administrador del sistema");
@@ -106,6 +124,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 	}
 
+	/** @author MTorres */
 	private void loadSubjectList(Long idGrade) {
 		try {
 			this.idSubjectGradeList = new ArrayList<>();
@@ -120,9 +139,10 @@ public class ReportBean extends BackingBean implements IReport {
 
 	}
 
-	public void getDataBasicDegreeFile() {
+	/** @author MTorres */
+	public boolean getDataBasicDegreeFile(int indexSheet) {
 		try {
-			Sheet sheet = this.wbDegree.getSheetAt(0);
+			Sheet sheet = this.wbDegree.getSheetAt(indexSheet);
 			this.basicInformation = new ArrayList<String>(IReport.CELL_REFERENCE_LIST.size());
 			for (String s : IReport.CELL_REFERENCE_LIST) {
 				CellReference cr = new CellReference(s);
@@ -134,6 +154,8 @@ public class ReportBean extends BackingBean implements IReport {
 						case Cell.CELL_TYPE_STRING:
 							if (!cell.getRichStringCellValue().getString().isEmpty())
 								basicInformation.add(cell.getRichStringCellValue().getString());
+							else
+								return false;
 						break;
 						case Cell.CELL_TYPE_NUMERIC:
 							basicInformation.add(String.valueOf(cell.getNumericCellValue()));
@@ -146,88 +168,122 @@ public class ReportBean extends BackingBean implements IReport {
 					}
 				}
 			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/** @author MTorres */
+	private void readXLSFile(int indexSheet) {
+		try {
+			this.student = new Student();
+			Iterator<Row> ri = this.wbDegree.getSheetAt(indexSheet).rowIterator();
+
+			System.out.println("start process file " + System.currentTimeMillis());
+			ri.next();
+			ri.next();
+			ri.next();
+			ri.next();
+			ri.next();
+			ri.next();
+			ri.next();
+			ri.next();
+			ri.next();
+			int count = 0;
+			// Bucle de control de filas
+			while (ri != null && ri.hasNext()) {
+
+
+				if (this.student != null && count > 0)
+					if (this.student.getInvalidColumn() != null && !this.student.getInvalidColumn().isEmpty())
+						addDataStudent();
+					else
+						break;
+				else if (this.student == null && count > 0) {
+					break;
+				}
+
+				Row r = (Row) ri.next();
+
+				Iterator<Cell> ci = r.cellIterator();
+
+				int i = 0;
+				this.student = new Student();
+				int countSave = 0;
+
+				this.qualification = new Qualification();
+				// Bucle de control de celdas/columnas
+				for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
+					Cell c = iterator.next();
+					if (i == 1 || i == 13 || i >= 27) {
+
+						if (i == 27 || i == 31 || i == 35 || i == 39 || i == 43 || i == 47 || i == 51 || i == 55 || i == 59 || i == 63 || i == 67
+							|| i == 71 || i == 47 || i == 75)
+							countSave = 0;
+
+						if (i >= 27 && ++countSave == 4 && this.student != null) {
+							addStudentQualification();
+						}
+						String value = null;
+						Double doubleValue = null;
+
+						switch (c.getCellType()) {
+							case Cell.CELL_TYPE_NUMERIC:
+								doubleValue = c.getNumericCellValue();
+								System.out.println(doubleValue);
+							break;
+							case Cell.CELL_TYPE_STRING:
+								value = c.getStringCellValue();
+								System.out.println(value);
+							break;
+							case Cell.CELL_TYPE_BOOLEAN:
+								System.out.println("estamos en boolean ");
+							break;
+							case Cell.CELL_TYPE_FORMULA:
+								System.out.println("estamos en formula");
+							break;
+							default:
+							break;
+						}
+						if (value != null || doubleValue != null) {
+							validateInsertRow(value, doubleValue, i);
+							count++;
+						}
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/** @author MTorres */
 	public void processDegreeFile() {
 		try {
-//			for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
-
-				getDataBasicDegreeFile();
-
-				Iterator<Row> ri = this.wbDegree.getSheetAt(0).rowIterator();
-
-				System.out.println("start process file " + System.currentTimeMillis());
-				ri.next();
-				ri.next();
-				ri.next();
-				ri.next();
-				ri.next();
-				ri.next();
-				ri.next();
-				ri.next();
-				ri.next();
-				int conteo = 0;
-				invalidData: while (ri != null && ri.hasNext()) {
-
-
-					Row r = (Row) ri.next();
-					if (++conteo == 7)
-						System.out.println("al parecer aqui es...");
-
-					Iterator<Cell> ci = r.cellIterator();
-
-					int i = 0;
-					this.student = new Student();
-					int countSave = 0;
-
-					this.qualification = new Qualification();
-
-					for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
-						Cell c = iterator.next();
-						if (i == 1 || i == 13 || i >= 27) {
-
-							if (i == 27 || i == 31 || i == 35 || i == 39 || i == 43)
-								countSave = 0;
-
-							if (i >= 27 && ++countSave == 4 && this.student != null) {
-								addDataStudent();
-							}
-							String value = null;
-							Double doubleValue = null;
-
-							switch (c.getCellType()) {
-								case Cell.CELL_TYPE_NUMERIC:
-									doubleValue = c.getNumericCellValue();
-									System.out.println(doubleValue);
-								break;
-								case Cell.CELL_TYPE_STRING:
-									value = c.getStringCellValue();
-									System.out.println(value);
-								break;
-								case Cell.CELL_TYPE_BOOLEAN:
-									System.out.println("estamos en boolean ");
-								break;
-								case Cell.CELL_TYPE_FORMULA:
-									System.out.println("estamos en formula");
-								break;
-								default:
-								break;
-							}
-							if (i >= 1 && value == null && doubleValue == null)
-								break invalidData;
-
-							if (value != null || doubleValue != null) {
-								validateInsertRow(value, doubleValue, i);
-							}
-						}
-					}
+			for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
+				if (j == this.wbDegree.getNumberOfSheets())
+					System.out.println("esto tiene algunas pages");
+				if (getDataBasicDegreeFile(j)) {
+					readXLSFile(j);
+				} else {
+					break;
 				}
+			}
 
-//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	/** @author MTorres */
+	private void addStudentQualification() {
+		try {
+			if (this.qualification != null && this.student != null)
+				if (this.qualification.getC1() != null || this.qualification.getC2() != null || this.qualification.getC3() != null)
+					this.qualification.setIdSubject(this.idSubjectGradeList.get(this.student.getQualificationList().size()));
+			this.student.getQualificationList().add(this.qualification);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -236,20 +292,11 @@ public class ReportBean extends BackingBean implements IReport {
 	/** @author MTorres */
 	private void addDataStudent() {
 		try {
-			if (this.student.getInvalidColumn().isEmpty()) {
-				this.qualification.setIdSubject(this.idSubjectGradeList.get(student.getQualificationList().size()));
-				this.student.getQualificationList().add(this.qualification);
-				
-				getProperStudentList().add(this.student);
-			} else
-				this.invalidStudent++;
-
 			getTotalStudentList().add(this.student);
-			this.student = null;
-			this.student = new Student();
-			this.student.setIdentification(this.studentIdentification);
-			this.student.setName(this.studentName);
+			if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
+				getProperStudentList().add(this.student);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}
 
@@ -391,6 +438,15 @@ public class ReportBean extends BackingBean implements IReport {
 				return false;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/** @author MTorres */
+	private void cleanVarList() {
+		try {
+			this.properStudentList = this.totalStudentList = null;
+		} catch (Exception e) {
 			throw e;
 		}
 	}

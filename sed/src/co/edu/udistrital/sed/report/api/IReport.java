@@ -22,7 +22,7 @@ public interface IReport {
 	public abstract void handleFileUpload(FileUploadEvent event);
 	
 	/**@author MTorres Este método permite capturar los datos básicos del archivo XLS como Sede, director de grupo y otros*/
-	public abstract void getDataBasicDegreeFile();
+	public abstract boolean getDataBasicDegreeFile(int indexSheet);
 	
 	/**@author MTorres Este método permite procesar el archivo XLS*/
 	public abstract void processDegreeFile();

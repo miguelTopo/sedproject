@@ -14,23 +14,21 @@
 		</tr>
 		<tr>
 			<td />
-			<td colspan="3">Por favor seleccione el grado del cual desea
-				descargar el archivo guia.</td>
+			<td colspan="3">#{bundle['page.report.labelDownloadGuide']}</td>
 			<td />
 		</tr>
 		<tr>
 			<td />
-			<td>Grado:</td>
+			<td>#{bundle['page.sed.labelGrade']}:</td>
 			<td><p:selectOneMenu value="#{reportBean.idGrade}">
-					<f:selectItem itemValue="0" itemLabel="Seleccione uno" />
+					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" />
 					<f:selectItems value="#{reportBean.gradeList}" var="g"
 						itemLabel="#{g.name}" itemValue="#{g.id}" />
 				</p:selectOneMenu></td>
-				<td>
-					<p:commandButton value="Descargar" ajax="false" icon="ui-icon-arrowstop-1-s">
-						<p:fileDownload value="#{reportBean.file}"/>
-					</p:commandButton>
-				</td>
+			<td><p:commandButton value="#{bundle['page.core.file.labelDownload']}" ajax="false"
+					icon="ui-icon-arrowstop-1-s">
+					<p:fileDownload value="#{reportBean.file}" />
+				</p:commandButton></td>
 		</tr>
 
 	</table>

@@ -1,12 +1,13 @@
 package co.edu.udistrital.core.common.excel;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class ManageExcel {
+public class ManageExcel{
 	
 	public static Workbook parseXLSFile(InputStream stream) throws Exception{
 		try {
