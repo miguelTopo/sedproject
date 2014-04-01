@@ -20,13 +20,14 @@ import co.edu.udistrital.sed.model.Student;
 public class StudentBean extends BackingBean {
 
 	private static final long serialVersionUID = -8160892651775048022L;
-	private boolean showList = false, showAdd = false, showDetail = false;
+	private boolean showList = false, showAdd = false, showDetail = false, showEdit = false;
 
 	private Long grade;
 	private Long course;
 	private Long miDato;
 
 	private List<Student> studentList;
+	private List<Student> studentFilteredList;
 	private List<Course> courseTmpList;
 
 	private StudentController controller;
@@ -46,8 +47,7 @@ public class StudentBean extends BackingBean {
 			if (validateLoadList()) {
 				// TODO mirar el funcionamiento de datatable de primefaces
 				// tu lista = controllwer.tufuncion en el controller -> DAO
-				this.studentList = this.controller.loadStudentList(this.grade,
-						this.course);
+				this.studentList = this.studentFilteredList = this.controller.loadStudentList(this.grade, this.course);
 			} else {
 				return;
 			}
@@ -61,12 +61,10 @@ public class StudentBean extends BackingBean {
 	public boolean validateLoadList() {
 		try {
 			if (this.grade == null || this.grade.equals(0L)) {
-				addWarnMessage("Listar estudiantes",
-						"Por favor indique el grado.");
+				addWarnMessage("Listar estudiantes", "Por favor indique el grado.");
 				return false;
 			} else if (this.course == null || this.course.equals(0L)) {
-				addWarnMessage("Listar estudiantes",
-						"Por favor indique el curso.");
+				addWarnMessage("Listar estudiantes", "Por favor indique el curso.");
 				return false;
 			} else {
 				return true;
@@ -81,7 +79,7 @@ public class StudentBean extends BackingBean {
 	public void handleGradeChange() {
 		try {
 			if (this.grade != null && !this.grade.equals(0L)) {
-				this.courseTmpList =loadCourseListByGrade(this.grade);
+				this.courseTmpList = loadCourseListByGrade(this.grade);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +97,69 @@ public class StudentBean extends BackingBean {
 			}
 			Student s = new Student();
 			s = this.controller.loadStudent(2L);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goBack() {
+		try {
+			hideAll();
+			clearVar();
+			setShowList(true);
+			setPanelView("studentList", "Listar Estudiantes", "studentBean");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goDetail() {
+		try {
+			hideAll();
+			setShowDetail(true);
+			setPanelView("detailStudent", "Detallar Estudiante", "studentBean");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goEdit() {
+		try {
+			hideAll();
+			setShowEdit(true);
+			setPanelView("addStudent", "Editar Estudiante", "studentBean");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void goAdd(){
+		try {
+			hideAll();
+			setShowAdd(true);
+			setPanelView("addStudent", "Crear Estudiante", "studentBean");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void clearVar() {
+		try {
+			this.course = null;
+			this.grade = null;
+			this.studentList = null;
+			this.studentFilteredList = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void hideAll() {
+		try {
+			setShowAdd(false);
+			setShowDetail(false);
+			setShowList(false);
+			setShowEdit(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -167,5 +228,23 @@ public class StudentBean extends BackingBean {
 	public void setCourseTmpList(List<Course> courseTmpList) {
 		this.courseTmpList = courseTmpList;
 	}
+
+	public List<Student> getStudentFilteredList() {
+		return studentFilteredList;
+	}
+
+	public void setStudentFilteredList(List<Student> studentFilteredList) {
+		this.studentFilteredList = studentFilteredList;
+	}
+
+	public boolean isShowEdit() {
+		return showEdit;
+	}
+
+	public void setShowEdit(boolean showEdit) {
+		this.showEdit = showEdit;
+	}
+	
+
 
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -23,6 +22,7 @@ import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.excel.ManageExcel;
 import co.edu.udistrital.sed.api.ICourt;
 import co.edu.udistrital.sed.api.IGrade;
+import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Qualification;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.report.api.IReport;
@@ -62,6 +62,7 @@ public class ReportBean extends BackingBean implements IReport {
 	// UserList
 	private List<Student> properStudentList;
 	private List<Student> totalStudentList;
+	private List<Course> tmpCourseList;
 
 	// User Object
 	private Student student;
@@ -84,7 +85,10 @@ public class ReportBean extends BackingBean implements IReport {
 				addWarnMessage("Agregar Archivo",
 					"Para poder subir el archivo es necesario que indique el grado al cual quiere subir la información.");
 				return;
+			} else {
+				this.tmpCourseList = loadCourseListByGrade(this.idSelectedGrade);
 			}
+
 			if (event != null) {
 				loadSubjectList(this.idSelectedGrade);
 
@@ -198,7 +202,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 				if (this.student != null && count > 0)
 					if (this.student.getInvalidColumn() != null && !this.student.getInvalidColumn().isEmpty())
-						addDataStudent();
+						addStudent(indexSheet);
 					else
 						break;
 				else if (this.student == null && count > 0) {
@@ -263,8 +267,6 @@ public class ReportBean extends BackingBean implements IReport {
 	public void processDegreeFile() {
 		try {
 			for (int j = 0; j < this.wbDegree.getNumberOfSheets(); j++) {
-				if (j == this.wbDegree.getNumberOfSheets())
-					System.out.println("esto tiene algunas pages");
 				if (getDataBasicDegreeFile(j)) {
 					readXLSFile(j);
 				} else {
@@ -290,8 +292,9 @@ public class ReportBean extends BackingBean implements IReport {
 	}
 
 	/** @author MTorres */
-	private void addDataStudent() {
+	private void addStudent(int indexSheet) {
 		try {
+			this.student.setIdCourse(this.tmpCourseList.get(indexSheet).getId());
 			getTotalStudentList().add(this.student);
 			if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
 				getProperStudentList().add(this.student);

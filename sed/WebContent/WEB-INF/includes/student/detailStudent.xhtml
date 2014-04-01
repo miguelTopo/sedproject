@@ -5,13 +5,17 @@
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
 	<h:form>
-		<p:panel>
+		<p:panel header="#{bundle['page.student.labelDetailStudent']}">
 		<table>
 			<tr>
 			
 			</tr>
 			
 		</table>
+		
+		<div align="center">
+			<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{studentBean.goBack}"/>
+		</div>
 		</p:panel>
 	</h:form>
 </f:view>
