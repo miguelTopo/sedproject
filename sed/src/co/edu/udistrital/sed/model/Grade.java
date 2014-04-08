@@ -21,7 +21,7 @@ public class Grade extends AParameter implements Serializable {
 	 */
 	private static final long serialVersionUID = -5748391988665868218L;
 
-	private String description;
+	private Long idSchool;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -91,13 +91,14 @@ public class Grade extends AParameter implements Serializable {
 		this.dateChange = dateChange;
 	}
 
-	@Column(name = "description", length = 500)
-	public String getDescription() {
-		return description;
+	@Column(name = "idSchool", nullable = false)
+	public Long getIdSchool() {
+		return idSchool;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setIdSchool(Long idSchool) {
+		this.idSchool = idSchool;
 	}
+
 
 }

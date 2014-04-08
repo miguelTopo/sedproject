@@ -21,7 +21,8 @@ public class Subject extends AParameter implements Serializable {
 	 */
 	private static final long serialVersionUID = 9002734354199822366L;
 
-	private Long idKnowledArea;
+	private Long idKnowledgeArea;
+	private Long idGrade;
 	private String description;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -101,13 +102,24 @@ public class Subject extends AParameter implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "idKnowledArea", nullable = false)
-	public Long getIdKnowledArea() {
-		return idKnowledArea;
+	@Column(name = "idKnowledgeArea", nullable = false)
+	public Long getIdKnowledgeArea() {
+		return idKnowledgeArea;
 	}
 
-	public void setIdKnowledArea(Long idKnowledArea) {
-		this.idKnowledArea = idKnowledArea;
+	public void setIdKnowledgeArea(Long idKnowledgeArea) {
+		this.idKnowledgeArea = idKnowledgeArea;
 	}
+
+	@Column(name = "idGrade", nullable = false)
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
+
+
 
 }

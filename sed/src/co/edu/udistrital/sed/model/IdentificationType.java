@@ -1,7 +1,5 @@
 package co.edu.udistrital.sed.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,17 +11,13 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "qualification")
-public class Qualification extends AParameter implements Serializable {
+@Table(name="identificationtype")
+public class IdentificationType extends AParameter {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1184189519737803513L;
-
-	private Long idStudentCourse;
-	private Long idQualificationType;
-	private Long idSubject;
+	private static final long serialVersionUID = 7652895084802571198L;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -90,30 +84,5 @@ public class Qualification extends AParameter implements Serializable {
 		this.dateChange = dateChange;
 	}
 
-	@Column(name = "idStudentCourse", nullable = false)
-	public Long getIdStudentCourse() {
-		return idStudentCourse;
-	}
 
-	public void setIdStudentCourse(Long idStudentCourse) {
-		this.idStudentCourse = idStudentCourse;
-	}
-
-	@Column(name = "idQualificationType", nullable = false)
-	public Long getIdQualificationType() {
-		return idQualificationType;
-	}
-
-	public void setIdQualificationType(Long idQualificationType) {
-		this.idQualificationType = idQualificationType;
-	}
-
-	@Column(name = "idSubject", nullable = false)
-	public Long getIdSubject() {
-		return idSubject;
-	}
-
-	public void setIdSubject(Long idSubject) {
-		this.idSubject = idSubject;
-	}
 }
