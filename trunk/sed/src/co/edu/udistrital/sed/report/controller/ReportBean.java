@@ -283,8 +283,8 @@ public class ReportBean extends BackingBean implements IReport {
 	private void addStudentQualification() {
 		try {
 			if (this.qualification != null && this.student != null)
-				if (this.qualification.getC1() != null || this.qualification.getC2() != null || this.qualification.getC3() != null)
-					this.qualification.setIdSubject(this.idSubjectGradeList.get(this.student.getQualificationList().size()));
+//				if (this.qualification.getC1() != null || this.qualification.getC2() != null || this.qualification.getC3() != null)
+//					this.qualification.setIdSubject(this.idSubjectGradeList.get(this.student.getQualificationList().size()));
 			this.student.getQualificationList().add(this.qualification);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -341,8 +341,8 @@ public class ReportBean extends BackingBean implements IReport {
 					case 75:
 						System.out.println("Notas correspondientes a corte 1");
 						if (validateNote(numericValue, ICourt.FIRST_COURT))
-							this.qualification.setC1(numericValue);
-						else
+//							this.qualification.setC1(numericValue);
+//						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 28:
@@ -360,8 +360,8 @@ public class ReportBean extends BackingBean implements IReport {
 					case 76:
 						System.out.println("Notas correspondientes a corte 2");
 						if (validateNote(numericValue, ICourt.SECOND_COURT))
-							this.qualification.setC2(numericValue);
-						else
+//							this.qualification.setC2(numericValue);
+//						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 29:
@@ -379,8 +379,8 @@ public class ReportBean extends BackingBean implements IReport {
 					case 77:
 						System.out.println("Notas correspondientes a corte 3");
 						if (validateNote(numericValue, ICourt.THIRD_COURT))
-							this.qualification.setC3(numericValue);
-						else
+//							this.qualification.setC3(numericValue);
+//						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 30:
@@ -397,8 +397,8 @@ public class ReportBean extends BackingBean implements IReport {
 					case 74:
 					case 78:
 						if (validateNote(numericValue, ICourt.THIRD_COURT))
-							this.qualification.setCf(numericValue);
-						else
+//							this.qualification.setCf(numericValue);
+//						else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 

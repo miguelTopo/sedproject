@@ -13,17 +13,13 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "qualification")
-public class Qualification extends AParameter implements Serializable {
+@Table(name = "knowledgearea")
+public class KnowledgeArea extends AParameter implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1184189519737803513L;
-
-	private Long idStudentCourse;
-	private Long idQualificationType;
-	private Long idSubject;
+	private static final long serialVersionUID = -6012879919694289323L;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -62,6 +58,7 @@ public class Qualification extends AParameter implements Serializable {
 
 	public void setUserCreation(String userCreation) {
 		this.userCreation = userCreation;
+
 	}
 
 	@Column(name = "dateCreation", nullable = false, length = 15)
@@ -71,17 +68,19 @@ public class Qualification extends AParameter implements Serializable {
 
 	public void setDateCreation(String dateCreation) {
 		this.dateCreation = dateCreation;
+
 	}
 
+	@Column(name = "userChange", length = 50)
 	public String getUserChange() {
 		return this.userChange;
 	}
 
-	@Column(name = "userChange", length = 50)
 	public void setUserChange(String userChange) {
 		this.userChange = userChange;
 	}
 
+	@Column(name = "dateChange", length = 15)
 	public String getDateChange() {
 		return this.dateChange;
 	}
@@ -90,30 +89,4 @@ public class Qualification extends AParameter implements Serializable {
 		this.dateChange = dateChange;
 	}
 
-	@Column(name = "idStudentCourse", nullable = false)
-	public Long getIdStudentCourse() {
-		return idStudentCourse;
-	}
-
-	public void setIdStudentCourse(Long idStudentCourse) {
-		this.idStudentCourse = idStudentCourse;
-	}
-
-	@Column(name = "idQualificationType", nullable = false)
-	public Long getIdQualificationType() {
-		return idQualificationType;
-	}
-
-	public void setIdQualificationType(Long idQualificationType) {
-		this.idQualificationType = idQualificationType;
-	}
-
-	@Column(name = "idSubject", nullable = false)
-	public Long getIdSubject() {
-		return idSubject;
-	}
-
-	public void setIdSubject(Long idSubject) {
-		this.idSubject = idSubject;
-	}
 }
