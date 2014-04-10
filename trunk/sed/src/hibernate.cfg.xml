@@ -20,7 +20,6 @@
   <mapping class="co.edu.udistrital.sed.model.Student"/>
   <mapping class="co.edu.udistrital.sed.model.Subject"/>
   <mapping class="co.edu.udistrital.sed.model.TimeZone"/>
-  <mapping class="co.edu.udistrital.sed.model.SubjectGrade"/>
   <mapping class="co.edu.udistrital.sed.model.Period"/>
   <mapping class="co.edu.udistrital.sed.model.IdentificationType"/>
   <mapping class="co.edu.udistrital.sed.model.QualificationType"/>

@@ -2,6 +2,7 @@ package co.edu.udistrital.core.common.controller;
 
 import java.io.Serializable;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import co.edu.udistrital.core.login.controller.PanelStackBean;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
-import co.edu.udistrital.sed.model.SubjectGrade;
 import co.edu.udistrital.sed.model.TimeZone;
 
 public abstract class BackingBean implements Serializable {
@@ -145,13 +145,15 @@ public abstract class BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
-	public String loadSubjectListByGrade(Long idGrade) {
+	public List<Subject> loadSubjectListByGrade(Long idGrade) {
 		try {
-			for (SubjectGrade sg : getSubjectGradeList()) {
-				if (sg.getIdGrade().equals(idGrade))
-					return sg.getIdSubjectList();
+			List<Subject> subjectGradeList = new ArrayList<>();
+
+			for (Subject s : getSubjectList()) {
+				if (s.getIdGrade().equals(idGrade))
+					subjectGradeList.add(s);
 			}
-			return null;
+			return subjectGradeList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -187,14 +189,6 @@ public abstract class BackingBean implements Serializable {
 	public List<Grade> getGradeList() {
 		try {
 			return BeanList.getGradeList();
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
-	public List<SubjectGrade> getSubjectGradeList() {
-		try {
-			return BeanList.getSubjectGradeList();
 		} catch (Exception e) {
 			throw e;
 		}

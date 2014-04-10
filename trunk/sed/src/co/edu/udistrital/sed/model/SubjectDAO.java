@@ -6,13 +6,13 @@ import org.hibernate.Query;
 
 import co.edu.udistrital.core.connection.HibernateDAO;
 
-public class SubjectDAO extends HibernateDAO{
+public class SubjectDAO extends HibernateDAO {
 
 	public List<Subject> findAll() throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
-			hql.append(" FROM Subject s WHERE s.state > 0 ");
+			hql.append(" FROM Subject s WHERE s.state > 0 ORDER BY s.orderSheet ");
 			qo = getSession().createQuery(hql.toString());
 			return qo.list();
 		} catch (Exception e) {
@@ -22,9 +22,9 @@ public class SubjectDAO extends HibernateDAO{
 			hql = null;
 			qo = null;
 		}
-		
+
 	}
-	
-	
+
+
 
 }
