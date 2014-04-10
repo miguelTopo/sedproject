@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,15 +23,17 @@ import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.excel.ManageExcel;
 import co.edu.udistrital.sed.api.ICourt;
 import co.edu.udistrital.sed.api.IGrade;
+import co.edu.udistrital.sed.api.IQualificationType;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Qualification;
 import co.edu.udistrital.sed.model.Student;
+import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.sed.report.api.IReport;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 @URLMapping(id = "addReport", pattern = "/portal/reporte", viewId = "/pages/report/report.jspx")
 public class ReportBean extends BackingBean implements IReport {
 
@@ -51,7 +54,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 	// Java Object List
 	private List<String> basicInformation;
-	private List<Long> idSubjectGradeList;
+	private List<Subject> subjectListByGrade;
 
 	// POI
 	private Workbook wbDegree;
@@ -68,8 +71,12 @@ public class ReportBean extends BackingBean implements IReport {
 	private Student student;
 	private Qualification qualification;
 
+	// Controller
+	private ReportController controller;
+
 	public ReportBean() {
 		try {
+			this.controller = new ReportController();
 			setShowAdd(true);
 			setShowDownloadFile(false);
 		} catch (Exception e) {
@@ -104,7 +111,11 @@ public class ReportBean extends BackingBean implements IReport {
 
 						if (this.totalStudentList != null && this.properStudentList != null) {
 							if (this.totalStudentList.size() == this.properStudentList.size()) {
-								System.out.println("Vamos a guardar a estos chinos");
+								this.totalStudentList = null;
+								List<Course> courseStudentList = loadCourseListByGrade(this.idSelectedGrade);
+								List<Student> studentGradeList = this.controller.loadStudentListByGrade(courseStudentList);
+								replaceIdentificationId(studentGradeList);
+
 							} else {
 								addFatalMessage("Cargar archivo",
 									"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
@@ -128,15 +139,26 @@ public class ReportBean extends BackingBean implements IReport {
 
 	}
 
+	private void replaceIdentificationId(List<Student> studentGradeList) {
+		try {
+			for (Student s : this.properStudentList) {
+				for (Student std : studentGradeList) {
+					if (std.getIdentification().trim().equals(s.getIdentification())) {
+						s.setId(std.getId());
+						studentGradeList.remove(std);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	/** @author MTorres */
 	private void loadSubjectList(Long idGrade) {
 		try {
-			this.idSubjectGradeList = new ArrayList<>();
-			String[] idSubList = loadSubjectListByGrade(idGrade).trim().split(",");
-
-			for (String s : idSubList) {
-				idSubjectGradeList.add(Long.valueOf(s));
-			}
+			this.subjectListByGrade = loadSubjectListByGrade(idGrade);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -201,7 +223,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 
 				if (this.student != null && count > 0)
-					if (this.student.getInvalidColumn() != null && !this.student.getInvalidColumn().isEmpty())
+					if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
 						addStudent(indexSheet);
 					else
 						break;
@@ -215,21 +237,31 @@ public class ReportBean extends BackingBean implements IReport {
 
 				int i = 0;
 				this.student = new Student();
-				int countSave = 0;
 
+				int countSave = 0;
+				int indexSubject = 0;
 				this.qualification = new Qualification();
 				// Bucle de control de celdas/columnas
 				for (Iterator<Cell> iterator = ci; iterator.hasNext(); i++) {
 					Cell c = iterator.next();
 					if (i == 1 || i == 13 || i >= 27) {
 
-						if (i == 27 || i == 31 || i == 35 || i == 39 || i == 43 || i == 47 || i == 51 || i == 55 || i == 59 || i == 63 || i == 67
-							|| i == 71 || i == 47 || i == 75)
-							countSave = 0;
+						if (i == 53)
+							System.out.println("aqui vamos a revisar muy bien");
 
-						if (i >= 27 && ++countSave == 4 && this.student != null) {
-							addStudentQualification();
+						// if (i == 27 || i == 31 || i == 35 || i == 39 || i == 43 || i == 47 || i
+						// == 51 || i == 55 || i == 59 || i == 63 || i == 67
+						// || i == 71 || i == 47 || i == 75)
+
+
+						if (i > 27 && this.student != null) {
+							if (countSave++ == 4) {
+								indexSubject++;
+								countSave = 0;
+							}
+							addStudentQualification(indexSubject);
 						}
+						this.qualification = new Qualification();
 						String value = null;
 						Double doubleValue = null;
 
@@ -280,12 +312,16 @@ public class ReportBean extends BackingBean implements IReport {
 	}
 
 	/** @author MTorres */
-	private void addStudentQualification() {
+	private void addStudentQualification(int indexSubject) {
 		try {
 			if (this.qualification != null && this.student != null)
-//				if (this.qualification.getC1() != null || this.qualification.getC2() != null || this.qualification.getC3() != null)
-//					this.qualification.setIdSubject(this.idSubjectGradeList.get(this.student.getQualificationList().size()));
-			this.student.getQualificationList().add(this.qualification);
+				if (this.qualification.getValue() != null) {
+					this.qualification.setIdSubject(subjectListByGrade.get(indexSubject).getId());
+					this.student.getQualificationList().add(this.qualification);
+				}
+
+
+			this.qualification = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -294,10 +330,12 @@ public class ReportBean extends BackingBean implements IReport {
 	/** @author MTorres */
 	private void addStudent(int indexSheet) {
 		try {
-			this.student.setIdCourse(this.tmpCourseList.get(indexSheet).getId());
-			getTotalStudentList().add(this.student);
-			if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
-				getProperStudentList().add(this.student);
+			if(this.student.getIdentification()!=null && !this.student.getIdentification().trim().isEmpty()){
+				this.student.setIdCourse(this.tmpCourseList.get(indexSheet).getId());
+				getTotalStudentList().add(this.student);
+				if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
+					getProperStudentList().add(this.student);	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -340,9 +378,10 @@ public class ReportBean extends BackingBean implements IReport {
 					case 71:
 					case 75:
 						System.out.println("Notas correspondientes a corte 1");
-						if (validateNote(numericValue, ICourt.FIRST_COURT))
-//							this.qualification.setC1(numericValue);
-//						else
+						if (validateNote(numericValue, ICourt.FIRST_COURT)) {
+							this.qualification.setIdQualificationType(IQualificationType.C1);
+							this.qualification.setValue(numericValue);
+						} else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 28:
@@ -359,9 +398,10 @@ public class ReportBean extends BackingBean implements IReport {
 					case 72:
 					case 76:
 						System.out.println("Notas correspondientes a corte 2");
-						if (validateNote(numericValue, ICourt.SECOND_COURT))
-//							this.qualification.setC2(numericValue);
-//						else
+						if (validateNote(numericValue, ICourt.SECOND_COURT)) {
+							this.qualification.setIdQualificationType(IQualificationType.C2);
+							this.qualification.setValue(numericValue);
+						} else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 29:
@@ -378,9 +418,10 @@ public class ReportBean extends BackingBean implements IReport {
 					case 73:
 					case 77:
 						System.out.println("Notas correspondientes a corte 3");
-						if (validateNote(numericValue, ICourt.THIRD_COURT))
-//							this.qualification.setC3(numericValue);
-//						else
+						if (validateNote(numericValue, ICourt.THIRD_COURT)) {
+							this.qualification.setIdQualificationType(IQualificationType.C3);
+							this.qualification.setValue(numericValue);
+						} else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 					case 30:
@@ -397,8 +438,8 @@ public class ReportBean extends BackingBean implements IReport {
 					case 74:
 					case 78:
 						if (validateNote(numericValue, ICourt.THIRD_COURT))
-//							this.qualification.setCf(numericValue);
-//						else
+							// this.qualification.setCf(numericValue);
+							// else
 							this.student.getInvalidColumn().add(new Integer(column));
 					break;
 

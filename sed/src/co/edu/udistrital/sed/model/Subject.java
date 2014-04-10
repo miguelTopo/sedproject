@@ -23,7 +23,8 @@ public class Subject extends AParameter implements Serializable {
 
 	private Long idKnowledgeArea;
 	private Long idGrade;
-	private String description;
+	private Long orderSheet;
+	
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -93,15 +94,6 @@ public class Subject extends AParameter implements Serializable {
 		this.dateChange = dateChange;
 	}
 
-	@Column(name = "description", length = 500)
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	@Column(name = "idKnowledgeArea", nullable = false)
 	public Long getIdKnowledgeArea() {
 		return idKnowledgeArea;
@@ -120,6 +112,12 @@ public class Subject extends AParameter implements Serializable {
 		this.idGrade = idGrade;
 	}
 
+	@Column(name = "orderSheet", nullable = false)
+	public Long getOrderSheet() {
+		return orderSheet;
+	}
 
-
+	public void setOrderSheet(Long orderSheet) {
+		this.orderSheet = orderSheet;
+	}
 }

@@ -12,8 +12,7 @@ import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.GradeDAO;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.sed.model.SubjectDAO;
-import co.edu.udistrital.sed.model.SubjectGrade;
-import co.edu.udistrital.sed.model.SubjectGradeDAO;
+
 import co.edu.udistrital.sed.model.TimeZone;
 import co.edu.udistrital.sed.model.TimeZoneDAO;
 
@@ -77,24 +76,6 @@ public class ControllerList extends Controller {
 	/** @author MTorres */
 	public List<Grade> loadGradeList() throws Exception {
 		GradeDAO dao = new GradeDAO();
-		Transaction tx = null;
-		try {
-			tx = dao.getSession().beginTransaction();
-			return dao.findAll();
-		} catch (Exception e) {
-			dao.getSession().cancelQuery();
-			tx.rollback();
-			throw e;
-		} finally {
-			dao.getSession().close();
-			dao = null;
-			tx = null;
-		}
-	}
-
-	/** @author MTorres */
-	public List<SubjectGrade> loadSubjectGradeList() throws Exception {
-		SubjectGradeDAO dao = new SubjectGradeDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();

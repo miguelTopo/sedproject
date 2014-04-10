@@ -1,6 +1,7 @@
 package co.edu.udistrital.core.common.list;
 
 import java.io.Serializable;
+
 import java.util.List;
 
 import javax.faces.bean.ApplicationScoped;
@@ -10,7 +11,6 @@ import co.edu.udistrital.core.common.list.beanlist.controller.ControllerList;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
-import co.edu.udistrital.sed.model.SubjectGrade;
 import co.edu.udistrital.sed.model.TimeZone;
 
 @ManagedBean(eager = true)
@@ -28,7 +28,6 @@ public class BeanList implements Serializable {
 	private static List<Course> courseList;
 	private static List<TimeZone> timeZoneList;
 	private static List<Grade> gradeList;
-	private static List<SubjectGrade> subjectGradeList; 
 
 	static {
 		initializeList();
@@ -42,17 +41,7 @@ public class BeanList implements Serializable {
 			loadGradeList();
 			loadCourseList();
 			loadTimeZoneList();
-			loadSubjectGradeList();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void loadSubjectGradeList(){
-		try {
-			if(subjectGradeList ==null)
-				subjectGradeList = controller.loadSubjectGradeList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -112,10 +101,6 @@ public class BeanList implements Serializable {
 
 	public static List<Grade> getGradeList() {
 		return gradeList;
-	}
-
-	public static List<SubjectGrade> getSubjectGradeList() {
-		return subjectGradeList;
 	}
 
 }

@@ -24,6 +24,7 @@ public class Qualification extends AParameter implements Serializable {
 	private Long idStudentCourse;
 	private Long idQualificationType;
 	private Long idSubject;
+	private Double value;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -116,4 +117,14 @@ public class Qualification extends AParameter implements Serializable {
 	public void setIdSubject(Long idSubject) {
 		this.idSubject = idSubject;
 	}
+
+	@Column(name = "value")
+	public Double getValue() {
+		return value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
 }
