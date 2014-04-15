@@ -2,7 +2,7 @@ package co.edu.udistrital.core.common.model;
 
 import java.io.Serializable;
 
-public abstract class AParameter extends Model implements Serializable{
+public abstract class AParameter extends ASEDModel implements Serializable{
 
 	protected String name;
 

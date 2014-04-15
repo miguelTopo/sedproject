@@ -11,10 +11,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import co.edu.udistrital.core.common.model.AParameter;
+import co.edu.udistrital.core.common.model.ASEDModel;
 
 @Entity
 @Table(name = "qualification")
-public class Qualification extends AParameter implements Serializable {
+public class Qualification extends ASEDModel implements Serializable {
 
 	/**
 	 * 
@@ -36,15 +37,6 @@ public class Qualification extends AParameter implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	@Column(name = "name", nullable = false, length = 200)
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Column(name = "state", nullable = false)

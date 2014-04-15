@@ -7,6 +7,8 @@ import org.hibernate.Transaction;
 
 import co.edu.udistrital.core.common.controller.Controller;
 import co.edu.udistrital.sed.model.Course;
+import co.edu.udistrital.sed.model.Qualification;
+import co.edu.udistrital.sed.model.QualificationDAO;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.student.model.StudentDAO;
 
@@ -39,4 +41,35 @@ public class ReportController extends Controller {
 		}
 	}
 
+	/** @author MTorres */
+	public boolean saveCalificationList(List<Student> properStudentList) throws Exception {
+		QualificationDAO dao = new QualificationDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+
+			int count = 0;
+
+			for (Student s : properStudentList) {
+				for (Qualification q : s.getQualificationList()) {
+					q.initialize(true);
+
+					dao.getSession().save(q);
+
+					if (count++ % 20 == 0)
+						dao.getSession().flush();
+				}
+			}
+			tx.commit();
+			return true;
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
 }
