@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.report.controller;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import java.util.Iterator;
@@ -115,7 +116,11 @@ public class ReportBean extends BackingBean implements IReport {
 								List<Course> courseStudentList = loadCourseListByGrade(this.idSelectedGrade);
 								List<Student> studentGradeList = this.controller.loadStudentListByGrade(courseStudentList);
 								replaceIdentificationId(studentGradeList);
-
+								if (this.controller.saveCalificationList(this.properStudentList)) {
+									addInfoMessage("Cargar archivo", "El archivo fué leido y almacenado en la base de datos correctamente.");
+								} else {
+									System.out.println("Aqui se produjo un error");
+								}
 							} else {
 								addFatalMessage("Cargar archivo",
 									"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
@@ -143,9 +148,16 @@ public class ReportBean extends BackingBean implements IReport {
 		try {
 			for (Student s : this.properStudentList) {
 				for (Student std : studentGradeList) {
-					if (std.getIdentification().trim().equals(s.getIdentification())) {
+					System.out.println(std.getIdentification());
+					System.out.println(s.getIdentification());
+					if (std.getIdentification().trim().equals(s.getIdentification().trim())) {
 						s.setId(std.getId());
-						studentGradeList.remove(std);
+						for (Qualification q : s.getQualificationList()) {
+							q.setIdStudentCourse(std.getIdStudentCourse());
+						}
+						break;
+
+						// studentGradeList.remove(std);
 					}
 				}
 			}
@@ -330,11 +342,11 @@ public class ReportBean extends BackingBean implements IReport {
 	/** @author MTorres */
 	private void addStudent(int indexSheet) {
 		try {
-			if(this.student.getIdentification()!=null && !this.student.getIdentification().trim().isEmpty()){
+			if (this.student.getIdentification() != null && !this.student.getIdentification().trim().isEmpty()) {
 				this.student.setIdCourse(this.tmpCourseList.get(indexSheet).getId());
 				getTotalStudentList().add(this.student);
 				if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
-					getProperStudentList().add(this.student);	
+					getProperStudentList().add(this.student);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -356,8 +368,10 @@ public class ReportBean extends BackingBean implements IReport {
 				switch (column) {
 					case 1:
 						System.out.println("columna 1");
-						this.studentIdentification = String.valueOf(numericValue.intValue());
-						this.student.setIdentification(this.studentIdentification);
+						this.studentIdentification = String.valueOf(numericValue.doubleValue()).replace(".", "").replace("E", "");
+						System.out.println(this.studentIdentification);
+
+						this.student.setIdentification(this.studentIdentification.substring(0, (this.studentIdentification.length() - 2)));
 					break;
 					case 13:
 						this.studentName = stringValue;

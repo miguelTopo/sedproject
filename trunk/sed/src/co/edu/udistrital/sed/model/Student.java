@@ -31,6 +31,7 @@ public class Student extends AParameter implements Serializable {
 
 	private transient String courseName;
 	private transient Long idGrade;
+	private transient Long idStudentCourse;
 
 	private transient List<Integer> invalidColumn;
 	private transient List<Qualification> qualificationList;
@@ -186,5 +187,15 @@ public class Student extends AParameter implements Serializable {
 	public void setQualificationList(List<Qualification> qualificationList) {
 		this.qualificationList = qualificationList;
 	}
+
+	@Transient
+	public Long getIdStudentCourse() {
+		return idStudentCourse;
+	}
+
+	public void setIdStudentCourse(Long idStudentCourse) {
+		this.idStudentCourse = idStudentCourse;
+	}
+
 
 }

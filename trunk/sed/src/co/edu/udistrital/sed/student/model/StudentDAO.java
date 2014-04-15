@@ -1,6 +1,7 @@
 package co.edu.udistrital.sed.student.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -173,15 +174,20 @@ public class StudentDAO extends HibernateDAO {
 		Query qo = null;
 		try {
 			hql.append(" SELECT s.id AS id, ");
-			hql.append(" s.identification AS identification ");
+			hql.append(" s.identification AS identification, ");
+			hql.append(" sc.id AS idStudentCourse ");
 			hql.append(" FROM Student s, StudentCourse sc ");
 			hql.append(" WHERE s.id = sc.idStudent ");
 			hql.append(" AND sc.idCourse IN:idCourseList ");
+			hql.append(" AND sc.idPeriod = :year ");
 			hql.append(" AND s.state = :state ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
+			Calendar c = Calendar.getInstance();
+			qo.setParameter("year", Long.valueOf(c.get(Calendar.YEAR)));
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setParameterList("idCourseList", idCourseList);
+			
 			
 			return qo.list();
 		} catch (Exception e) {
