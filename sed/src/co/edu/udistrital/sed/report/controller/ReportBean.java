@@ -22,6 +22,7 @@ import org.primefaces.model.UploadedFile;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.excel.ManageExcel;
+import co.edu.udistrital.core.common.util.NumberFormatter;
 import co.edu.udistrital.sed.api.ICourt;
 import co.edu.udistrital.sed.api.IGrade;
 import co.edu.udistrital.sed.api.IQualificationType;
@@ -343,7 +344,6 @@ public class ReportBean extends BackingBean implements IReport {
 	private void addStudent(int indexSheet) {
 		try {
 			if (this.student.getIdentification() != null && !this.student.getIdentification().trim().isEmpty()) {
-				this.student.setIdCourse(this.tmpCourseList.get(indexSheet).getId());
 				getTotalStudentList().add(this.student);
 				if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
 					getProperStudentList().add(this.student);
@@ -368,14 +368,14 @@ public class ReportBean extends BackingBean implements IReport {
 				switch (column) {
 					case 1:
 						System.out.println("columna 1");
-						this.studentIdentification = String.valueOf(numericValue.doubleValue()).replace(".", "").replace("E", "");
+						this.studentIdentification = NumberFormatter.parseDoubleToString(numericValue, NumberFormatter.FORMAT_0);
 						System.out.println(this.studentIdentification);
-
-						this.student.setIdentification(this.studentIdentification.substring(0, (this.studentIdentification.length() - 2)));
+						this.student.setIdentification(this.studentIdentification);
 					break;
 					case 13:
 						this.studentName = stringValue;
 						this.student.setName(this.studentName);
+
 						System.out.println("columna 2 puesto");
 					break;
 					case 27:
@@ -504,6 +504,11 @@ public class ReportBean extends BackingBean implements IReport {
 	private void cleanVarList() {
 		try {
 			this.properStudentList = this.totalStudentList = null;
+			this.idGrade = null;
+			this.idSelectedGrade = null;
+			this.student = null;
+			this.studentIdentification = null;
+			this.studentName = null;
 		} catch (Exception e) {
 			throw e;
 		}
