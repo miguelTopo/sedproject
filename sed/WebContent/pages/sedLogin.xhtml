@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<h:head>
+		<link rel="stylesheet" type="text/css" href="../css/sedStyle.css" />
+		<f:loadBundle
+			basename="co.edu.udistrital.core.common.util.resource.webMessages"
+			var="bundle" />
+	</h:head>
+	<h:body>
+		<h:form>
+			<div id="sedHeader" align="center">
+				<table>
+					<tr>
+						<td><p:graphicImage value="../css/images/bogotaShield.png"
+								height="85" width="70" /></td>
+						<td><p:graphicImage value="../css/images/logoSed.png" /></td>
+					</tr>
+				</table>
+			</div>
+			<div align="center" style="padding-top: 70px">
+				<div style="width: 300px;">
+					<p:panel header="#{bundle['page.core.labelWelcome']}">
+						<table cellpadding="3" cellspacing="3" width="100%">
+							<tr>
+								<td width="5%" />
+								<td width="35%" />
+								<td width="55%" />
+								<td width="5%" />
+							</tr>
+							<tr>
+								<td />
+								<td>#{bundle['page.login.labelUser']}:</td>
+								<td><p:inputText value="#{loginBean.userName}"></p:inputText></td>
+							</tr>
+							<tr>
+								<td />
+								<td>#{bundle['page.login.labelPassword']}:</td>
+								<td><p:password value="#{loginBean.userPassword}"></p:password>
+								</td>
+							</tr>
+						</table>
+
+						<div align="center">
+							<p:commandButton value="#{bundle['page.login.labelSignIn']}"
+								action="#{loginBean.validateSedUser}" />
+						</div>
+
+					</p:panel>
+				</div>
+			</div>
+		</h:form>
+	</h:body>
+</f:view>
+</html>

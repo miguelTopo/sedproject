@@ -3,6 +3,7 @@ package co.edu.udistrital.core.common.controller;
 import java.io.Serializable;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,6 @@ import co.edu.udistrital.core.login.controller.PanelStackBean;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
-import co.edu.udistrital.sed.model.TimeZone;
 
 public abstract class BackingBean implements Serializable {
 
@@ -35,7 +35,7 @@ public abstract class BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
-	public void addInfoMessage(String summary, String detail) {
+	public static void addInfoMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail));
 		} catch (Exception e) {
@@ -44,7 +44,7 @@ public abstract class BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
-	public void addWarnMessage(String summary, String detail) {
+	public static void addWarnMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
 		} catch (Exception e) {
@@ -53,7 +53,7 @@ public abstract class BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
-	public void addErrorMessage(String summary, String detail) {
+	public static void addErrorMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail));
 		} catch (Exception e) {
@@ -62,7 +62,7 @@ public abstract class BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
-	public void addFatalMessage(String summary, String detail) {
+	public static void addFatalMessage(String summary, String detail) {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, summary, detail));
 		} catch (Exception e) {
@@ -173,14 +173,6 @@ public abstract class BackingBean implements Serializable {
 	public List<Course> getCourseList() {
 		try {
 			return BeanList.getCourseList();
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
-	public List<TimeZone> getTimeZoneList() {
-		try {
-			return BeanList.getTimeZoneList();
 		} catch (Exception e) {
 			throw e;
 		}

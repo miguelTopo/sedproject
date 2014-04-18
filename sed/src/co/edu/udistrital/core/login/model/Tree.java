@@ -1,27 +1,31 @@
-package co.edu.udistrital.sed.model;
-
-import java.io.Serializable;
+package co.edu.udistrital.core.login.model;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import javax.persistence.Entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import co.edu.udistrital.core.common.model.AParameter;
 
+import java.io.Serializable;
+
 @Entity
-@Table(name="timezone")
-public class TimeZone extends AParameter implements Serializable{
-	
+@Table(name = "tree")
+public class Tree extends AParameter implements Serializable {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6539162512511948609L;
+	private static final long serialVersionUID = -8144263378384284865L;
 	
-	private String description;
+	private boolean isRoot;
+	private Long idTreeRoot;
+	private String ulrPattern;
+
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -91,13 +95,33 @@ public class TimeZone extends AParameter implements Serializable{
 		this.dateChange = dateChange;
 	}
 
-	@Column(name = "description", length = 500)
-	public String getDescription() {
-		return description;
+	@Column(name = "isRoot", nullable = false)
+	public boolean isRoot() {
+		return isRoot;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setRoot(boolean isRoot) {
+		this.isRoot = isRoot;
 	}
+
+	@Column(name = "idTreeRoot")
+	public Long getIdTreeRoot() {
+		return idTreeRoot;
+	}
+
+	public void setIdTreeRoot(Long idTreeRoot) {
+		this.idTreeRoot = idTreeRoot;
+	}
+
+	@Column(name = "ulrPattern", length = 100, nullable = false)
+	public String getUlrPattern() {
+		return ulrPattern;
+	}
+
+	public void setUlrPattern(String ulrPattern) {
+		this.ulrPattern = ulrPattern;
+	}
+
+
 
 }
