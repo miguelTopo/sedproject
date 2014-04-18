@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.report.controller;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 @ManagedBean
 @ViewScoped
 @URLMapping(id = "addReport", pattern = "/portal/reporte", viewId = "/pages/report/report.jspx")
-public class ReportBean extends BackingBean implements IReport {
+public class ReportBean extends BackingBean implements IReport, Serializable {
 
 	/**
 	 * 
