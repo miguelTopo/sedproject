@@ -1,22 +1,29 @@
 package co.edu.udistrital.core.common.controller;
 
 import java.io.Serializable;
-
-
+import java.net.URI;
+import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.context.RequestContext;
 
 import co.edu.udistrital.core.common.list.BeanList;
 import co.edu.udistrital.core.login.controller.PanelStackBean;
+import co.edu.udistrital.core.login.model.Tree;
+import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
+import co.edu.udistrital.session.common.SedSession;
 
 public abstract class BackingBean implements Serializable {
 
@@ -25,6 +32,7 @@ public abstract class BackingBean implements Serializable {
 	 */
 	private static final long serialVersionUID = -8403730495105725673L;
 	private PanelStackBean panelStackBean;
+	private SedSession sedSession;
 
 	public BackingBean() {
 		try {
@@ -109,6 +117,33 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	public static void redirect(String facesPattern) {
+		try {
+			String url = null;
+			ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+			String scheme = getRequest().getScheme();
+			String serverName = getRequest().getServerName();
+			String contextPath = getRequest().getContextPath();
+			int serverPort = getRequest().getServerPort();
+
+			url = scheme + "://" + serverName + ":" + serverPort + contextPath;
+
+			context.redirect(url + facesPattern);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static HttpServletRequest getRequest() {
+		try {
+			return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 	/** @author MTorres */
 	public PanelStackBean getPanelStackBean() {
 		try {
@@ -160,6 +195,36 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	/** @author MTorres */
+	public List<Tree> loadTreeListByRole(Long idRole) {
+		try {
+			List<Tree> treeRoleList = new ArrayList<Tree>();
+			for (TreeSedRole tr : getTreeSedRoleList()) {
+
+				if (tr.getIdSedRole().equals(idRole)) {
+
+
+					for (Tree t : BeanList.getTreeList()) {
+						if (tr.getIdTree().equals(t.getId()) && t.isRoot()) {
+
+							for (Tree tl : BeanList.getTreeList()) {
+								if (!tl.isRoot() && tl.getIdTreeRoot().equals(t.getId()))
+									t.getLeafTreeList().add(tl);
+							}
+							treeRoleList.add(t);
+						}
+
+					}
+				}
+			}
+
+			return treeRoleList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 	// ////////----------getters and setters----------//////////
 
 	public List<Subject> getSubjectList() {
@@ -184,6 +249,31 @@ public abstract class BackingBean implements Serializable {
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+
+
+	public List<TreeSedRole> getTreeSedRoleList() {
+		try {
+			return BeanList.getTreeSedRoleList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<Tree> getTreeList() {
+		try {
+			return BeanList.getTreeList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public SedSession getSedSession() {
+		return sedSession;
+	}
+
+	public void setSedSession(SedSession sedSession) {
+		this.sedSession = sedSession;
 	}
 
 }

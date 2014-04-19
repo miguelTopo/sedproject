@@ -13,7 +13,16 @@
 			var="bundle" />
 	</h:head>
 	<h:body>
-		<h:form>
+		<h:form id="loginForm">
+			<p:growl id="growl" showDetail="true" life="6000" autoUpdate="true"
+				globalOnly="true" />
+			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog"
+				closable="false" header="Procesando..." resizable="false"
+				draggable="false" modal="true">
+				<div align="center">
+					<p:graphicImage value="../css/images/loadingAjax.gif" />
+				</div>
+			</p:dialog>
 			<div id="sedHeader" align="center">
 				<table>
 					<tr>
@@ -25,7 +34,9 @@
 			</div>
 			<div align="center" style="padding-top: 70px">
 				<div style="width: 300px;">
-					<p:panel header="#{bundle['page.core.labelWelcome']}">
+					<p:panel id="loginPanel"
+						header="#{bundle['page.core.labelWelcome']}">
+						<p:focus context=":loginForm:loginPanel" />
 						<table cellpadding="3" cellspacing="3" width="100%">
 							<tr>
 								<td width="5%" />
@@ -36,19 +47,20 @@
 							<tr>
 								<td />
 								<td>#{bundle['page.login.labelUser']}:</td>
-								<td><p:inputText value="#{loginBean.userName}"></p:inputText></td>
+								<td><p:inputText value="#{loginBean.userName}"
+										placeholder="#{bundle['page.login.labelUserUser']}" /></td>
 							</tr>
 							<tr>
 								<td />
 								<td>#{bundle['page.login.labelPassword']}:</td>
-								<td><p:password value="#{loginBean.userPassword}"></p:password>
-								</td>
+								<td><p:password value="#{loginBean.userPassword}"
+										placeholder="#{bundle['page.login.labelPassword']}" /></td>
 							</tr>
 						</table>
 
 						<div align="center">
 							<p:commandButton value="#{bundle['page.login.labelSignIn']}"
-								action="#{loginBean.validateSedUser}" />
+								action="#{loginBean.validateSedUser}" update=":loginForm:growl" />
 						</div>
 
 					</p:panel>

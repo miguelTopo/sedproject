@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<f:view>
+	<h:form>
+		<ui:repeat var="rootTree" value="#{loginBean.treeList}">
+			<p:fieldset legend="#{rootTree.name}" toggleable="true"
+				toggleSpeed="500">
+
+				<div align="center">
+
+					<p:dataGrid var="leafTree"
+						columns="#{fn:length(rootTree.leafTreeList)}"
+						value="#{rootTree.leafTreeList}">
+
+									<div align="center" style="width: 150px; height: 150px;">
+										<a href="/sed#{leafTree.urlPattern}"> <p:panel
+												header="#{leafTree.name}">
+												<p:graphicImage value="../css/icon/#{leafTree.icon}"
+													width="70" title="#{leafTree.name}" height="70" />
+												<br />
+											</p:panel>
+										</a>
+									</div>
+
+
+					</p:dataGrid>
+				</div>
+			</p:fieldset>
+			<br />
+			<br />
+		</ui:repeat>
+	</h:form>
+</f:view>
+</html>
