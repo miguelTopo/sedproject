@@ -7,6 +7,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 
 import co.edu.udistrital.core.common.controller.Controller;
+import co.edu.udistrital.core.login.model.Tree;
+import co.edu.udistrital.core.login.model.TreeDAO;
+import co.edu.udistrital.core.login.model.TreeSedRole;
+import co.edu.udistrital.core.login.model.TreeSedRoleDAO;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.CourseDAO;
 import co.edu.udistrital.sed.model.Grade;
@@ -57,6 +61,40 @@ public class ControllerList extends Controller {
 	/** @author MTorres */
 	public List<Grade> loadGradeList() throws Exception {
 		GradeDAO dao = new GradeDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	public List<Tree> loadTreeList()throws Exception {
+		TreeDAO dao = new TreeDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	public List<TreeSedRole> loadTreeSedRoleList() throws Exception{
+		TreeSedRoleDAO dao = new TreeSedRoleDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();

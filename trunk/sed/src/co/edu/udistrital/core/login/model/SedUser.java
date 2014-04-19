@@ -1,5 +1,6 @@
 package co.edu.udistrital.core.login.model;
 
+import java.beans.Transient;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -24,6 +25,11 @@ public class SedUser extends AParameter implements Serializable {
 	private Long idIdentificationType;
 	private String lastName;
 	private String identification;
+	private String email;
+
+	// Transient
+	private transient Long idSedRole;
+	private transient String nameSedRole;
 
 
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -120,4 +126,36 @@ public class SedUser extends AParameter implements Serializable {
 	public void setIdentification(String identification) {
 		this.identification = identification;
 	}
+
+	@Column(name = "email", nullable = false)
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	// ////////----------Transient----------//////////
+
+	@Transient
+	public Long getIdSedRole() {
+		return idSedRole;
+	}
+
+	public void setIdSedRole(Long idSedRole) {
+		this.idSedRole = idSedRole;
+	}
+
+	@Transient
+	public String getNameSedRole() {
+		return nameSedRole;
+	}
+
+	public void setNameSedRole(String nameSedRole) {
+		this.nameSedRole = nameSedRole;
+	}
+
+
+
 }

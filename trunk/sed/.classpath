@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javax.faces-2.0.10.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/bluesky-1.0.10.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/postgresql-9.3-1101.jdbc3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javax.servlet.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

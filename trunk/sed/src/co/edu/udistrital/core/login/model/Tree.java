@@ -1,9 +1,11 @@
 package co.edu.udistrital.core.login.model;
 
 import javax.persistence.Column;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import javax.persistence.Entity;
 
@@ -12,6 +14,8 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tree")
@@ -21,10 +25,17 @@ public class Tree extends AParameter implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8144263378384284865L;
-	
+	// Primitives
 	private boolean isRoot;
+
+	// Simple Java Data Object
 	private Long idTreeRoot;
-	private String ulrPattern;
+	private String urlPattern;
+	private String icon;
+
+	// User Transient List
+	private transient List<Tree> leafTreeList;
+
 
 
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -113,13 +124,35 @@ public class Tree extends AParameter implements Serializable {
 		this.idTreeRoot = idTreeRoot;
 	}
 
-	@Column(name = "ulrPattern", length = 100, nullable = false)
-	public String getUlrPattern() {
-		return ulrPattern;
+	@Column(name = "icon")
+	public String getIcon() {
+		return icon;
 	}
 
-	public void setUlrPattern(String ulrPattern) {
-		this.ulrPattern = ulrPattern;
+	@Column(name = "urlPattern", length = 100)
+	public String getUrlPattern() {
+		return urlPattern;
+	}
+
+	public void setUrlPattern(String urlPattern) {
+		this.urlPattern = urlPattern;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	// ////////----------Transient----------//////////
+
+	@Transient
+	public List<Tree> getLeafTreeList() {
+		if (leafTreeList == null)
+			leafTreeList = new ArrayList<Tree>();
+		return leafTreeList;
+	}
+
+	public void setLeafTreeList(List<Tree> leafTreeList) {
+		this.leafTreeList = leafTreeList;
 	}
 
 

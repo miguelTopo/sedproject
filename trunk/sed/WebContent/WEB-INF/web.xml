@@ -4,7 +4,6 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
 	<display-name>sed</display-name>
-
 	<context-param>
 		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
 		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
@@ -37,7 +36,7 @@
 	</context-param>
 	
 	<welcome-file-list>
-		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>sedIndex.jsp</welcome-file>
 	</welcome-file-list>
 	
 	<filter>
