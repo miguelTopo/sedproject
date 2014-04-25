@@ -23,6 +23,16 @@ public class TestBean extends BackingBean {
 			e.printStackTrace();
 		}
 	}
+	
+	/** @author MTorres */
+	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+		try {
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 	public void goDetail() {
 		try {

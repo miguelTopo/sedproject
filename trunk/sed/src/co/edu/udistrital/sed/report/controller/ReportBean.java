@@ -86,6 +86,16 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	/** @author MTorres */
+	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+		try {
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 	/** @author MTorres */
 	public void handleFileUpload(FileUploadEvent event) {

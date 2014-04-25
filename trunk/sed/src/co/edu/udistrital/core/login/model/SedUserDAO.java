@@ -1,5 +1,7 @@
 package co.edu.udistrital.core.login.model;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 
@@ -62,6 +64,72 @@ public class SedUserDAO extends HibernateDAO {
 			hql = null;
 			qo = null;
 		}
+	}
+
+	/** @author MTorres */
+	public List<SedUser> loadSedUserList() throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" ");
+			hql.append(" SELECT su.id AS id, ");
+			hql.append(" su.idIdentificationType AS idIdentificationType, ");
+			hql.append(" su.name AS name, ");
+			hql.append(" su.lastName AS lastName, ");
+			hql.append(" su.identification AS identification, ");
+			hql.append(" su.email AS email, ");
+			hql.append(" it.name AS nameIdentificationType ");
+			hql.append(" FROM SedUser su, ");
+			hql.append(" IdentificationType it ");
+			hql.append(" WHERE su.idIdentificationType = it.id ");
+			hql.append(" AND su.state = :state ");
+			hql.append(" AND it.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
+
+			qo.setParameter("state", IState.ACTIVE);
+
+			return qo.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	public boolean validateExistField(String className, String field, String fieldCompare) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT COUNT(c.id) ");
+			hql.append(" FROM ");
+			hql.append(className);
+			hql.append(" c ");
+			hql.append(" WHERE c.");
+			hql.append(field);
+			hql.append(" = :fieldCompare ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("fieldCompare", fieldCompare);
+			qo.setMaxResults(1);
+			Object o = qo.uniqueResult();
+
+			if (o != null) {
+				return Integer.parseInt(o.toString()) > 0;
+			} else
+				return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+
 	}
 
 

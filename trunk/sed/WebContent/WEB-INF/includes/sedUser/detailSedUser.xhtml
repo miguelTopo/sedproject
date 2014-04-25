@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<h:form id="detailUserForm">
+		<p:panel id="detailPanel" header="Detallar Usuario">
+			<table width="100%" cellpadding="3" cellspacing="3">
+				<tr>
+					<td width="7%" />
+					<td width="20%" />
+					<td width="20%" />
+					<td width="6%" />
+					<td width="20%" />
+					<td width="20%" />
+					<td width="7%" />
+				</tr>
+				<tr>
+					<td />
+					<td><strong>#{bundle['page.student.labelStudentIdentification']}:</strong>
+					</td>
+					<td>#{sedUserBean.selectedSedUser.identification}</td>
+					<td />
+					<td><strong>#{bundle['page.student.labelIdentificationType']}:</strong>
+					</td>
+					<td>#{sedUserBean.selectedSedUser.nameIdentificationType}</td>
+				</tr>
+				<tr>
+					<td />
+					<td><strong>#{bundle['page.student.labelStudentLastName']}:</strong>
+					</td>
+					<td>#{sedUserBean.selectedSedUser.lastName}</td>
+					<td />
+					<td><strong>#{bundle['page.student.labelStudentName']}:</strong>
+					</td>
+					<td>#{sedUserBean.selectedSedUser.name}</td>
+				</tr>
+				<tr>
+					<td />
+					<td><strong>#{bundle['page.student.labelStudentEmail']}:</strong>
+					</td>
+					<td>#{sedUserBean.selectedSedUser.email}</td>
+				</tr>
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="#{bundle['page.core.labelGoBack']}"
+				action="#{sedUserBean.goBack}" />
+		</div>
+	</h:form>
+</f:view>
+</html>

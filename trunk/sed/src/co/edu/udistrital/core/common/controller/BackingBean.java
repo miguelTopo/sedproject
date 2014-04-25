@@ -18,10 +18,12 @@ import org.primefaces.context.RequestContext;
 
 import co.edu.udistrital.core.common.list.BeanList;
 import co.edu.udistrital.core.login.controller.PanelStackBean;
+import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
+import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.session.common.SedSession;
 
@@ -41,6 +43,8 @@ public abstract class BackingBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
+
+	public abstract boolean getValidateSedUserRole(Long idSedRole) throws Exception;
 
 	/** @author MTorres */
 	public static void addInfoMessage(String summary, String detail) {
@@ -268,6 +272,22 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	public List<IdentificationType> getIdentificationTypeList() {
+		try {
+			return BeanList.getIdentificationTypeList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<SedRole> getSedRoleList() {
+		try {
+			return BeanList.getSedRoleList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	public SedSession getSedSession() {
 		return sedSession;
 	}
@@ -275,5 +295,6 @@ public abstract class BackingBean implements Serializable {
 	public void setSedSession(SedSession sedSession) {
 		this.sedSession = sedSession;
 	}
+
 
 }
