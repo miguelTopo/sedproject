@@ -1,6 +1,6 @@
 package co.edu.udistrital.core.login.model;
 
-import java.beans.Transient;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -30,6 +31,8 @@ public class SedUser extends AParameter implements Serializable {
 	// Transient
 	private transient Long idSedRole;
 	private transient String nameSedRole;
+	private transient String nameIdentificationType;
+	private transient String userName;
 
 
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -156,6 +159,22 @@ public class SedUser extends AParameter implements Serializable {
 		this.nameSedRole = nameSedRole;
 	}
 
+	@Transient
+	public String getNameIdentificationType() {
+		return nameIdentificationType;
+	}
 
+	public void setNameIdentificationType(String nameIdentificationType) {
+		this.nameIdentificationType = nameIdentificationType;
+	}
 
+	@Transient
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
 }

@@ -57,6 +57,16 @@ public class StudentBean extends BackingBean {
 		}
 
 	}
+	
+	/** @author MTorres */
+	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+		try {
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 	public boolean validateLoadList() {
 		try {

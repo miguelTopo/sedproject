@@ -49,6 +49,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	}
 
 
+	/** @author MTorres */
 	public void validateSedUser() {
 		try {
 			if (!validateLoginData())
@@ -62,13 +63,13 @@ public class LoginBean extends BackingBean implements Serializable {
 					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
 					return;
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/** @author MTorres */
 	private boolean validateLoginData() {
 		try {
 			if (this.userName == null || this.userName.trim().isEmpty()) {
@@ -79,6 +80,16 @@ public class LoginBean extends BackingBean implements Serializable {
 				return false;
 			} else
 				return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/** @author MTorres */
+	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+		try {
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -110,6 +121,5 @@ public class LoginBean extends BackingBean implements Serializable {
 	public void setTreeList(List<Tree> treeList) {
 		this.treeList = treeList;
 	}
-
 
 }

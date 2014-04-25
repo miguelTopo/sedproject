@@ -61,3 +61,6 @@ a {
 .ui-inputfield {
 	color:#5A5D5E !important;
 }
+.ui-field-invalid{
+	color:#F08F39;
+}
