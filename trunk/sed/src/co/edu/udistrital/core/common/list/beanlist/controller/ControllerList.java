@@ -6,6 +6,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 
 import co.edu.udistrital.core.common.controller.Controller;
+import co.edu.udistrital.core.common.model.EmailTemplate;
+import co.edu.udistrital.core.common.model.EmailTemplateDAO;
 import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.SedRoleDAO;
 import co.edu.udistrital.core.login.model.Tree;
@@ -136,6 +138,23 @@ public class ControllerList extends Controller {
 	/** @author MTorres */
 	public List<SedRole> loadSedRoleList() throws Exception {
 		SedRoleDAO dao = new SedRoleDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	public List<EmailTemplate> loadEmailTemplateList() throws Exception{
+		EmailTemplateDAO dao = new EmailTemplateDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();

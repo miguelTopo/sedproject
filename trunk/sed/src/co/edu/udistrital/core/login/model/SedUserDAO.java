@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
+import org.postgresql.util.MD5Digest;
 
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
@@ -117,10 +118,7 @@ public class SedUserDAO extends HibernateDAO {
 			qo.setMaxResults(1);
 			Object o = qo.uniqueResult();
 
-			if (o != null) {
-				return Integer.parseInt(o.toString()) > 0;
-			} else
-				return true;
+			return (o != null) ? Integer.parseInt(o.toString()) > 0 : true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,5 +130,58 @@ public class SedUserDAO extends HibernateDAO {
 
 	}
 
+	/** @author MTorres */
+	public SedUser loadSedUser(String email) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT su.id AS id, ");
+			hql.append(" su.name AS name, ");
+			hql.append(" su.lastName AS lastName, ");
+			hql.append(" sul.userName AS userName ");
+			hql.append(" FROM SedUser su, ");
+			hql.append(" SedUserLogin sul ");
+			hql.append(" WHERE sul.idSedUser = su.id ");
+			hql.append(" AND su.email = :sedUserEmail ");
+			hql.append(" AND su.state = :state ");
 
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
+			qo.setParameter("sedUserEmail", email);
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setMaxResults(1);
+
+			return (SedUser) qo.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+
+	}
+
+	public boolean updateSedUserPassword(Long idSedUser, String password) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" UPDATE SedUserLogin sul ");
+			hql.append(" SET sul.md5Password = :md5Password ");
+			hql.append(" WHERE sul.idSedUser = :idSedUser ");
+			hql.append(" AND sul.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("md5Password", ManageMD5.parseMD5(password));
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("state", IState.ACTIVE);
+
+			return qo.executeUpdate() == 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
 }

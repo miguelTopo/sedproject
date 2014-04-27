@@ -7,7 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
-import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.login.model.Tree;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;

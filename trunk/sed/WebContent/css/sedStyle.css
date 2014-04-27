@@ -6,7 +6,7 @@ body {
 }
 p{
 	font-family: "Arial",Helvetica,sans-serif;
-	color: #848788;
+	color: black;
 }
 
 body,td,th {
@@ -63,4 +63,12 @@ a {
 }
 .ui-field-invalid{
 	color:#F08F39;
+}
+.ui-priority-primary {
+    color: #FFF !important;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25) !important;
+    background-color: #006DCC !important;
+    background-image: -moz-linear-gradient(center top , #08C, #04C) !important;
+    background-repeat: repeat-x !important;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25) !important;
 }

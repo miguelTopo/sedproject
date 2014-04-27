@@ -200,6 +200,24 @@ public abstract class BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
+	public static String getProperty(String key) {
+		try {
+			return BeanList.getProperties().getProperty(key);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres */
+	public static String getMessage(String key) {
+		try {
+			return BeanList.getProperties().getWebMessage(key);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres */
 	public List<Tree> loadTreeListByRole(Long idRole) {
 		try {
 			List<Tree> treeRoleList = new ArrayList<Tree>();
