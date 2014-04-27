@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
-	<h:form>
+	<h:form id="sedUserForm">
+		  <h:inputHidden id="disableEnter"/><p:defaultCommand target="disableEnter"/>
 		<p:panel header="Usuarios del Sistema">
 			<table width="100%" cellpadding="3" cellspacing="3">
 				<tr>
@@ -27,23 +28,34 @@
 				</tr>
 				<tr>
 					<td />
-					<td><p:dataTable value="#{sedUserBean.sedUserList}" var="u"
-							paginatorAlwaysVisible="false" resizableColumns="false"
+					<td><p:dataTable id="sedUserTable" value="#{sedUserBean.sedUserList}" var="u" filteredValue="#{sedUserBean.sedUserFilteredList}"
+							paginatorAlwaysVisible="false" resizableColumns="false" widgetVar="sedUserTableWV"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="20,40,60" paginator="true" rows="20"
 							filterDelay="600"
 							emptyMessage="#{bundle['page.seduser.labelEmptyList']}"
 							style="width:95%">
+							
+							<f:facet name="header">
+								<div style="text-align: right;padding:10px;">
+									<p:outputPanel>
+										<h:outputText value="#{bundle['page.core.labelSearch']}:" />
+										<p:inputText id="globalFilter" onkeyup="sedUserTableWV.filter();" style="width:200px;"/>
+									</p:outputPanel>
+								</div>
+							</f:facet>
+							
 							<p:column sortBy="identification" filterBy="identification"
 								filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelStudentIdentification']}">
 								<h:outputText value="#{u.identification}" />
 							</p:column>
-							<p:column sortBy="nameIdentificationType"
-								filterBy="nameIdentificationType" filterMatchMode="contains"
+							
+							<p:column sortBy="nameIdentificationType" filterBy="nameIdentificationType" filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelIdentificationType']}">
 								<h:outputText value="#{u.nameIdentificationType}" />
 							</p:column>
+							
 							<p:column sortBy="lastName" filterBy="lastName"
 								filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelStudentLastName']}">
@@ -79,7 +91,7 @@
 										<p:graphicImage value="../css/icon/edit.png" width="20"
 											height="20" />
 										<f:setPropertyActionListener
-											target="#{sedUserBean.selectedSedUser}" value="#{u}" />
+											target="#{sedUserBean.sedUser}" value="#{u}" />
 									</p:commandLink>
 								</div>
 							</p:column>

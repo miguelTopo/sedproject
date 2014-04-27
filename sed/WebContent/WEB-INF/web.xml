@@ -14,31 +14,31 @@
 		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
 		<param-value>false</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>primefaces.SUBMIT</param-name>
 		<param-value>partial</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
 		<param-value>false</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
-	
+
 	<welcome-file-list>
 		<welcome-file>sedIndex.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<filter>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
@@ -51,7 +51,7 @@
 			<param-value>C:/opt/sed/temp</param-value>
 		</init-param>
 	</filter>
-	
+
 	<filter-mapping>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -62,24 +62,22 @@
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jspx</url-pattern>
 	</servlet-mapping>
-	
+
 	<context-param>
 		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	<context-param>  
-    <param-name>primefaces.THEME</param-name>  
-    <param-value>excite-bike</param-value>  
-</context-param>
+	<!-- <context-param> <param-name>primefaces.THEME</param-name> <param-value>excite-bike</param-value> 
+		</context-param> -->
 
-<context-param>
-    <param-name>org.primefaces.extensions.DELIVER_UNCOMPRESSED_RESOURCES</param-name>
-    <param-value>false</param-value>
-</context-param> 
-		
+	<context-param>
+		<param-name>org.primefaces.extensions.DELIVER_UNCOMPRESSED_RESOURCES</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
 </web-app>

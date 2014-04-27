@@ -14,8 +14,7 @@
 	</h:head>
 	<h:body>
 		<h:form id="loginForm">
-			<p:growl id="growl" showDetail="true" life="6000" autoUpdate="true"
-				globalOnly="true" />
+			<p:growl id="growl" showDetail="true" life="6000" autoUpdate="true" globalOnly="true" />
 			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog"
 				closable="false" header="Procesando..." resizable="false"
 				draggable="false" modal="true">
@@ -56,11 +55,21 @@
 								<td><p:password value="#{loginBean.userPassword}"
 										placeholder="#{bundle['page.login.labelPassword']}" /></td>
 							</tr>
+							<tr>
+								<td>
+									<br/>
+								</td>
+							</tr>
 						</table>
 
 						<div align="center">
-							<p:commandButton value="#{bundle['page.login.labelSignIn']}"
+							<p:commandButton value="#{bundle['page.login.labelSignIn']}" styleClass="ui-priority-primary"
 								action="#{loginBean.validateSedUser}" update=":loginForm:growl" />
+						</div>
+						<div style="padding:20px;">
+							<a href="recuperar">
+								#{bundle['page.login.labelForgetPassword']}
+							</a> 
 						</div>
 
 					</p:panel>

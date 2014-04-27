@@ -8,6 +8,8 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
 import co.edu.udistrital.core.common.list.beanlist.controller.ControllerList;
+import co.edu.udistrital.core.common.model.EmailTemplate;
+import co.edu.udistrital.core.common.util.resource.ManageProperties;
 import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.core.login.model.TreeSedRole;
@@ -25,6 +27,8 @@ public class BeanList implements Serializable {
 	 */
 	private static final long serialVersionUID = 6631727569215723693L;
 
+	private static ManageProperties properties;
+
 	private static ControllerList controller;
 
 	private static List<Subject> subjectList;
@@ -33,7 +37,9 @@ public class BeanList implements Serializable {
 	private static List<Tree> treeList;
 	private static List<TreeSedRole> treeSedRoleList;
 	private static List<IdentificationType> identificationTypeList;
-	private static List<SedRole>sedRoleList; 
+	private static List<SedRole> sedRoleList;
+
+	private static List<EmailTemplate> emailTemplateList;
 
 	static {
 		initializeList();
@@ -43,6 +49,7 @@ public class BeanList implements Serializable {
 	public static void initializeList() {
 		try {
 			controller = new ControllerList();
+			properties = new ManageProperties();
 			loadSubjectList();
 			loadGradeList();
 			loadCourseList();
@@ -50,26 +57,36 @@ public class BeanList implements Serializable {
 			loadTreeSedRoleList();
 			loadIdentificationTypeList();
 			loadSedRoleList();
+			loadEmailTemplateList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	/**@author MTorres*/
-	public static void loadSedRoleList(){
+
+	public static void loadEmailTemplateList() {
 		try {
-			if(sedRoleList==null)
-				sedRoleList= controller.loadSedRoleList();
+			if (emailTemplateList == null)
+				emailTemplateList = controller.loadEmailTemplateList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	/**@author MTorres*/
-	public static void loadIdentificationTypeList(){
+
+	/** @author MTorres */
+	public static void loadSedRoleList() {
 		try {
-			if(identificationTypeList==null)
-				identificationTypeList = controller.loadIdentificationTypeList(); 
+			if (sedRoleList == null)
+				sedRoleList = controller.loadSedRoleList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** @author MTorres */
+	public static void loadIdentificationTypeList() {
+		try {
+			if (identificationTypeList == null)
+				identificationTypeList = controller.loadIdentificationTypeList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -148,8 +165,17 @@ public class BeanList implements Serializable {
 	public static List<IdentificationType> getIdentificationTypeList() {
 		return identificationTypeList;
 	}
+
 	public static List<SedRole> getSedRoleList() {
 		return sedRoleList;
+	}
+
+	public static ManageProperties getProperties() {
+		return properties;
+	}
+
+	public static List<EmailTemplate> getEmailTemplateList() {
+		return emailTemplateList;
 	}
 
 
