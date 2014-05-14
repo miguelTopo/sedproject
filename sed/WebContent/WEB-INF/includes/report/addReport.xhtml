@@ -6,14 +6,14 @@
 <f:view>
 	<h:form id="addReportForm">
 		<p:panel header="#{bundle['page.report.labelHeadAdd']}">
-			<table width="100%" cellpadding="3" cellspacing="3">
+			<table style="width:100%">
 				<tr>
-					<td width="5%" />
-					<td width="15%" />
-					<td width="20%" />
-					<td width="25%" />
-					<td width="30%" />
-					<td width="5%" />
+					<td style="width:5%"/>
+					<td style="width:15%"/>
+					<td style="width:20%"/>
+					<td style="width:25%"/>
+					<td style="width:30%"/>
+					<td style="width:5%"/>
 				</tr>
 				<tr>
 					<td />
@@ -81,14 +81,21 @@
 									fileUploadListener="#{reportBean.handleFileUpload}"
 									cancelLabel="#{bundle['page.core.labelCancel']}" deletelabel="#{bundle['page.core.labelDelete']}"
 									uploadLabel="#{bundle['page.core.file.labelUpload']}" label="#{bundle['page.core.labelSelect']}"
-									onstart="statusDialog.show();"
+									onstart="statusDialog.show();" update=":addReportForm:opFileError"
 									oncomplete="statusDialog.hide();"
-									allowTypes="/(\.|\/)(xls|xlsx)$/" />
+									allowTypes="/(\.|\/)(xls?x)$/" />
 							</p:outputPanel>
 						</p:outputPanel>
 					</td>
 				</tr>
 			</table>
+			<p:outputPanel id="opFileError">
+				<p:outputPanel rendered="#{reportBean.fileError}">
+					<div style="text-align:center;">
+						<p:commandButton value="Descargar archivo de errores" action="#{reportBean.downloadErrorFile}" styleClass="ui-priority-primary"/>
+					</div>
+				</p:outputPanel>
+			</p:outputPanel>
 		</p:panel>
 	</h:form>
 </f:view>

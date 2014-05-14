@@ -1,7 +1,6 @@
 package co.edu.udistrital.sed.report.controller;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 import java.util.Iterator;
@@ -36,7 +35,7 @@ import co.edu.udistrital.sed.report.api.IReport;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 @URLMapping(id = "addReport", pattern = "/portal/reporte", viewId = "/pages/report/report.jspx")
 public class ReportBean extends BackingBean implements IReport, Serializable {
 
@@ -47,6 +46,7 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 
 	// Primitives
 	private boolean showAdd = false, showDownloadFile = false;
+	private boolean fileError = false;
 	private int invalidStudent;
 
 	// Java Object
@@ -67,6 +67,7 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 
 	// UserList
 	private List<Student> properStudentList;
+	private List<Student> invalidStudentList;
 	private List<Student> totalStudentList;
 	private List<Course> tmpCourseList;
 
@@ -86,14 +87,22 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/** @author MTorres */
-	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+	public boolean getValidateSedUserRole() throws Exception {
 		try {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	public void downloadErrorFile() {
+		try {
+			System.out.println("vamos a descargar archivo de errores....");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -114,32 +123,35 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 
 				UploadedFile inputFile = event.getFile();
 				if (inputFile != null) {
+
+					// Verificacion de tipo de Excel xls o xlsx
+
 					if (inputFile.getFileName().endsWith(".xls"))
 						this.wbDegree = ManageExcel.parseXLSFile(inputFile.getInputstream());
 					else if (inputFile.getFileName().endsWith(".xlsx"))
 						this.wbDegree = ManageExcel.parseXLSXFile(inputFile.getInputstream());
 
+					// Procesar Archivo Excel en busca de errores de inserción
 					if (this.wbDegree != null) {
 						processDegreeFile();
 
-						if (this.totalStudentList != null && this.properStudentList != null) {
-							if (this.totalStudentList.size() == this.properStudentList.size()) {
-								this.totalStudentList = null;
-								List<Course> courseStudentList = loadCourseListByGrade(this.idSelectedGrade);
-								List<Student> studentGradeList = this.controller.loadStudentListByGrade(courseStudentList);
-								replaceIdentificationId(studentGradeList);
-								if (this.controller.saveCalificationList(this.properStudentList)) {
-									addInfoMessage("Cargar archivo", "El archivo fué leido y almacenado en la base de datos correctamente.");
-								} else {
-									System.out.println("Aqui se produjo un error");
-								}
-							} else {
-								addFatalMessage("Cargar archivo",
-									"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
-								return;
+						if (this.totalStudentList != null && this.properStudentList != null
+							&& (this.totalStudentList.size() == this.properStudentList.size())) {
+
+							this.totalStudentList = null;
+							List<Course> courseStudentList = loadCourseListByGrade(this.idSelectedGrade);
+							List<Student> studentGradeList = this.controller.loadStudentListByGrade(courseStudentList);
+
+							// reeemplazar numero de documento de estudiantes con id en la BD
+							replaceIdentificationId(studentGradeList);
+
+							if (this.controller.saveCalificationList(this.properStudentList)) {
+								addInfoMessage("Cargar archivo", "El archivo fué leido y almacenado en la base de datos correctamente.");
 							}
+
 						} else {
-							addFatalMessage("Cargar archivo",
+							setFileError(true);
+							addWarnMessage("Cargar archivo",
 								"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
 							return;
 						}
@@ -168,7 +180,6 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 							q.setIdStudentCourse(std.getIdStudentCourse());
 						}
 						break;
-
 						// studentGradeList.remove(std);
 					}
 				}
@@ -249,8 +260,11 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 				if (this.student != null && count > 0)
 					if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
 						addStudent(indexSheet);
-					else
+					else {
+						getInvalidStudentList().add(this.student);
 						break;
+					}
+
 				else if (this.student == null && count > 0) {
 					break;
 				}
@@ -358,6 +372,7 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 				getTotalStudentList().add(this.student);
 				if (this.student.getInvalidColumn() != null && this.student.getInvalidColumn().isEmpty())
 					getProperStudentList().add(this.student);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -602,6 +617,25 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 	public void setIdSelectedGrade(Long idSelectedGrade) {
 		this.idSelectedGrade = idSelectedGrade;
 	}
+
+	public boolean isFileError() {
+		return fileError;
+	}
+
+	public void setFileError(boolean fileError) {
+		this.fileError = fileError;
+	}
+
+	public List<Student> getInvalidStudentList() {
+		if (this.invalidStudentList == null)
+			this.invalidStudentList = new ArrayList<Student>();
+		return invalidStudentList;
+	}
+
+	public void setInvalidStudentList(List<Student> invalidStudentList) {
+		this.invalidStudentList = invalidStudentList;
+	}
+
 
 
 }

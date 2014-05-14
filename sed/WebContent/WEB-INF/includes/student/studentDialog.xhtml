@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+
+	<!-- dialog delete Student -->
+	<p:dialog id="dlgStudentDelete" widgetVar="dlgStudentDeleteWV" header="Eliminar Estudiante" resizable="false" modal="true" width="360">
+		<table style="width:100%; border-spacing: 7px;">
+			<tr>
+				<td style="width:10%"/>
+				<td style="width:80%"/>
+				<td style="width:10%"/>
+			</tr>
+			<tr>
+				<td/>
+				<td style="text-align:center;">
+					El estudiante seleccionado es: <strong>#{studentBean.studentSelected.name} #{studentBean.studentSelected.lastName}</strong>
+				</td>
+				<td/>
+			</tr>
+			<tr>
+				<td>
+					<br/>
+				</td>
+			</tr>
+			<tr>
+				<td/>
+				<td>
+					¿Está seguro(a) que desea eliminar el estudiante seleccionado?
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br/><br/>
+				</td>
+			</tr>
+		</table>
+		<div style="text-align: center;">
+			<p:commandButton value="Aceptar" action="#{studentBean.deleteStudent}" onstart="statusDialog.show();" 
+				update=":studentListForm:opStudentList" oncomplete="statusDialog.hide();dlgStudentDeleteWV.hide();"/>
+			<p:spacer width="5"/>
+			<p:commandButton value="Cancelar" type="button" onclick="dlgStudentDeleteWV.hide();"/>
+		</div>
+	</p:dialog>
+
+</f:view>
+</html>

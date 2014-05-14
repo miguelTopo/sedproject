@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class SedSession implements Serializable {
 
 	private Long id;
+	private Long idSedUser;
 	private Long idIdentificationType;
 	private String name;
 	private String lastName;
@@ -68,6 +69,12 @@ public class SedSession implements Serializable {
 		this.idSedRoleUser = idSedRoleUser;
 	}
 
+	public Long getIdSedUser() {
+		return idSedUser;
+	}
 
-
+	public void setIdSedUser(Long idSedUser) {
+		this.idSedUser = idSedUser;
+	}
+	
 }

@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
@@ -19,17 +16,26 @@ import co.edu.udistrital.sed.model.Student;
 @URLMapping(id = "studentBean", pattern = "/portal/estudiante", viewId = "/pages/student/student.jspx")
 public class StudentBean extends BackingBean {
 
+	// static
 	private static final long serialVersionUID = -8160892651775048022L;
+
+	// Primitives
 	private boolean showList = false, showAdd = false, showDetail = false, showEdit = false;
 
+	// Basic Java Object
 	private Long grade;
 	private Long course;
 	private Long miDato;
 
+	// User List
 	private List<Student> studentList;
 	private List<Student> studentFilteredList;
 	private List<Course> courseTmpList;
 
+	// User Object
+	private Student studentSelected;
+
+	// Controller
 	private StudentController controller;
 
 	public StudentBean() {
@@ -44,11 +50,12 @@ public class StudentBean extends BackingBean {
 	public void loadStudentList() {
 		try {
 			System.out.print("Bean");
-			if (validateLoadList()) {
-				// TODO mirar el funcionamiento de datatable de primefaces
-				// tu lista = controllwer.tufuncion en el controller -> DAO
-				this.studentList = this.studentFilteredList = this.controller.loadStudentList(this.grade, this.course);
-			} else {
+			if (!validateLoadStudentList())
+				return;
+
+			this.studentList = this.studentFilteredList = this.controller.loadStudentList(this.course);
+			if (this.studentList == null || this.studentList.isEmpty()) {
+				addWarnMessage("Cargar Estudiantes", "No existen estudiantes con los parámetros ingresados.");
 				return;
 			}
 
@@ -57,9 +64,26 @@ public class StudentBean extends BackingBean {
 		}
 
 	}
-	
+
+	public void deleteStudent() {
+		try {
+			if (this.studentSelected != null) {
+				if (this.controller.deleteStudent(this.studentSelected.getId(), getUserSession() != null ? getUserSession().getIdentification()
+					: "admin")) {
+					this.studentList.remove(this.studentSelected);
+					this.studentFilteredList = this.studentList;
+					this.studentSelected = null;
+					this.studentSelected = new Student();
+					addInfoMessage("Eliminar Estudiante", "El estudiante se eliminó correctamente.");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/** @author MTorres */
-	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+	public boolean getValidateSedUserRole() throws Exception {
 		try {
 			return true;
 		} catch (Exception e) {
@@ -68,7 +92,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
-	public boolean validateLoadList() {
+	public boolean validateLoadStudentList() {
 		try {
 			if (this.grade == null || this.grade.equals(0L)) {
 				addWarnMessage("Listar estudiantes", "Por favor indique el grado.");
@@ -142,8 +166,8 @@ public class StudentBean extends BackingBean {
 			e.printStackTrace();
 		}
 	}
-	
-	public void goAdd(){
+
+	public void goAdd() {
 		try {
 			hideAll();
 			setShowAdd(true);
@@ -155,10 +179,6 @@ public class StudentBean extends BackingBean {
 
 	public void clearVar() {
 		try {
-			this.course = null;
-			this.grade = null;
-			this.studentList = null;
-			this.studentFilteredList = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -254,7 +274,15 @@ public class StudentBean extends BackingBean {
 	public void setShowEdit(boolean showEdit) {
 		this.showEdit = showEdit;
 	}
-	
+
+	public Student getStudentSelected() {
+		return studentSelected;
+	}
+
+	public void setStudentSelected(Student studentSelected) {
+		this.studentSelected = studentSelected;
+	}
+
 
 
 }

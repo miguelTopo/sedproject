@@ -25,7 +25,7 @@ public class TestBean extends BackingBean {
 	}
 	
 	/** @author MTorres */
-	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+	public boolean getValidateSedUserRole() throws Exception {
 		try {
 			return true;
 		} catch (Exception e) {

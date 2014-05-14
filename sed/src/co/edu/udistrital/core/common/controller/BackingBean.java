@@ -1,8 +1,6 @@
 package co.edu.udistrital.core.common.controller;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +8,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 
@@ -33,8 +30,14 @@ public abstract class BackingBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8403730495105725673L;
+
+
+
+	// User Object
 	private PanelStackBean panelStackBean;
-	private SedSession sedSession;
+	private SedSession userSession;
+
+
 
 	public BackingBean() {
 		try {
@@ -44,7 +47,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public abstract boolean getValidateSedUserRole(Long idSedRole) throws Exception;
+	public abstract boolean getValidateSedUserRole() throws Exception;
 
 	/** @author MTorres */
 	public static void addInfoMessage(String summary, String detail) {
@@ -306,13 +309,12 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public SedSession getSedSession() {
-		return sedSession;
+	public SedSession getUserSession() {
+		return userSession;
 	}
 
-	public void setSedSession(SedSession sedSession) {
-		this.sedSession = sedSession;
+	public void setUserSession(SedSession userSession) {
+		this.userSession = userSession;
 	}
-
 
 }

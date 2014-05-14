@@ -36,7 +36,7 @@ public class SedUserDAO extends HibernateDAO {
 				hql = new StringBuilder();
 				qo = null;
 
-				hql.append(" SELECT su.id AS id, ");
+				hql.append(" SELECT su.id AS idSedUser, ");
 				hql.append(" su.idIdentificationType AS idIdentificationType, ");
 				hql.append(" su.name AS name, ");
 				hql.append(" su.lastName AS lastName, ");

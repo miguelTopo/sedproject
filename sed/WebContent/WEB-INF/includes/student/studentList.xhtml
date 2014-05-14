@@ -18,47 +18,49 @@
 				</tr>
 				<tr>
 					<td />
-					<td align="center">#{bundle['page.sed.labelGrade']}:</td>
-					<td><p:selectOneMenu value="#{studentBean.grade}"
-							style="width:98%;">
+					<td align="center">
+						#{bundle['page.sed.labelGrade']}:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{studentBean.grade}" style="width:98%;">
 							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
 							<f:selectItems value="#{studentBean.gradeList}" var="g"
 								itemValue="#{g.id}" itemLabel="#{g.name}" />
 							<p:ajax listener="#{studentBean.handleGradeChange}"
 								update=":studentListForm:somStdCourse" />
-						</p:selectOneMenu></td>
-					<td align="center">#{bundle['page.sed.labelCourse']}</td>
-
-					<td><p:selectOneMenu id="somStdCourse"
-							disabled="#{empty studentBean.courseTmpList}"
-							value="#{studentBean.course}" style="width:98%;">
+						</p:selectOneMenu>
+					</td>
+					<td align="center">
+						#{bundle['page.sed.labelCourse']}
+					</td>
+					<td>
+						<p:selectOneMenu id="somStdCourse" disabled="#{empty studentBean.courseTmpList}" value="#{studentBean.course}" style="width:98%;">
 							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
 							<f:selectItems value="#{studentBean.courseTmpList}" var="c"
 								itemLabel="#{c.name}" itemValue="#{c.id}" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
+					</td>
 					<td>
-						<div align="center">
-							<p:commandButton
-								value="#{bundle['page.student.labelViewStudentList']}"
-								action="#{studentBean.loadStudentList}"
-								update="studentListForm:dtStudent"
-								styleClass="ui-priority-primary" />
+						<div style="text-align:center">
+							<p:commandButton value="#{bundle['page.student.labelViewStudentList']}"
+								action="#{studentBean.loadStudentList}" update=":studentListForm:opStudentList" styleClass="ui-priority-primary" />
 						</div>
 					</td>
 				</tr>
 				<tr>
-					<td><p:spacer height="30" /></td>
+					<td>
+						<br/><br/>
+					</td>
 				</tr>
 				<tr>
 					<td />
-					<td colspan="5" align="center"><p:dataTable id="dtStudent"
-							var="std" paginatorAlwaysVisible="false" resizableColumns="false"
+					<td colspan="5" align="center">
+						<p:outputPanel id="opStudentList">
+						<p:dataTable id="tableStudent" var="std" paginatorAlwaysVisible="false" resizableColumns="false" rendered="#{!empty studentBean.studentList}"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							value="#{studentBean.studentList}" rowsPerPageTemplate="20,40,60"
-							paginator="true" filterDelay="600" style="width:98%;"
-							filteredValue="#{studentBean.studentFilteredList}"
-							widgetVar="studentListWV"
-							emptyMessage="#{bundle['page.student.labelEmptyList']}">
+							paginator="true" filterDelay="600" style="width:98%;" filteredValue="#{studentBean.studentFilteredList}"
+							widgetVar="studentListWV" emptyMessage="#{bundle['page.student.labelEmptyList']}">
 
 							<f:facet name="header">
 								<p:outputPanel style="margin-right:15px;padding:10px;">
@@ -70,10 +72,8 @@
 								</p:outputPanel>
 							</f:facet>
 
-							<p:column
-								headerText="#{bundle['page.student.labelStudentIdentification']}"
-								sortBy="identification" filterBy="identification"
-								filterMatchMode="contains">
+							<p:column headerText="#{bundle['page.student.labelStudentIdentification']}"
+								sortBy="identification" filterBy="identification" filterMatchMode="contains">
 								<h:outputText value="#{std.identification}" />
 							</p:column>
 
@@ -87,42 +87,47 @@
 								filterMatchMode="contains">
 								<h:outputText value="#{std.courseName}" />
 							</p:column>
+							
 							<p:column>
-								<div align="center">
+								<div style="text-align:center">
 									<p:commandLink title="#{bundle['page.core.labelDetail']}" action="#{studentBean.goDetail}">
-										<p:graphicImage value="../css/icon/detail.png" width="20"
-											height="20" />
+										<p:graphicImage value="../css/icon/detail.png" width="20" height="20" />
 									</p:commandLink>
 								</div>
 							</p:column>
+							
 							<p:column>
 								<div align="center">
 									<p:commandLink title="#{bundle['page.core.labelEdit']}" action="#{studentBean.goEdit}">
-										<p:graphicImage value="../css/icon/edit.png" width="20"
-											height="20" />
+										<p:graphicImage value="../css/icon/edit.png" width="20" height="20" />
 									</p:commandLink>
 								</div>
 							</p:column>
+							
 							<p:column>
 								<div align="center">
-									<p:commandLink title="#{bundle['page.core.labelDelete']}">
-										<p:graphicImage value="../css/icon/delete.png" width="20"
-											height="20" />
+									<p:commandLink title="#{bundle['page.core.labelDelete']}" oncomplete="dlgStudentDeleteWV.show();" 
+										update=":studentListForm:dlgStudentDelete">
+										<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
+										<f:setPropertyActionListener target="#{studentBean.studentSelected}" value="#{std}" />
 									</p:commandLink>
 								</div>
 							</p:column>
-
-						</p:dataTable></td>
+						</p:dataTable>
+						</p:outputPanel>
+					</td>
 				</tr>
 				<tr>
-					<td><p:spacer height="10" /></td>
+					<td>
+						<br/><br/>
+					</td>
 				</tr>
 			</table>
-			<div align="center">
-				<p:commandButton value="#{bundle['page.student.labelAddStudent']}"
-					styleClass="ui-priority-primary" />
+			<div style="text-align:center">
+				<p:commandButton value="#{bundle['page.student.labelAddStudent']}" action="#{studentBean.goAdd}" styleClass="ui-priority-primary" />
 			</div>
 		</p:panel>
+		<ui:include src="/WEB-INF/includes/student/studentDialog.xhtml" />
 	</h:form>
 </f:view>
 </html>
