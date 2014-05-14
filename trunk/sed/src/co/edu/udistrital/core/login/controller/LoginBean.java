@@ -38,7 +38,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	public LoginBean() {
 		try {
 			this.controller = new LoginController();
-			if (getSedSession() == null) {
+			if (getUserSession() == null) {
 				redirect("/portal/login");
 			}
 
@@ -54,9 +54,9 @@ public class LoginBean extends BackingBean implements Serializable {
 			if (!validateLoginData())
 				return;
 			else {
-				setSedSession(this.controller.validateSedUser(this.userName, this.userPassword));
-				if (getSedSession() != null) {
-					this.treeList = loadTreeListByRole(getSedSession().getIdSedRoleUser());
+				setUserSession(this.controller.validateSedUser(this.userName, this.userPassword));
+				if (getUserSession() != null) {
+					this.treeList = loadTreeListByRole(getUserSession().getIdSedRoleUser());
 					redirect("/portal/menu");
 				} else {
 					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
@@ -86,7 +86,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	}
 
 	/** @author MTorres */
-	public boolean getValidateSedUserRole(Long idSedRole) throws Exception {
+	public boolean getValidateSedUserRole() throws Exception {
 		try {
 			return true;
 		} catch (Exception e) {

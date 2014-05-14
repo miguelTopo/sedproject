@@ -31,15 +31,14 @@ public class StudentController extends Controller{
 		}
 	}
 
-	/** @author PPaez */
-	public List<Student> loadStudentList(Long grade, Long course)
+	/** @author MTorres */
+	public List<Student> loadStudentList(Long idCourse)
 			throws Exception {
 		StudentDAO dao = new StudentDAO();
 		Transaction tx = null;
 		try {
-			System.out.print("Controller");
 			tx = dao.getSession().beginTransaction();
-			return dao.loadStudentList(grade, course);
+			return dao.loadStudentList(idCourse);
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			tx.rollback();
@@ -50,6 +49,26 @@ public class StudentController extends Controller{
 			tx = null;
 		}
 
+	}
+
+	public boolean deleteStudent(Long idStudent, String user)throws Exception {
+		StudentDAO dao = new StudentDAO();
+		Transaction tx = null;
+		boolean success = false;
+		try {
+			tx = dao.getSession().beginTransaction();
+			success =dao.deleteStudent(idStudent, user);
+			tx.commit();
+			return success;
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
 	}
 
 }

@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 
 import co.edu.udistrital.core.common.controller.IState;
+import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.connection.HibernateDAO;
 import co.edu.udistrital.sed.model.Student;
 
@@ -64,33 +65,30 @@ public class StudentDAO extends HibernateDAO {
 		}
 	}
 
-	public List<Student> loadStudentList(Long idGrade, Long idCourse) throws Exception {
+	public List<Student> loadStudentList(Long idCourse) throws Exception {
 		StringBuilder hql = null;
 		Query qo = null;
 
 		try {
 			hql = new StringBuilder();
 			hql.append(" SELECT s.id AS id, ");
-			hql.append(" s.identification AS identification, ");
 			hql.append(" s.name AS name, ");
-			hql.append(" s.idCourse AS idCourse, ");
-			hql.append(" c.idGrade AS idGrade, ");
-			hql.append(" c.name AS courseName ");
-			hql.append(" FROM Student s, Course c ");
-			hql.append(" WHERE s.idCourse = c.id  ");
-			hql.append(" AND c.idGrade = :idGrade ");
-			hql.append(" AND s.idCourse = :idCourse ");
+			hql.append(" s.lastName AS lastName, ");
+			hql.append(" s.identification AS identification, ");
+			hql.append(" s.userCreation AS userCreation, ");
+			hql.append(" s.dateCreation AS dateCreation, ");
+			hql.append(" s.state AS state, ");
+			hql.append(" s.idIdentificationType AS idIdentificationType ");
+			hql.append(" FROM Student s, ");
+			hql.append(" StudentCourse sc ");
+			hql.append(" WHERE sc.idStudent = s.id ");
+			hql.append(" AND sc.idCourse = :idCourse ");
 			hql.append(" AND s.state = :state ");
-			hql.append(" AND c.state = :state ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
-			qo.setParameter("idGrade", idGrade);
 			qo.setParameter("idCourse", idCourse);
 			qo.setParameter("state", IState.ACTIVE);
-			List<Student> lista = qo.list();
-
-			return lista;
-
+			return qo.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -100,22 +98,24 @@ public class StudentDAO extends HibernateDAO {
 		}
 	}
 
-	public boolean deleteStudent(long idStudent) throws Exception {
+	public boolean deleteStudent(Long idStudent, String user) throws Exception {
 		StringBuilder hql = null;
 		Query qo = null;
 		try {
-			hql.append(" UPDATE Student");
-			hql.append(" SET state=0");
-			hql.append(" WHERE id=:idStudent ");
-			hql.append(" AND s.state=:state ");
+			hql= new StringBuilder(); 
+			hql.append(" UPDATE Student s ");
+			hql.append(" SET s.state = :inactiveState, ");
+			hql.append(" s.dateChange = :dateChange, ");
+			hql.append(" s.userChange = :userChange ");
+			hql.append(" WHERE s.id = :idStudent ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
-			qo.setParameter("state", IState.ACTIVE);
-			qo.setParameter("paramId", idStudent);
+			qo.setParameter("inactiveState", IState.INACTIVE);
+			qo.setParameter("dateChange", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("userChange", user);			
+			qo.setParameter("idStudent", idStudent);
 
-			qo.executeUpdate();
-			return true;
-
+			return qo.executeUpdate() == 1;
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -187,8 +187,8 @@ public class StudentDAO extends HibernateDAO {
 			qo.setParameter("year", Long.valueOf(c.get(Calendar.YEAR)));
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setParameterList("idCourseList", idCourseList);
-			
-			
+
+
 			return qo.list();
 		} catch (Exception e) {
 			e.printStackTrace();
