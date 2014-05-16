@@ -8,9 +8,11 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import co.edu.udistrital.core.common.model.ASEDModel;
+
 @Entity
 @Table(name = "studentcourse")
-public class StudentCourse {
+public class StudentCourse extends ASEDModel{
 
 	private Long id;
 	private Long idPeriod;

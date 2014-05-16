@@ -2,19 +2,102 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
-	<h:form>
+	<h:form id="addStudentForm">
 		<p:panel header="#{bundle['page.student.labelAddStudent']}">
-			<table>
+			<table style="width:100%; border-spacing: 7px;">
 				<tr>
-
+					<td style="width:5%"/>
+					<td style="width:20%"/>
+					<td style="width:23%"/>
+					<td style="width:6%"/>
+					<td style="width:20%"/>
+					<td style="width:23%"/>
+					<td style="width:5%"/>
 				</tr>
-
+				<tr>
+					<td/>
+					<td>
+						* Nombres:
+					</td>
+					<td>
+						<p:inputText value="#{studentBean.student.name}"/>
+					</td>
+					<td/>
+					<td>
+						* Apellidos:
+					</td>
+					<td>
+						<p:inputText value="#{studentBean.student.lastName}"></p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						* Tipo de identificación:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{studentBean.student.idIdentificationType}">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+							<f:selectItems value="#{studentBean.identificationTypeList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+						</p:selectOneMenu>
+					</td>
+					<td/>
+					<td>
+						*Documento:
+					</td>
+					<td>
+						<p:inputText id="txtDocument" value="#{studentBean.student.identification}"></p:inputText>
+						<pe:keyFilter for="txtDocument" mask="pint"/>						
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						* Grado:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{studentBean.student.idGrade}">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+							<f:selectItems value="#{studentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+							<p:ajax process="@this" listener="#{studentBean.handleGradeChange}" update=":addStudentForm:opCourseStudent"/>						
+						</p:selectOneMenu>
+					</td>
+					<td/>
+					<td>
+						* Curso:
+					</td>
+					<td>
+						<p:outputPanel id="opCourseStudent">
+							<p:selectOneMenu value="#{studentBean.student.idCourse}">
+								<f:selectItem itemLabel="Seleccione uno" itemValue="0"/>
+								<f:selectItems value="#{studentBean.courseTmpList}" var="test" itemValue="#{test.id}" itemLabel="#{test.name}"/>
+							</p:selectOneMenu>
+						</p:outputPanel>	
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+					* Correo electrónico:
+					</td>
+					<td>
+						<p:inputText value="#{studentBean.student.email}"></p:inputText>
+					</td>
+					<td/>
+					<td>
+						
+					</td>
+				</tr>
 			</table>
+			<div style="text-align:center;">
+				<p:commandButton value="Guardar Estudiante" action="#{studentBean.saveStudent}"/>
+			</div>
 			<div align="center">
 				<p:commandButton value="#{bundle['page.core.labelGoBack']}"
-					action="#{studentBean.goBack}" />
+					action="#{studentBean.goBack}" onstart="statusDialog.show();" oncomplete="statusDialog.hide();" />
 			</div>
 		</p:panel>
 	</h:form>

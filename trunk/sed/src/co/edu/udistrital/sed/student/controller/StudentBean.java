@@ -8,6 +8,8 @@ import javax.faces.bean.ViewScoped;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.util.FieldValidator;
+import co.edu.udistrital.core.common.util.RandomPassword;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Student;
 
@@ -34,6 +36,7 @@ public class StudentBean extends BackingBean {
 
 	// User Object
 	private Student studentSelected;
+	private Student student;
 
 	// Controller
 	private StudentController controller;
@@ -65,6 +68,24 @@ public class StudentBean extends BackingBean {
 
 	}
 
+	public void saveStudent() {
+		try {
+			if (!validateSaveStudent())
+				return;
+
+			String password = RandomPassword.getPassword(7);
+
+			if (this.controller.saveStudent(this.student, getUserSession() != null ? getUserSession().getIdentification() : "admin", password)) {
+				addInfoMessage("Guardar Estudiante", "El estudiante fué almacenado correctamente.");
+				goBack();
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void deleteStudent() {
 		try {
 			if (this.studentSelected != null) {
@@ -92,6 +113,42 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	private boolean validateSaveStudent() throws Exception {
+		try {
+			if (this.student == null)
+				return false;
+
+			if (this.student.getName() == null || this.student.getName().trim().isEmpty()) {
+				addWarnMessage("Guardar Estudiante", "Por favor digite los nombres del estudiante.");
+				return false;
+			} else if (this.student.getLastName() == null || this.student.getLastName().trim().isEmpty()) {
+				addWarnMessage("Guardar Estudiante", "Por favor digite los apellidos del estudiante.");
+				return false;
+			} else if (this.student.getIdIdentificationType() == null || this.student.getIdIdentificationType().equals(0L)) {
+				addWarnMessage("Guardar Estudiante", "Por favor seleccione el tipo de identificación.");
+				return false;
+			} else if (this.student.getIdentification() == null || this.student.getIdentification().trim().isEmpty()) {
+				addWarnMessage("Guardar Estudiante", "Por favor digite la identificación del estudiante.");
+				return false;
+			} else if (this.student.getIdGrade() == null || this.student.getIdGrade().equals(0L)) {
+				addWarnMessage("Guardar Estudiante", "Por favor seleccione el grado del estudiante.");
+				return false;
+			} else if (this.student.getIdCourse() == null || this.student.getIdCourse().equals(0L)) {
+				addWarnMessage("Guardar Estudiante", "Por favor seleccione el curso del estudiante.");
+				return false;
+			} else if (this.student.getEmail() == null || this.student.getEmail().trim().isEmpty()) {
+				addWarnMessage("Guardar Estudiante", "Por favor digite el correo del estudiante.");
+				return false;
+			} else if(!FieldValidator.isValidEmail(this.student.getEmail())){
+				addWarnMessage("Guardar Estudiante", "El correo ingresado no es un correo válido. Por favor verifique.");
+				return false;	
+			}
+				return true;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	public boolean validateLoadStudentList() {
 		try {
 			if (this.grade == null || this.grade.equals(0L)) {
@@ -112,8 +169,14 @@ public class StudentBean extends BackingBean {
 
 	public void handleGradeChange() {
 		try {
-			if (this.grade != null && !this.grade.equals(0L)) {
-				this.courseTmpList = loadCourseListByGrade(this.grade);
+			if (isShowAdd()) {
+				if (this.student.getIdGrade() != null && !this.student.getIdGrade().equals(0L)) {
+					this.courseTmpList = loadCourseListByGrade(this.student.getIdGrade());
+				}
+			} else {
+				if (this.grade != null && !this.grade.equals(0L)) {
+					this.courseTmpList = loadCourseListByGrade(this.grade);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,6 +233,7 @@ public class StudentBean extends BackingBean {
 	public void goAdd() {
 		try {
 			hideAll();
+			this.student = new Student();
 			setShowAdd(true);
 			setPanelView("addStudent", "Crear Estudiante", "studentBean");
 		} catch (Exception e) {
@@ -283,6 +347,12 @@ public class StudentBean extends BackingBean {
 		this.studentSelected = studentSelected;
 	}
 
+	public Student getStudent() {
+		return student;
+	}
 
+	public void setStudent(Student student) {
+		this.student = student;
+	}
 
 }
