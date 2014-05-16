@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 
+
 @Entity
 @Table(name = "seduserlogin")
 public class SedUserLogin implements Serializable {
@@ -116,5 +117,6 @@ public class SedUserLogin implements Serializable {
 	public void setMd5Password(String md5Password) {
 		this.md5Password = md5Password;
 	}
+
 
 }

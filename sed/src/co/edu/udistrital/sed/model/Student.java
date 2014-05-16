@@ -29,7 +29,9 @@ public class Student extends AParameter implements Serializable {
 	private Long idIdentificationType;
 
 	private transient String courseName;
+	private transient String email;
 	private transient Long idGrade;
+	private transient Long idCourse;
 	private transient Long idStudentCourse;
 
 	private transient List<Integer> invalidColumn;
@@ -186,5 +188,22 @@ public class Student extends AParameter implements Serializable {
 		this.idStudentCourse = idStudentCourse;
 	}
 
+	@Transient
+	public Long getIdCourse() {
+		return idCourse;
+	}
 
+	public void setIdCourse(Long idCourse) {
+		this.idCourse = idCourse;
+	}
+	
+	@Transient
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 }

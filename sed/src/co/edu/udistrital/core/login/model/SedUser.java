@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
 import co.edu.udistrital.core.common.model.AParameter;
+import co.edu.udistrital.sed.model.Student;
 
 @Entity
 @Table(name = "seduser")
@@ -33,6 +34,22 @@ public class SedUser extends AParameter implements Serializable {
 	private transient String nameSedRole;
 	private transient String nameIdentificationType;
 	private transient String userName;
+
+	public SedUser() {
+
+	}
+
+	public SedUser(Student student) {
+		try {
+			this.idIdentificationType = student.getIdIdentificationType();
+			this.name = student.getName();
+			this.lastName=student.getLastName();
+			this.identification = student.getIdentification();
+			this.email = student.getEmail();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -176,5 +193,5 @@ public class SedUser extends AParameter implements Serializable {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
+
 }
