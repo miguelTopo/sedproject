@@ -27,12 +27,15 @@ public class Student extends AParameter implements Serializable {
 	private String identification;
 	private String lastName;
 	private Long idIdentificationType;
+	private Long idSedUser;
+	private String birthday;
 
 	private transient String courseName;
 	private transient String email;
 	private transient Long idGrade;
 	private transient Long idCourse;
 	private transient Long idStudentCourse;
+
 
 	private transient List<Integer> invalidColumn;
 	private transient List<Qualification> qualificationList;
@@ -44,6 +47,16 @@ public class Student extends AParameter implements Serializable {
 			e.printStackTrace();
 		}
 	}
+
+
+
+	public Student(String identification, String lastName, String name) {
+		this.identification = identification;
+		this.lastName = lastName;
+		this.name = name;
+	}
+
+
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -121,6 +134,7 @@ public class Student extends AParameter implements Serializable {
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
 	}
+
 	@Column(name = "lastName", length = 60)
 	public String getLastName() {
 		return lastName;
@@ -138,6 +152,26 @@ public class Student extends AParameter implements Serializable {
 	public void setIdIdentificationType(Long idIdentificationType) {
 		this.idIdentificationType = idIdentificationType;
 	}
+
+	@Column(name = "birthday", nullable = false, length = 15)
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	@Column(name = "idSedUser", nullable = false)
+	public Long getIdSedUser() {
+		return idSedUser;
+	}
+
+	public void setIdSedUser(Long idSedUser) {
+		this.idSedUser = idSedUser;
+	}
+
+
 
 	@Transient
 	public String getCourseName() {
@@ -196,7 +230,7 @@ public class Student extends AParameter implements Serializable {
 	public void setIdCourse(Long idCourse) {
 		this.idCourse = idCourse;
 	}
-	
+
 	@Transient
 	public String getEmail() {
 		return email;
@@ -205,5 +239,5 @@ public class Student extends AParameter implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 }

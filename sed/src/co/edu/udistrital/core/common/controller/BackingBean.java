@@ -9,9 +9,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
+
+import com.ocpsoft.pretty.PrettyContext;
 
 import co.edu.udistrital.core.common.list.BeanList;
 import co.edu.udistrital.core.login.controller.PanelStackBean;
@@ -23,6 +26,7 @@ import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.session.common.SedSession;
+import co.edu.udistrital.session.common.User;
 
 public abstract class BackingBean implements Serializable {
 
@@ -31,19 +35,93 @@ public abstract class BackingBean implements Serializable {
 	 */
 	private static final long serialVersionUID = -8403730495105725673L;
 
+	// Primitives
+	private boolean initializedGeneral = false;
+	private boolean cancelSession = false;
+	private boolean uniqueLogin = false;
+	private boolean validateLogin = false;
 
 
 	// User Object
 	private PanelStackBean panelStackBean;
-	private SedSession userSession;
+	private User userSession;
 
 
 
 	public BackingBean() {
 		try {
-
+//			if (!initializedGeneral && getResponse() != null)
+//				setInitializedGeneral(true);
+//
+//			getValidateExpiredSession();
+//			if (getUserSession() != null) {
+//				setValidateLogin(true);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			redirectToLogin();
+		}
+	}
+
+	public static void redirectToLogin() {
+		try {
+			String requestUrl = PrettyContext.getCurrentInstance().getRequestURL().toURL();
+			if (requestUrl != null && !requestUrl.trim().isEmpty() && !requestUrl.endsWith("login")) {
+				// redirect to login
+				redirect("/portal/login");
+				getSession(false).setAttribute("requestPath", requestUrl);
+			}
+
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+
+	public boolean getValidateExpiredSession() {
+		try {
+			String idSession = ManageCookie.getCookieByName("JSESSIONID");
+
+			if (getSession(false) != null && idSession != null && !idSession.trim().isEmpty()) {
+				String currentSession = getSession(false).getId();
+				if (currentSession.startsWith(idSession)) {
+					User userA = (User) getSession(false).getAttribute("user");
+					User userZ = SedSession.getUserBySession(currentSession);
+
+					if (userA == null && userZ == null) {
+						redirectToLogin();
+						return false;
+					}
+
+					if (userZ != null) {
+						setUserSession(userA != null && userA.getId().equals(userZ.getId()) ? userZ : null);
+						return true;
+					} else if (userA != null) {
+						if (getUserSession() != null)
+							setCancelSession(true);
+
+						this.setUserSession(null);
+						this.setUniqueLogin(false);
+						redirectToLogin();
+					} else {
+						redirectToLogin();
+					}
+					SedSession.deleteLoginSessionId(idSession, null);
+					return false;
+				}
+				redirectToLogin();
+			} else {
+				if (getUserSession() != null)
+					setCancelSession(true);
+
+				setUserSession(null);
+				setUniqueLogin(false);
+				redirectToLogin();
+			}
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -151,6 +229,26 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
+	public static HttpSession getSession(boolean isNew) {
+		try {
+			if (FacesContext.getCurrentInstance().getExternalContext() != null)
+				return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(isNew);
+			return null;
+		} catch (Exception e) {
+			throw e;
+
+		}
+	}
+
+	public static HttpServletResponse getResponse() {
+		try {
+			return (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	/** @author MTorres */
 	public PanelStackBean getPanelStackBean() {
 		try {
@@ -171,6 +269,7 @@ public abstract class BackingBean implements Serializable {
 	public void setPanelStackBean(PanelStackBean panelStackBean) {
 		this.panelStackBean = panelStackBean;
 	}
+	
 
 	/** @author MTorres */
 	public List<Course> loadCourseListByGrade(Long idGrade) {
@@ -250,8 +349,6 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	// ////////----------getters and setters----------//////////
-
 	public List<Subject> getSubjectList() {
 		try {
 			return BeanList.getSubjectList();
@@ -309,12 +406,45 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public SedSession getUserSession() {
+	public User getUserSession() {
 		return userSession;
 	}
 
-	public void setUserSession(SedSession userSession) {
+	public void setUserSession(User userSession) {
 		this.userSession = userSession;
 	}
+
+	public boolean isInitializedGeneral() {
+		return initializedGeneral;
+	}
+
+	public void setInitializedGeneral(boolean initializedGeneral) {
+		this.initializedGeneral = initializedGeneral;
+	}
+
+	public boolean isCancelSession() {
+		return cancelSession;
+	}
+
+	public void setCancelSession(boolean cancelSession) {
+		this.cancelSession = cancelSession;
+	}
+
+	public boolean isUniqueLogin() {
+		return uniqueLogin;
+	}
+
+	public void setUniqueLogin(boolean uniqueLogin) {
+		this.uniqueLogin = uniqueLogin;
+	}
+
+	public boolean isValidateLogin() {
+		return validateLogin;
+	}
+
+	public void setValidateLogin(boolean validateLogin) {
+		this.validateLogin = validateLogin;
+	}
+
 
 }

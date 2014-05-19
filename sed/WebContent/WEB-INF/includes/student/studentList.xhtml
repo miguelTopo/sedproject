@@ -6,7 +6,7 @@
 <f:view>
 	<h:form id="studentListForm">
 		<p:panel header="#{bundle['page.student.labelStudentList']}">
-			<table width="100%" cellpadding="3" cellspacing="3">
+			<table style="width:100%;border-spacing:7px">
 				<tr>
 					<td width="7%" />
 					<td width="15%" />
@@ -14,11 +14,27 @@
 					<td width="15%" />
 					<td width="20%" />
 					<td width="16%" />
-					<td width="7%" />
+					<td width="7%" >
+						<br/><br/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="5">
+						<strong class="ui-emphasize-text">Gestor de Estudiantes.</strong> En este modulo usted está en la capacidad de realizar todas las gestiones necesarias 
+						para los estudiantes: crear, actualizar, modificar y consultar los estudiantes. Para consultar los estudiantes 
+						por favor seleccione el grado y el curso que desea consultar y dé clic en el botón Ver Estudiantes. Si lo que desea es agregar un nuevo estudiante 
+						por favor de clic en el botón crear estudiante.  
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<br/><br/>
+					</td>
 				</tr>
 				<tr>
 					<td />
-					<td align="center">
+					<td style="text-align:center">
 						#{bundle['page.sed.labelGrade']}:
 					</td>
 					<td>
@@ -30,14 +46,13 @@
 								update=":studentListForm:somStdCourse" />
 						</p:selectOneMenu>
 					</td>
-					<td align="center">
-						#{bundle['page.sed.labelCourse']}
+					<td style="text-align:center">
+						#{bundle['page.sed.labelCourse']}:
 					</td>
 					<td>
 						<p:selectOneMenu id="somStdCourse" disabled="#{empty studentBean.courseTmpList}" value="#{studentBean.course}" style="width:98%;">
 							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
-							<f:selectItems value="#{studentBean.courseTmpList}" var="c"
-								itemLabel="#{c.name}" itemValue="#{c.id}" />
+							<f:selectItems value="#{studentBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
 						</p:selectOneMenu>
 					</td>
 					<td>
@@ -76,6 +91,11 @@
 								sortBy="identification" filterBy="identification" filterMatchMode="contains">
 								<h:outputText value="#{std.identification}" />
 							</p:column>
+							
+							<p:column headerText="#{bundle['page.student.labelStudentLastName']}"
+								sortBy="lastName" filterBy="lastName" filterMatchMode="contains">
+								<h:outputText value="#{std.lastName}" />
+							</p:column>
 
 							<p:column headerText="#{bundle['page.student.labelStudentName']}"
 								sortBy="name" filterBy="name" filterMatchMode="contains">
@@ -100,6 +120,7 @@
 								<div align="center">
 									<p:commandLink title="#{bundle['page.core.labelEdit']}" action="#{studentBean.goEdit}">
 										<p:graphicImage value="../css/icon/edit.png" width="20" height="20" />
+										<f:setPropertyActionListener target="#{studentBean.idStudentSelected}" value="#{std.id}" />
 									</p:commandLink>
 								</div>
 							</p:column>

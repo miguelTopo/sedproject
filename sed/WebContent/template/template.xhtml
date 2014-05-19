@@ -8,9 +8,13 @@
 <f:view>
 	<h:head>
 		<link type="text/css" rel="stylesheet" href="../css/sedStyle.css" />
+		<script type="text/javascript" src="../js/sedFunction.js"/>
 		<f:loadBundle
 			basename="co.edu.udistrital.core.common.util.resource.webMessages"
 			var="bundle" />
+		<script type="text/javascript">
+			 PrimeFaces.locales['es'] = {closeText : 'Hecho', prevText : 'Anterior', nextText : 'Siguiente', currentText : 'Hoy', monthNames : [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ], monthNamesShort : [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ], dayNames : [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ], dayNamesShort : [ 'Do', 'Lu', 'Ma', 'mi', 'Ju', 'Vi', 'Sa'  ], dayNamesMin : [ 'Do', 'Lu', 'Ma', 'mi', 'Ju', 'Vi', 'Sa' ], weekHeader : 'Semana', firstDay : 1, isRTL : false, showMonthAfterYear : false, yearSuffix : '', month: 'Mes', week: 'Semana', day: 'Día', allDayText : 'Todo el día' , timeFormat:"hh:mm tt",timeSuffix:"",timeOnlyTitle:"Seleccione la hora",timeText:"Tiempo",hourText:"Hora",minuteText:"Minuto",secondText:"Segundo",timezoneText:"Time Zone" };
+		</script>
 	</h:head>
 	<h:body>
 		<h:panelGroup>

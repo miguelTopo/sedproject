@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:view>
+	<h:form id="pr1Form">
+		<p:panel header="Propuesta 1">
+			<table style="width:100%;border-spacing:5px">
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:90%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						<p:dataTable value="#{teacherQualificationBean.studentList}" var="s" editable="true" editMode="cell">
+				
+							<p:column headerText="Identificación" sortBy="identification" filterBy="identification" filterMatchMode="contains">
+								#{s.identification}
+							</p:column>
+				
+							<p:column headerText="Apellidos" sortBy="lastName" filterBy="lastName" filterMatchMode="contains">
+								#{s.lastName}
+							</p:column>
+				
+							<p:column headerText="Nombres" sortBy="name" filterBy="name" filterMatchMode="contains">
+								#{s.name}
+							</p:column>
+				
+							<p:column style="width:60px" headerText="P1">
+								<p:cellEditor>
+									<f:facet name="input">
+										<p:inputText style="width:50px;"/>
+									</f:facet>
+									<f:facet name="output">
+										<h:outputText value="nota1" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+				
+							<p:column style="width:60px" headerText="P2">
+								<p:cellEditor>
+									<f:facet name="input">
+										<p:inputText style="width:50px;"/>
+									</f:facet>
+									<f:facet name="output">
+										<h:outputText value="nota2" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+				
+							<p:column style="width:60px" headerText="P3">
+								<p:cellEditor>
+									<f:facet name="input">
+										<p:inputText style="width:50px;"/>
+									</f:facet>
+									<f:facet name="output">
+										<h:outputText value="nota3" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+				
+						</p:dataTable>				
+					</td>
+					<td/>
+				</tr>
+			</table>
+		
+			
+			<div style="text-align:center">
+				<p:commandButton value="Guardar Notas" styleClass="ui-priority-primary"/>
+			</div>
+			<div style="text-align:right;">
+				<p:commandButton value="Ir a propuesta 2" action="#{teacherQualificationBean.goProp2(2)}"/>
+			</div>
+		</p:panel>
+	</h:form>
+</f:view>
+</html>

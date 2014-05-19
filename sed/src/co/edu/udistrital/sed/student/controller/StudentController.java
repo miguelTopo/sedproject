@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.student.controller;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Transaction;
@@ -12,6 +13,7 @@ import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.SedRoleUser;
 import co.edu.udistrital.core.login.model.SedUser;
+import co.edu.udistrital.core.login.model.SedUserDAO;
 import co.edu.udistrital.core.login.model.SedUserLogin;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.model.StudentCourse;
@@ -19,16 +21,13 @@ import co.edu.udistrital.sed.student.model.StudentDAO;
 
 public class StudentController extends Controller {
 
-	// ////Maneja transacciones,
 
-	public Student loadStudent(Long idStudent) throws Exception {
+	public Student loadStudent(Long idStudent, Long idCourse) throws Exception {
 		StudentDAO dao = new StudentDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();
-			// dao.getSession().save(new Student());
-			// tx.commit();
-			return dao.loadStudent(idStudent);
+			return dao.loadStudent(idStudent, idCourse);
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			tx.rollback();
@@ -83,28 +82,20 @@ public class StudentController extends Controller {
 		StudentDAO dao = new StudentDAO();
 		Transaction tx = null;
 		boolean isNew;
+		Calendar c = Calendar.getInstance();
+		Long idSedUser = null;
 		try {
 			isNew = student.getId() != null ? false : true;
-			student.initialize(isNew);
 			tx = dao.getSession().beginTransaction();
-			// save Student
-			dao.getSession().saveOrUpdate(student);
 
 			if (isNew) {
-				/** TODO mtorres realizar mejora para que se vea el periodo al que se quiere asignar */
-				// save StudentCourse
-				StudentCourse sc = new StudentCourse();
-				sc.setIdStudent(student.getId());
-				sc.setIdCourse(student.getIdCourse());
-				sc.setIdPeriod(Long.valueOf(2014));
-				sc.initialize(true);
-
-				dao.getSession().save(sc);
 
 				// Save SedUser
 				SedUser su = new SedUser(student);
 				su.initialize(true);
 				dao.getSession().save(su);
+
+				idSedUser = su.getId();
 
 				// Save SedUserRole
 				SedRoleUser sru = new SedRoleUser();
@@ -115,7 +106,6 @@ public class StudentController extends Controller {
 				sru.setState(IState.ACTIVE);
 
 				dao.getSession().save(sru);
-
 
 				// Save SedUserLogin
 				SedUserLogin sul = new SedUserLogin();
@@ -129,10 +119,45 @@ public class StudentController extends Controller {
 				dao.getSession().save(sul);
 			}
 
+			student.initialize(isNew);
+			student.setIdSedUser(isNew ? idSedUser : student.getIdSedUser());
+			// save Student
+			dao.getSession().saveOrUpdate(student);
+
+			if (isNew) {
+
+				// save StudentCourse
+				StudentCourse sc = new StudentCourse();
+				sc.setIdStudent(student.getId());
+				sc.setIdCourse(student.getIdCourse());
+				sc.setIdPeriod(Long.valueOf(c.get(Calendar.YEAR)));
+				sc.initialize(true);
+
+				dao.getSession().save(sc);
+			}
+
 			tx.commit();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	/** @author MTorres */
+	public boolean validateExistField(String className, String field, String fieldCompare) throws Exception {
+		SedUserDAO dao = new SedUserDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			return dao.validateExistField(className, field, fieldCompare);
+		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			tx.rollback();
 			throw e;

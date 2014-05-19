@@ -9,12 +9,12 @@ import org.postgresql.util.MD5Digest;
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.connection.HibernateDAO;
-import co.edu.udistrital.session.common.SedSession;
+import co.edu.udistrital.session.common.User;
 
 public class SedUserDAO extends HibernateDAO {
 
 	/** @author MTorres */
-	public SedSession validateSedUser(String userName, String password) throws Exception {
+	public User validateSedUser(String userName, String password) throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -36,7 +36,8 @@ public class SedUserDAO extends HibernateDAO {
 				hql = new StringBuilder();
 				qo = null;
 
-				hql.append(" SELECT su.id AS idSedUser, ");
+				hql.append(" SELECT su.id AS id, ");
+				hql.append(" su.id AS idSedUser, ");
 				hql.append(" su.idIdentificationType AS idIdentificationType, ");
 				hql.append(" su.name AS name, ");
 				hql.append(" su.lastName AS lastName, ");
@@ -49,12 +50,12 @@ public class SedUserDAO extends HibernateDAO {
 				hql.append(" AND su.state = :state ");
 				hql.append(" AND sru.state = :state ");
 
-				qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedSession.class));
+				qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(User.class));
 				qo.setParameter("idSedUser", idSedUser);
 				qo.setParameter("state", IState.ACTIVE);
 				qo.setMaxResults(1);
 
-				return (SedSession) qo.uniqueResult();
+				return (User) qo.uniqueResult();
 
 			} else
 				return null;
