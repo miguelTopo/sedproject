@@ -105,7 +105,7 @@ public class SedUserBean extends BackingBean {
 	}
 
 	/** @author MTorres */
-	public void sendNewSedUserAccount() {
+	private void sendNewSedUserAccount() {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_SEDUSER_ACCOUNT);
 			SMTPEmail e = new SMTPEmail();

@@ -14,19 +14,39 @@ import co.edu.udistrital.sed.model.Student;
 
 public class StudentDAO extends HibernateDAO {
 
-	public Student loadStudent(Long idStudent) throws Exception {
+	public Student loadStudent(Long idStudent, Long idCourse) throws Exception {
 		StringBuilder hql = null;
 		Query qo = null;
 		try {
+			hql = new StringBuilder();
 			hql.append(" SELECT s.id AS id, ");
+			hql.append(" s.name AS name, ");
+			hql.append(" s.lastName AS lastName, ");
 			hql.append(" s.identification AS identification, ");
-			hql.append(" s.name AS name  ");
-			hql.append(" FROM Student s ");
-			hql.append(" WHERE s.id = :idloquesea ");
+			hql.append(" s.userCreation AS userCreation, ");
+			hql.append(" s.dateCreation AS dateCreation, ");
+			hql.append(" s.state AS state, ");
+			hql.append(" s.idIdentificationType AS idIdentificationType, ");
+			hql.append(" s.birthday AS birthday, ");
+			hql.append(" su.email AS email, ");
+			hql.append(" sc.idCourse AS idCourse, ");
+			hql.append(" c.idGrade AS idGrade, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" c.id AS idCourse ");
+			hql.append(" FROM Student s, ");
+			hql.append(" StudentCourse sc, ");
+			hql.append(" SedUser su, ");
+			hql.append(" Course c ");
+			hql.append(" WHERE sc.idStudent = s.id ");
+			hql.append(" AND su.id = s.id ");
+			hql.append(" AND c.id = sc.idCourse ");
+			hql.append(" AND sc.idCourse = :idCourse ");
 			hql.append(" AND s.state = :state ");
+			hql.append(" and s.id = :idStudent ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
-			qo.setParameter("idloquesea", idStudent);
+			qo.setParameter("idStudent", idStudent);
+			qo.setParameter("idCourse", idCourse);
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setMaxResults(1);
 
@@ -78,13 +98,23 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" s.userCreation AS userCreation, ");
 			hql.append(" s.dateCreation AS dateCreation, ");
 			hql.append(" s.state AS state, ");
-			hql.append(" s.idIdentificationType AS idIdentificationType ");
+			hql.append(" s.idIdentificationType AS idIdentificationType, ");
+			hql.append(" s.birthday AS birthday, ");
+			hql.append(" su.email AS email, ");
+			hql.append(" sc.idCourse AS idCourse, ");
+			hql.append(" c.idGrade AS idGrade, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" c.id AS idCourse ");
 			hql.append(" FROM Student s, ");
-			hql.append(" StudentCourse sc ");
+			hql.append(" StudentCourse sc, ");
+			hql.append(" SedUser su, ");
+			hql.append(" Course c ");
 			hql.append(" WHERE sc.idStudent = s.id ");
+			hql.append(" AND su.id = s.id ");
+			hql.append(" AND c.id = sc.idCourse ");
 			hql.append(" AND sc.idCourse = :idCourse ");
 			hql.append(" AND s.state = :state ");
-
+		
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
 			qo.setParameter("idCourse", idCourse);
 			qo.setParameter("state", IState.ACTIVE);

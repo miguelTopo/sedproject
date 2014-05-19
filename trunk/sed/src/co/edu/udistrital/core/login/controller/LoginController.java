@@ -10,7 +10,7 @@ import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.login.model.SedUserDAO;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.core.login.model.TreeDAO;
-import co.edu.udistrital.session.common.SedSession;
+import co.edu.udistrital.session.common.User;
 
 public class LoginController extends Controller {
 
@@ -20,7 +20,7 @@ public class LoginController extends Controller {
 	private static final long serialVersionUID = 4365975570263539163L;
 
 	/** @author MTorres */
-	public SedSession validateSedUser(String userName, String password) throws Exception {
+	public User validateSedUser(String userName, String password) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {

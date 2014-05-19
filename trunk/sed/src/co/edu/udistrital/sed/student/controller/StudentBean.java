@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.student.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -7,9 +8,15 @@ import javax.faces.bean.ViewScoped;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
+import co.edu.udistrital.core.common.api.IEmailTemplate;
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
+import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.common.util.RandomPassword;
+import co.edu.udistrital.core.login.model.SedUser;
+import co.edu.udistrital.core.mail.io.mn.aws.MailGeneratorFunction;
+import co.edu.udistrital.core.mail.io.mn.aws.SMTPEmail;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Student;
 
@@ -23,11 +30,15 @@ public class StudentBean extends BackingBean {
 
 	// Primitives
 	private boolean showList = false, showAdd = false, showDetail = false, showEdit = false;
+	private boolean existDocument = false;
+	private boolean existEmail = false;
 
 	// Basic Java Object
 	private Long grade;
 	private Long course;
 	private Long miDato;
+	private Long idStudentSelected;
+	private Date studentBirthday;
 
 	// User List
 	private List<Student> studentList;
@@ -50,6 +61,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/**@author MTorres*/
 	public void loadStudentList() {
 		try {
 			System.out.print("Bean");
@@ -68,24 +80,44 @@ public class StudentBean extends BackingBean {
 
 	}
 
+	/**@author MTorres*/
+	private void sendAddStudentEmail(String userPassword) {
+		try {
+			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_STUDENT);
+			SMTPEmail e = new SMTPEmail();
+			e.sendProcessMail(
+				null,
+				t.getSubject(),
+				MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(),
+					this.student.getName() + " " + this.student.getLastName(), this.student.getIdentification(), userPassword),
+				this.student.getEmail());
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/**@author MTorres*/
 	public void saveStudent() {
 		try {
 			if (!validateSaveStudent())
 				return;
 
 			String password = RandomPassword.getPassword(7);
+			this.student.setBirthday(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
 
 			if (this.controller.saveStudent(this.student, getUserSession() != null ? getUserSession().getIdentification() : "admin", password)) {
+				sendAddStudentEmail(password);
+				password = null;
 				addInfoMessage("Guardar Estudiante", "El estudiante fué almacenado correctamente.");
 				goBack();
 			}
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**@author MTorres*/
 	public void deleteStudent() {
 		try {
 			if (this.studentSelected != null) {
@@ -118,11 +150,26 @@ public class StudentBean extends BackingBean {
 			if (this.student == null)
 				return false;
 
-			if (this.student.getName() == null || this.student.getName().trim().isEmpty()) {
+			if (isExistDocument()) {
+				addWarnMessage("Guardar Estudiante", "El documento ya existe por favor verifique.");
+				return false;
+			} else if (isExistEmail()) {
+				addWarnMessage("Guardar Estudiante", "El coreo electrónico ya existe por favor verifique.");
+				return false;
+			} else if (this.student.getName() == null || this.student.getName().trim().isEmpty()) {
 				addWarnMessage("Guardar Estudiante", "Por favor digite los nombres del estudiante.");
 				return false;
 			} else if (this.student.getLastName() == null || this.student.getLastName().trim().isEmpty()) {
 				addWarnMessage("Guardar Estudiante", "Por favor digite los apellidos del estudiante.");
+				return false;
+			} else if (this.student.getEmail() == null || this.student.getEmail().trim().isEmpty()) {
+				addWarnMessage("Guardar Estudiante", "Por favor digite el correo del estudiante.");
+				return false;
+			} else if (!FieldValidator.isValidEmail(this.student.getEmail())) {
+				addWarnMessage("Guardar Estudiante", "El correo ingresado no es un correo válido. Por favor verifique.");
+				return false;
+			} else if (this.studentBirthday == null) {
+				addWarnMessage("Guardar Estudiante", "Por favor ingrese la fecha de nacimiento.");
 				return false;
 			} else if (this.student.getIdIdentificationType() == null || this.student.getIdIdentificationType().equals(0L)) {
 				addWarnMessage("Guardar Estudiante", "Por favor seleccione el tipo de identificación.");
@@ -136,16 +183,31 @@ public class StudentBean extends BackingBean {
 			} else if (this.student.getIdCourse() == null || this.student.getIdCourse().equals(0L)) {
 				addWarnMessage("Guardar Estudiante", "Por favor seleccione el curso del estudiante.");
 				return false;
-			} else if (this.student.getEmail() == null || this.student.getEmail().trim().isEmpty()) {
-				addWarnMessage("Guardar Estudiante", "Por favor digite el correo del estudiante.");
-				return false;
-			} else if(!FieldValidator.isValidEmail(this.student.getEmail())){
-				addWarnMessage("Guardar Estudiante", "El correo ingresado no es un correo válido. Por favor verifique.");
-				return false;	
 			}
-				return true;
+			return true;
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+
+	public void validateIdentification() {
+		try {
+			if (this.student != null && this.student.getIdentification() != null && !this.student.getIdentification().trim().isEmpty())
+				setExistDocument(this.controller.validateExistField(Student.class.getSimpleName(), "identification", this.student.getIdentification()
+					.trim()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void validateEmail() {
+		try {
+			if (this.student != null && this.student.getEmail() != null && !this.student.getEmail().trim().isEmpty())
+				setExistEmail(this.controller.validateExistField(SedUser.class.getSimpleName(), "email", this.student.getEmail().trim()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -193,7 +255,7 @@ public class StudentBean extends BackingBean {
 				return;
 			}
 			Student s = new Student();
-			s = this.controller.loadStudent(2L);
+//			s = this.controller.loadStudent(2L);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -220,11 +282,25 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	private Student loadStudent() throws Exception {
+		try {
+			return this.controller.loadStudent(this.idStudentSelected, this.course);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 	public void goEdit() {
 		try {
-			hideAll();
-			setShowEdit(true);
-			setPanelView("addStudent", "Editar Estudiante", "studentBean");
+			if (this.idStudentSelected != null) {
+				hideAll();
+				setShowEdit(true);
+				this.student = loadStudent();
+				this.studentBirthday = ManageDate.stringToDate(this.student.getBirthday(), ManageDate.YYYY_MM_DD);
+				System.out.println(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
+				setPanelView("addStudent", "Editar Estudiante", "studentBean");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -234,6 +310,7 @@ public class StudentBean extends BackingBean {
 		try {
 			hideAll();
 			this.student = new Student();
+			this.student.setIdGrade(0L);
 			setShowAdd(true);
 			setPanelView("addStudent", "Crear Estudiante", "studentBean");
 		} catch (Exception e) {
@@ -243,6 +320,9 @@ public class StudentBean extends BackingBean {
 
 	public void clearVar() {
 		try {
+			this.student = null;
+			this.student = new Student();
+			this.studentBirthday = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -353,6 +433,38 @@ public class StudentBean extends BackingBean {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+
+	public boolean isExistDocument() {
+		return existDocument;
+	}
+
+	public void setExistDocument(boolean existDocument) {
+		this.existDocument = existDocument;
+	}
+
+	public boolean isExistEmail() {
+		return existEmail;
+	}
+
+	public void setExistEmail(boolean existEmail) {
+		this.existEmail = existEmail;
+	}
+
+	public Date getStudentBirthday() {
+		return studentBirthday;
+	}
+
+	public void setStudentBirthday(Date studentBirthday) {
+		this.studentBirthday = studentBirthday;
+	}
+
+	public Long getIdStudentSelected() {
+		return idStudentSelected;
+	}
+
+	public void setIdStudentSelected(Long idStudentSelected) {
+		this.idStudentSelected = idStudentSelected;
 	}
 
 }

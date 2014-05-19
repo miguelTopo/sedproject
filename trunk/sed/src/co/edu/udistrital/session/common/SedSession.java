@@ -1,80 +1,90 @@
 package co.edu.udistrital.session.common;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SedSession implements Serializable {
+import org.w3c.dom.ls.LSInput;
 
-	private Long id;
-	private Long idSedUser;
-	private Long idIdentificationType;
-	private String name;
-	private String lastName;
-	private String identification;
-	private String email;
-	private Long idSedRoleUser;
+public class SedSession {
 
-	public Long getId() {
-		return id;
+	private static List<User> listUserSession;
+
+	public SedSession() {
+
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public static synchronized void addLoginUser(User user) {
+		try {
+			if (user != null)
+				getListUserSession().add(user);
+		} catch (Exception e) {
+			throw e;
+		}
+
 	}
 
-	public Long getIdIdentificationType() {
-		return idIdentificationType;
+	public static synchronized List<User> getLoginUser(String idUser) {
+		try {
+			List<User> loginList = new ArrayList<User>();
+			if (listUserSession != null) {
+				for (User u : listUserSession) {
+					if (u.getId().toString().equals(idUser)) {
+						loginList.add(u);
+					}
+				}
+
+				return (loginList != null && !loginList.isEmpty()) ? loginList : null;
+			}
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
-	public void setIdIdentificationType(Long idIdentificationType) {
-		this.idIdentificationType = idIdentificationType;
+	public static synchronized User getUserBySession(String idSession) {
+		try {
+			if (idSession != null && !idSession.trim().isEmpty()) {
+				if (listUserSession == null)
+					return null;
+				for (User u : listUserSession) {
+					if (u.getIdSession().equals(idSession))
+						return u;
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
-	public String getName() {
-		return name;
+	public static void deleteLoginSessionId(String idSession, String idUser) {
+		try {
+			int index = -1;
+			if (idSession != null || idUser != null) {
+				for (int i = 0; i < listUserSession.size(); i++) {
+					User u = listUserSession.get(i);
+					if (u.getId().toString().equals(idUser) || u.getIdSession().equals(idSession)) {
+						index = i;
+						break;
+					}
+				}
+			}
+
+			if (index != -1 && index > -1)
+				listUserSession.remove(index);
+
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public static List<User> getListUserSession() {
+		if (listUserSession != null)
+			listUserSession = new ArrayList<User>();
+		return listUserSession;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public static void setListUserSession(List<User> listUserSession) {
+		SedSession.listUserSession = listUserSession;
 	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getIdentification() {
-		return identification;
-	}
-
-	public void setIdentification(String identification) {
-		this.identification = identification;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Long getIdSedRoleUser() {
-		return idSedRoleUser;
-	}
-
-	public void setIdSedRoleUser(Long idSedRoleUser) {
-		this.idSedRoleUser = idSedRoleUser;
-	}
-
-	public Long getIdSedUser() {
-		return idSedUser;
-	}
-
-	public void setIdSedUser(Long idSedUser) {
-		this.idSedUser = idSedUser;
-	}
-	
 }
