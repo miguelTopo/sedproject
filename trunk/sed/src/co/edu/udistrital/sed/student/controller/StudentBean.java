@@ -14,6 +14,7 @@ import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.common.util.RandomPassword;
+import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.mail.io.mn.aws.MailGeneratorFunction;
 import co.edu.udistrital.core.mail.io.mn.aws.SMTPEmail;
@@ -52,19 +53,21 @@ public class StudentBean extends BackingBean {
 	// Controller
 	private StudentController controller;
 
+	/** @author MTorres */
 	public StudentBean() {
 		try {
-			this.controller = new StudentController();
-			setShowList(true);
+			if (getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)) {
+				this.controller = new StudentController();
+				setShowList(true);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**@author MTorres*/
+	/** @author MTorres */
 	public void loadStudentList() {
 		try {
-			System.out.print("Bean");
 			if (!validateLoadStudentList())
 				return;
 
@@ -80,23 +83,47 @@ public class StudentBean extends BackingBean {
 
 	}
 
-	/**@author MTorres*/
-	private void sendAddStudentEmail(String userPassword) {
+	/** @author MTorres */
+	private void threadSaveStudent(String password) {
+		try {
+			final String pass = password;
+			final Student s = this.student;
+
+			if (FieldValidator.isValidEmail(s.getEmail())) {
+				new Thread(new Runnable() {
+
+					public void run() {
+						try {
+							sendAddStudentEmail(pass, s);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}).start();
+			}
+
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+	/** @author MTorres */
+	private void sendAddStudentEmail(final String userPassword, final Student s) {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_STUDENT);
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(
 				null,
 				t.getSubject(),
-				MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(),
-					this.student.getName() + " " + this.student.getLastName(), this.student.getIdentification(), userPassword),
-				this.student.getEmail());
+				MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), s.getName() + " " + s.getLastName(),
+					s.getIdentification(), userPassword), s.getEmail());
 		} catch (Exception e) {
 			throw e;
 		}
 	}
 
-	/**@author MTorres*/
+	/** @author MTorres */
 	public void saveStudent() {
 		try {
 			if (!validateSaveStudent())
@@ -106,7 +133,7 @@ public class StudentBean extends BackingBean {
 			this.student.setBirthday(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
 
 			if (this.controller.saveStudent(this.student, getUserSession() != null ? getUserSession().getIdentification() : "admin", password)) {
-				sendAddStudentEmail(password);
+				threadSaveStudent(password);
 				password = null;
 				addInfoMessage("Guardar Estudiante", "El estudiante fué almacenado correctamente.");
 				goBack();
@@ -117,12 +144,12 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
-	/**@author MTorres*/
+	/** @author MTorres */
 	public void deleteStudent() {
 		try {
 			if (this.studentSelected != null) {
-				if (this.controller.deleteStudent(this.studentSelected.getId(), getUserSession() != null ? getUserSession().getIdentification()
-					: "admin")) {
+				if (this.controller.deleteStudent(this.studentSelected.getId(), this.studentSelected.getIdSedUser(),
+					getUserSession() != null ? getUserSession().getIdentification() : "admin")) {
 					this.studentList.remove(this.studentSelected);
 					this.studentFilteredList = this.studentList;
 					this.studentSelected = null;
@@ -138,13 +165,21 @@ public class StudentBean extends BackingBean {
 	/** @author MTorres */
 	public boolean getValidateSedUserRole() throws Exception {
 		try {
-			return true;
+			if (getUserSession() != null) {
+				if (getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR))
+					return true;
+				else
+					return false;
+			} else
+				return false;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
 
+	/** @author MTorres */
 	private boolean validateSaveStudent() throws Exception {
 		try {
 			if (this.student == null)
@@ -190,17 +225,20 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	public void validateIdentification() {
 		try {
 			if (this.student != null && this.student.getIdentification() != null && !this.student.getIdentification().trim().isEmpty())
 				setExistDocument(this.controller.validateExistField(Student.class.getSimpleName(), "identification", this.student.getIdentification()
-					.trim()));
+					.trim())
+					&& this.controller.validateExistField(SedUser.class.getSimpleName(), "identification", this.student.getIdentification().trim()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/** @author MTorres */
 	public void validateEmail() {
 		try {
 			if (this.student != null && this.student.getEmail() != null && !this.student.getEmail().trim().isEmpty())
@@ -245,22 +283,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
-	public void cargarFuncion() {
-		try {
-			System.out.println("Ingresando....." + this.miDato);
-			if (!this.miDato.equals(0L)) {
-				addInfoMessage("Agregar", "Usted eligio  " + this.miDato);
-			} else {
-				addErrorMessage("Agregar", "Por favor seleccioneun valor");
-				return;
-			}
-			Student s = new Student();
-//			s = this.controller.loadStudent(2L);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	/** @author MTorres */
 	public void goBack() {
 		try {
 			hideAll();
@@ -272,6 +295,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	public void goDetail() {
 		try {
 			hideAll();
@@ -282,6 +306,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	private Student loadStudent() throws Exception {
 		try {
 			return this.controller.loadStudent(this.idStudentSelected, this.course);
@@ -291,6 +316,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	public void goEdit() {
 		try {
 			if (this.idStudentSelected != null) {
@@ -306,6 +332,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	public void goAdd() {
 		try {
 			hideAll();
@@ -318,6 +345,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	public void clearVar() {
 		try {
 			this.student = null;
@@ -328,6 +356,7 @@ public class StudentBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres */
 	public void hideAll() {
 		try {
 			setShowAdd(false);

@@ -2,6 +2,7 @@ package co.edu.udistrital.session.common;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class User implements Serializable {
 
 	private Long id;

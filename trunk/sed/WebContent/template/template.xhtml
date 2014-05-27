@@ -8,7 +8,27 @@
 <f:view>
 	<h:head>
 		<link type="text/css" rel="stylesheet" href="../css/sedStyle.css" />
+		<script type="text/javascript">
+		var lmPresence = <h:outputText value="#{bundle.labelPresence}"/>; 
+		var lmNotNumber = <h:outputText value="#{bundle.labelNotANumberMessage}"/>; 
+		var lmNotInteger = <h:outputText value="#{bundle.labelNotAnIntegerMessage}"/>; 
+		var lmWrong = <h:outputText value="#{bundle.labelWrongNumberMessage}"/>; 
+		var lmLowm = <h:outputText value="#{bundle.labelTooLowMessage}"/>; 
+		var lmHighm = <h:outputText value="#{bundle.labelTooHighMessage}"/>; 
+		var lmNotm = <h:outputText value="#{bundle.labelNotValid}"/>; 
+		var lmNotMail = <h:outputText value="#{bundle.labelNotValidMail}"/>; 
+		var lmC = <h:outputText value="#{bundle.labelCharacter}"/>; 
+		var lmShort = <h:outputText value="#{bundle.labelTooShortMessage}"/>; 
+		var lmLong = <h:outputText value="#{bundle.labelLongMessage}"/>; 
+		var lmIC = <h:outputText value="#{bundle.labelInvalidCharacter}"/>; 
+		var lmNotList = <h:outputText value="#{bundle.labelNotList}"/>;
+		var lmNotMatch = <h:outputText value="#{bundle.labelDontMatch}"/>; 
+		var lmNotAcept = <h:outputText value="#{bundle.labelNotAcept}"/>;
+		var lmMustSelectOne= <h:outputText value="#{bundle.labelMustSelectOne}"/>;
+		</script>
+		
 		<script type="text/javascript" src="../js/sedFunction.js"/>
+		<script type="text/javascript" src="../js/livevalidation.js"/>
 		<f:loadBundle
 			basename="co.edu.udistrital.core.common.util.resource.webMessages"
 			var="bundle" />

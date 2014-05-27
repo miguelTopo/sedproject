@@ -6,7 +6,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.controller.ManageCookie;
 import co.edu.udistrital.core.login.model.Tree;
@@ -74,7 +73,8 @@ public class LoginBean extends BackingBean implements Serializable {
 					setUniqueEnter(true);
 					getUserSession().setIdSession(sessionId);
 					userSessionList = SedSession.getLoginUser(getUserSession().getId().toString());
-
+					getSession(false).setAttribute("user", getUserSession());
+					
 					redirect("/portal/menu");
 				} else {
 					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
@@ -89,7 +89,7 @@ public class LoginBean extends BackingBean implements Serializable {
 			e.printStackTrace();
 			setUserSession(null);
 		}finally{
-			setUserSession(null);
+//			setUserSession(null);
 		}
 	}
 
