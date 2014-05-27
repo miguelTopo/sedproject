@@ -50,13 +50,14 @@ public abstract class BackingBean implements Serializable {
 
 	public BackingBean() {
 		try {
-//			if (!initializedGeneral && getResponse() != null)
-//				setInitializedGeneral(true);
-//
-//			getValidateExpiredSession();
-//			if (getUserSession() != null) {
-//				setValidateLogin(true);
-//			}
+			// if (!initializedGeneral && getResponse() != null)
+			// setInitializedGeneral(true);
+			//
+			if(!getValidateExpiredSession())
+				redirectToLogin();
+			// if (getUserSession() != null) {
+			// setValidateLogin(true);
+			// }
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirectToLogin();
@@ -86,30 +87,22 @@ public abstract class BackingBean implements Serializable {
 				String currentSession = getSession(false).getId();
 				if (currentSession.startsWith(idSession)) {
 					User userA = (User) getSession(false).getAttribute("user");
-					User userZ = SedSession.getUserBySession(currentSession);
 
-					if (userA == null && userZ == null) {
-						redirectToLogin();
+					if (userA == null) 
 						return false;
-					}
+					
 
-					if (userZ != null) {
-						setUserSession(userA != null && userA.getId().equals(userZ.getId()) ? userZ : null);
-						return true;
-					} else if (userA != null) {
+					if (userA != null) {
 						if (getUserSession() != null)
-							setCancelSession(true);
-
-						this.setUserSession(null);
-						this.setUniqueLogin(false);
-						redirectToLogin();
-					} else {
-						redirectToLogin();
+							this.cancelSession = true;
+						// ///verificar por que esto estaba enviando null
+						setUserSession(userA);
+						setUniqueLogin(false);
+						return true;
+//						redirectToLogin();
 					}
-					SedSession.deleteLoginSessionId(idSession, null);
-					return false;
 				}
-				redirectToLogin();
+
 			} else {
 				if (getUserSession() != null)
 					setCancelSession(true);
@@ -269,7 +262,7 @@ public abstract class BackingBean implements Serializable {
 	public void setPanelStackBean(PanelStackBean panelStackBean) {
 		this.panelStackBean = panelStackBean;
 	}
-	
+
 
 	/** @author MTorres */
 	public List<Course> loadCourseListByGrade(Long idGrade) {

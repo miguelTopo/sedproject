@@ -10,6 +10,7 @@ import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
 import co.edu.udistrital.core.common.util.RandomPassword;
+import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.login.model.SedUserLogin;
 import co.edu.udistrital.core.mail.io.mn.aws.MailGeneratorFunction;
@@ -53,7 +54,7 @@ public class SedUserBean extends BackingBean {
 	public SedUserBean() {
 		try {
 			this.controller = new SedUserController();
-			this.sedUserList = this.sedUserFilteredList= this.controller.loadSedUserList();
+			this.sedUserList = this.sedUserFilteredList = this.controller.loadSedUserList();
 			setShowList(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -204,7 +205,7 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/**@author MTorres*/
+	/** @author MTorres */
 	public void activeRandomPassword() {
 		try {
 			setRandomPassword(!isRandomPassword());
@@ -253,7 +254,7 @@ public class SedUserBean extends BackingBean {
 	public void goBack() {
 		try {
 			hideAll();
-			this.sedUserList = this.sedUserFilteredList=this.controller.loadSedUserList();
+			this.sedUserList = this.sedUserFilteredList = this.controller.loadSedUserList();
 			setShowList(true);
 			setPanelView("sedUserList", "Lista de Usuarios", "SedUserBean");
 		} catch (Exception e) {
@@ -288,7 +289,14 @@ public class SedUserBean extends BackingBean {
 	/** @author MTorres */
 	public boolean getValidateSedUserRole() throws Exception {
 		try {
-			return true;
+			if (getUserSession() != null) {
+				if (getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR))
+					return true;
+				else
+					return false;
+			} else
+				return false;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -411,5 +419,5 @@ public class SedUserBean extends BackingBean {
 	public void setSedUserFilteredList(List<SedUser> sedUserFilteredList) {
 		this.sedUserFilteredList = sedUserFilteredList;
 	}
-	
+
 }

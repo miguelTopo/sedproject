@@ -58,13 +58,13 @@ public class StudentController extends Controller {
 
 	}
 
-	public boolean deleteStudent(Long idStudent, String user) throws Exception {
+	public boolean deleteStudent(Long idStudent,Long idSedUser, String user) throws Exception {
 		StudentDAO dao = new StudentDAO();
 		Transaction tx = null;
 		boolean success = false;
 		try {
 			tx = dao.getSession().beginTransaction();
-			success = dao.deleteStudent(idStudent, user);
+			success = dao.deleteStudent(idStudent,idSedUser, user);
 			tx.commit();
 			return success;
 		} catch (Exception e) {

@@ -7,7 +7,7 @@
 <f:view>
 	<h:form id="addStudentForm">
 		<p:panel header="#{bundle['page.student.labelAddStudent']}">
-			<table style="width:100%; border-spacing: 7px;">
+			<table style="width:100%; border-spacing: 5px;">
 				<tr>
 					<td style="width:5%"/>
 					<td style="width:20%"/>
@@ -36,7 +36,7 @@
 						</strong>
 					</td>
 					<td>
-						<p:inputText value="#{studentBean.student.name}" style="width:95%"/>
+						<p:inputText id="txtStdName" value="#{studentBean.student.name}" style="width:95%"/>
 					</td>
 					<td/>
 					<td>
@@ -45,7 +45,7 @@
 						</strong>
 					</td>
 					<td>
-						<p:inputText value="#{studentBean.student.lastName}" style="width:95%"></p:inputText>
+						<p:inputText id="txtStdLastname" value="#{studentBean.student.lastName}" style="width:95%"></p:inputText>
 					</td>
 				</tr>
 				<tr>
@@ -84,10 +84,11 @@
 						</strong>
 					</td>
 					<td>
-						<p:selectOneMenu value="#{studentBean.student.idIdentificationType}" style="width:95%">
+						<p:selectOneMenu id="somIdentificationType" value="#{studentBean.student.idIdentificationType}" style="width:95%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 							<f:selectItems value="#{studentBean.identificationTypeList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
 						</p:selectOneMenu>
+						<div id="valIdType_DIV" class="ui-field-invalid"/>
 					</td>
 					<td/>
 					<td>
@@ -116,11 +117,12 @@
 						</strong>
 					</td>
 					<td>
-						<p:selectOneMenu value="#{studentBean.student.idGrade}" style="width:95%">
+						<p:selectOneMenu id="somGrade" value="#{studentBean.student.idGrade}" style="width:95%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 							<f:selectItems value="#{studentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
 							<p:ajax process="@this" listener="#{studentBean.handleGradeChange}" update=":addStudentForm:opCourseStudent"/>						
 						</p:selectOneMenu>
+						<div id="valGrade_DIV" class="ui-field-invalid"/>
 					</td>
 					<td/>
 					<td>
@@ -130,10 +132,11 @@
 					</td>
 					<td>
 						<p:outputPanel id="opCourseStudent">
-							<p:selectOneMenu value="#{studentBean.student.idCourse}" disabled="#{studentBean.student.idGrade eq 0}" style="width:95%">
+							<p:selectOneMenu id="somCourse" value="#{studentBean.student.idCourse}" disabled="#{studentBean.student.idGrade eq 0}" style="width:95%">
 								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 								<f:selectItems value="#{studentBean.courseTmpList}" var="ct" itemLabel="#{ct.name}" itemValue="#{ct.id}"/>	
 							</p:selectOneMenu>
+							<div id="valCourse_DIV" class="ui-field-invalid"/>
 						</p:outputPanel>	
 					</td>
 				</tr>
@@ -144,8 +147,9 @@
 				</tr>
 			</table>
 			<div style="text-align:center;">
-				<p:commandButton value="Guardar Estudiante" action="#{studentBean.saveStudent}" styleClass="ui-priority-primary" 
-					onstart="statusDialog.show()" oncomplete="statusDialog.hide()"/>
+				<p:commandButton id="btnAddStudent" value="Guardar Estudiante" action="#{studentBean.saveStudent}" styleClass="ui-priority-primary"
+					onclick="validateAddStudent();" type="button"
+				/>
 			</div>
 			<div style="text-align: right;">
 				<p:commandButton value="#{bundle['page.core.labelGoBack']}" icon="ui-icon-carat-1-w"
