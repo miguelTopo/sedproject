@@ -38,13 +38,14 @@
 						#{bundle['page.sed.labelGrade']}:
 					</td>
 					<td>
-						<p:selectOneMenu value="#{studentBean.grade}" style="width:98%;">
+						<p:selectOneMenu id="somStdGrade" value="#{studentBean.grade}" style="width:98%;">
 							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
 							<f:selectItems value="#{studentBean.gradeList}" var="g"
 								itemValue="#{g.id}" itemLabel="#{g.name}" />
 							<p:ajax listener="#{studentBean.handleGradeChange}"
 								update=":studentListForm:somStdCourse" />
 						</p:selectOneMenu>
+						<div id="valStdGradeList_DIV" class="ui-field-invalid"/>
 					</td>
 					<td style="text-align:center">
 						#{bundle['page.sed.labelCourse']}:
@@ -54,10 +55,11 @@
 							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
 							<f:selectItems value="#{studentBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
 						</p:selectOneMenu>
+						<div id="valStdCourseList_DIV" class="ui-field-invalid"/>
 					</td>
 					<td>
 						<div style="text-align:center">
-							<p:commandButton value="#{bundle['page.student.labelViewStudentList']}"
+							<p:commandButton id="btnStudentList" value="#{bundle['page.student.labelViewStudentList']}" onclick="validateLoadStudentList();" type="button"
 								action="#{studentBean.loadStudentList}" update=":studentListForm:opStudentList" styleClass="ui-priority-primary" />
 						</div>
 					</td>

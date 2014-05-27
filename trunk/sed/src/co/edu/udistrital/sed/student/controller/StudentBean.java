@@ -56,7 +56,7 @@ public class StudentBean extends BackingBean {
 	/** @author MTorres */
 	public StudentBean() {
 		try {
-			if (getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)) {
+			if (getUserSession()!=null && getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)) {
 				this.controller = new StudentController();
 				setShowList(true);
 			}
