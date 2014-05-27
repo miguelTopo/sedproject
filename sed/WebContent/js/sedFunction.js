@@ -93,6 +93,7 @@ function addTextValidation(idComponent, compulsory, presence, minLength,
 	return lv;
 }
 
+/** @author MTorres */
 function validateAddStudent() {
 	var form = "addStudentForm";
 	txtName = addTextValidation(form + ":txtStdName", true, true, 1, 20);
@@ -113,7 +114,6 @@ function validateAddStudent() {
 			partialSubmit : true,
 			source : form + ':btnAddStudent',
 			process : '@all',
-			update : '',
 			oncomplete : function(xhr, status, args) {
 				statusDialog.hide();
 			}
@@ -122,3 +122,60 @@ function validateAddStudent() {
 	}
 
 }
+/** @author MTorres */
+ function validateLoadStudentList(){
+	var form = "studentListForm";
+	
+	selectGrade = addSelectValidation(form + ":somStdGrade_input","valStdGradeList_DIV");
+	selectCourse = addSelectValidation(form + ":somStdCourse_input","valStdCourseList_DIV");
+	
+	if (selectGrade && selectCourse) {
+		statusDialog.show();
+		Primefaces.ab({
+			formId : form,
+			partialSubmit : true,
+			source : form + ':btnStudentList',
+			process : '@all',
+			oncomplete : function(xhr, status, args) {
+				statusDialog.hide();
+			}
+		});
+		return false;
+	}
+ }
+ 
+ function validateAddSedUser(randomPassword){
+	 var form = "addSedUserForm";
+	 
+	 valLastName = addTextValidation(form + ":txtSuLastName", true, true, 1, 60);
+	 valName = addTextValidation(form + ":txtSuName", true, true, 1, 60);
+	 valIdentification = addTextValidation(form + ":txtSuIdentification", true, true, 1, 20);
+	 valEmail = addTextValidation(form + ":txtSuEmail", true, true, 1, 200);
+	 
+	 selectIdType = addSelectValidation(form + ":somIdType_input", "valIdType_DIV");
+	 selectRole = addSelectValidation(form + ":somRole_input", "valRole_DIV");
+	 
+	 valid = true;
+	 
+	 if(!randomPassword){
+		 valPass = addTextValidation(form + ":userPw", true, true, 6, 50);
+		 valPassRetry = addTextValidation(form + ":userPwRetry", true, true, 6, 50);
+		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail, valPass, valPassRetry ]);
+	 }else
+		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail ]);
+	 
+	 if (valid && selectIdType && selectRole) {
+			statusDialog.show();
+			Primefaces.ab({
+				formId : form,
+				partialSubmit : true,
+				source : form + ':btnAddSedUser',
+				process : '@all',
+				update :'addSedUserForm:addSedUserPanel',
+				oncomplete : function(xhr, status, args) {
+					statusDialog.hide();
+				}
+			});
+			return false;
+		}	  
+ }
