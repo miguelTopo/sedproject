@@ -23,11 +23,9 @@ import co.edu.udistrital.sed.model.Student;
 
 @ManagedBean
 @ViewScoped
-@URLMapping(id = "studentBean", pattern = "/portal/estudiante", viewId = "/pages/student/student.jspx")
+@URLMapping(id = "studentBean", pattern = "/portal/estudiantes", viewId = "/pages/student/student.jspx")
 public class StudentBean extends BackingBean {
 
-	// static
-	private static final long serialVersionUID = -8160892651775048022L;
 
 	// Primitives
 	private boolean showList = false, showAdd = false, showDetail = false, showEdit = false;
@@ -56,7 +54,7 @@ public class StudentBean extends BackingBean {
 	/** @author MTorres */
 	public StudentBean() {
 		try {
-			if (getUserSession()!=null && getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)) {
+			if (getUserSession() != null && getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)) {
 				this.controller = new StudentController();
 				setShowList(true);
 			}
@@ -298,9 +296,11 @@ public class StudentBean extends BackingBean {
 	/** @author MTorres */
 	public void goDetail() {
 		try {
-			hideAll();
-			setShowDetail(true);
-			setPanelView("detailStudent", "Detallar Estudiante", "studentBean");
+			if (this.studentSelected != null) {
+				hideAll();
+				setShowDetail(true);
+				setPanelView("detailStudent", "Detallar Estudiante", "studentBean");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -78,12 +78,18 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" sc.idCourse AS idCourse, ");
 			hql.append(" c.idGrade AS idGrade, ");
 			hql.append(" c.name AS courseName, ");
-			hql.append(" c.id AS idCourse ");
+			hql.append(" c.id AS idCourse, ");
+			hql.append(" it.name AS identificationTypeName, ");
+			hql.append(" g.name AS gradeName ");
 			hql.append(" FROM Student s, ");
 			hql.append(" StudentCourse sc, ");
 			hql.append(" SedUser su, ");
-			hql.append(" Course c ");
+			hql.append(" Course c, ");
+			hql.append(" Grade g, ");
+			hql.append(" IdentificationType it ");
 			hql.append(" WHERE sc.idStudent = s.id ");
+			hql.append(" AND it.id = s.idIdentificationType ");
+			hql.append(" AND c.idGrade = g.id ");
 			hql.append(" AND su.id = s.id ");
 			hql.append(" AND c.id = sc.idCourse ");
 			hql.append(" AND sc.idCourse = :idCourse ");
@@ -92,6 +98,7 @@ public class StudentDAO extends HibernateDAO {
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
 			qo.setParameter("idCourse", idCourse);
 			qo.setParameter("state", IState.ACTIVE);
+			
 			return qo.list();
 		} catch (Exception e) {
 			e.printStackTrace();

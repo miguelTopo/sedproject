@@ -19,11 +19,7 @@ import co.edu.udistrital.core.common.model.AParameter;
 @Table(name = "student")
 public class Student extends AParameter implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5559474476366015511L;
-
+	
 	private String identification;
 	private String lastName;
 	private Long idIdentificationType;
@@ -31,6 +27,8 @@ public class Student extends AParameter implements Serializable {
 	private String birthday;
 
 	private transient String courseName;
+	private transient String gradeName;
+	private transient String identificationTypeName;
 	private transient String email;
 	private transient Long idGrade;
 	private transient Long idCourse;
@@ -171,8 +169,6 @@ public class Student extends AParameter implements Serializable {
 		this.idSedUser = idSedUser;
 	}
 
-
-
 	@Transient
 	public String getCourseName() {
 		return courseName;
@@ -240,4 +236,21 @@ public class Student extends AParameter implements Serializable {
 		this.email = email;
 	}
 
+	@Transient
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	@Transient
+	public String getIdentificationTypeName() {
+		return identificationTypeName;
+	}
+
+	public void setIdentificationTypeName(String identificationTypeName) {
+		this.identificationTypeName = identificationTypeName;
+	}
 }
