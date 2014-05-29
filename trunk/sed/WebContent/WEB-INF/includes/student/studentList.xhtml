@@ -60,7 +60,7 @@
 					<td>
 						<div style="text-align:center">
 							<p:commandButton id="btnStudentList" value="#{bundle['page.student.labelViewStudentList']}" onclick="validateLoadStudentList();" type="button"
-								action="#{studentBean.loadStudentList}" update=":studentListForm:opStudentList" styleClass="ui-priority-primary" />
+								action="#{studentBean.loadStudentList}" styleClass="ui-priority-primary" />
 						</div>
 					</td>
 				</tr>
@@ -73,10 +73,10 @@
 					<td />
 					<td colspan="5" align="center">
 						<p:outputPanel id="opStudentList">
-						<p:dataTable id="tableStudent" var="std" paginatorAlwaysVisible="false" resizableColumns="false" rendered="#{!empty studentBean.studentList}"
+						<p:dataTable id="tableStudent" var="s" paginatorAlwaysVisible="false" resizableColumns="false" rendered="#{!empty studentBean.studentList}"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							value="#{studentBean.studentList}" rowsPerPageTemplate="20,40,60"
-							paginator="true" filterDelay="600" style="width:98%;" filteredValue="#{studentBean.studentFilteredList}"
+							paginator="true" style="width:98%;" filteredValue="#{studentBean.studentFilteredList}"
 							widgetVar="studentListWV" emptyMessage="#{bundle['page.student.labelEmptyList']}">
 
 							<f:facet name="header">
@@ -91,29 +91,30 @@
 
 							<p:column headerText="#{bundle['page.student.labelStudentIdentification']}"
 								sortBy="identification" filterBy="identification" filterMatchMode="contains">
-								<h:outputText value="#{std.identification}" />
+								#{s.identification}
 							</p:column>
 							
 							<p:column headerText="#{bundle['page.student.labelStudentLastName']}"
 								sortBy="lastName" filterBy="lastName" filterMatchMode="contains">
-								<h:outputText value="#{std.lastName}" />
+								#{s.lastName}
 							</p:column>
 
 							<p:column headerText="#{bundle['page.student.labelStudentName']}"
 								sortBy="name" filterBy="name" filterMatchMode="contains">
-								<h:outputText value="#{std.name}" />
+								#{s.name}
 							</p:column>
 
 							<p:column headerText="#{bundle['page.sed.labelCourse']}"
 								sortBy="courseName" filterBy="courseName"
 								filterMatchMode="contains">
-								<h:outputText value="#{std.courseName}" />
+								#{s.courseName}
 							</p:column>
 							
 							<p:column>
 								<div style="text-align:center">
 									<p:commandLink title="#{bundle['page.core.labelDetail']}" action="#{studentBean.goDetail}">
 										<p:graphicImage value="../css/icon/detail.png" width="20" height="20" />
+										<f:setPropertyActionListener target="#{studentBean.studentSelected}" value="#{s}" />
 									</p:commandLink>
 								</div>
 							</p:column>
@@ -122,7 +123,7 @@
 								<div align="center">
 									<p:commandLink title="#{bundle['page.core.labelEdit']}" action="#{studentBean.goEdit}">
 										<p:graphicImage value="../css/icon/edit.png" width="20" height="20" />
-										<f:setPropertyActionListener target="#{studentBean.idStudentSelected}" value="#{std.id}" />
+										<f:setPropertyActionListener target="#{studentBean.idStudentSelected}" value="#{s.id}" />
 									</p:commandLink>
 								</div>
 							</p:column>

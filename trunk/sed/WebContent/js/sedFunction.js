@@ -109,7 +109,7 @@ function validateAddStudent() {
 	valid = LiveValidation.massValidate([ txtName, txtLastName, txtEmail, stdBirthday, txtIdentification ]);
 	if (valid && selectIdType && selectGrade && selectCourse) {
 		statusDialog.show();
-		Primefaces.ab({
+		PrimeFaces.ab({
 			formId : form,
 			partialSubmit : true,
 			source : form + ':btnAddStudent',
@@ -131,11 +131,12 @@ function validateAddStudent() {
 	
 	if (selectGrade && selectCourse) {
 		statusDialog.show();
-		Primefaces.ab({
+		PrimeFaces.ab({
 			formId : form,
 			partialSubmit : true,
 			source : form + ':btnStudentList',
 			process : '@all',
+			update: 'studentListForm:opStudentList',
 			oncomplete : function(xhr, status, args) {
 				statusDialog.hide();
 			}
@@ -166,7 +167,7 @@ function validateAddStudent() {
 	 
 	 if (valid && selectIdType && selectRole) {
 			statusDialog.show();
-			Primefaces.ab({
+			PrimeFaces.ab({
 				formId : form,
 				partialSubmit : true,
 				source : form + ':btnAddSedUser',
