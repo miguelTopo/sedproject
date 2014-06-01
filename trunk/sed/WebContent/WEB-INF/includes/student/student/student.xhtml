@@ -6,13 +6,13 @@
 <f:view>
 	<p:outputPanel rendered="#{studentBean.validateSedUserRole}">
 		<p:outputPanel rendered="#{studentBean.showList}">
-			<ui:include src="/WEB-INF/includes/student/studentList.xhtml" />
+			<ui:include src="/WEB-INF/includes/student/student/studentList.xhtml" />
 		</p:outputPanel>
 		<p:outputPanel rendered="#{studentBean.showAdd or studentBean.showEdit}">
-			<ui:include src="/WEB-INF/includes/student/addStudent.xhtml" />
+			<ui:include src="/WEB-INF/includes/student/student/addStudent.xhtml" />
 		</p:outputPanel>
 		<p:outputPanel rendered="#{studentBean.showDetail}">
-			<ui:include src="/WEB-INF/includes/student/detailStudent.xhtml" />
+			<ui:include src="/WEB-INF/includes/student/student/detailStudent.xhtml" />
 		</p:outputPanel>
 	</p:outputPanel>
 </f:view>

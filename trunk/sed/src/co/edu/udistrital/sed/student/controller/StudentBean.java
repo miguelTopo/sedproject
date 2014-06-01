@@ -23,7 +23,7 @@ import co.edu.udistrital.sed.model.Student;
 
 @ManagedBean
 @ViewScoped
-@URLMapping(id = "studentBean", pattern = "/portal/estudiantes", viewId = "/pages/student/student.jspx")
+@URLMapping(id = "studentBean", pattern = "/portal/estudiantes", viewId = "/pages/student/student/student.jspx")
 public class StudentBean extends BackingBean {
 
 
@@ -128,6 +128,7 @@ public class StudentBean extends BackingBean {
 				return;
 
 			String password = RandomPassword.getPassword(7);
+			System.out.println("************************************LA CONTRASEÑA ES: " + password + "****************************");
 			this.student.setBirthday(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
 
 			if (this.controller.saveStudent(this.student, getUserSession() != null ? getUserSession().getIdentification() : "admin", password)) {
