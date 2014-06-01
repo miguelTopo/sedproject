@@ -9,9 +9,9 @@
 		<p:panel header="Usuarios del Sistema">
 			<table width="100%" cellpadding="3" cellspacing="3">
 				<tr>
-					<td width="5%" />
-					<td width="90%" />
-					<td width="5%" />
+					<td width="3%" />
+					<td width="94%" />
+					<td width="3%" />
 				</tr>
 				<tr>
 					<td />
@@ -45,33 +45,34 @@
 							</f:facet>
 							
 							<p:column sortBy="#{u.identification}" filterBy="#{u.identification}"
-								filterMatchMode="contains"
+								filterMatchMode="contains" style="width:120px"
 								headerText="#{bundle['page.student.labelStudentIdentification']}">
 								#{u.identification}
 							</p:column>
 							
 							<p:column sortBy="#{u.nameIdentificationType}" filterBy="#{u.nameIdentificationType}" filterMatchMode="contains"
-								headerText="#{bundle['page.student.labelIdentificationType']}">
+								headerText="#{bundle['page.student.labelIdentificationType']}" style="width:140px">
 								#{u.nameIdentificationType}
 							</p:column>
 							
 							<p:column sortBy="#{u.lastName}" filterBy="#{u.lastName}"
-								filterMatchMode="contains"
+								filterMatchMode="contains" style="width:150px"
 								headerText="#{bundle['page.student.labelStudentLastName']}">
 								<h:outputText value="#{u.lastName}" />
 							</p:column>
+							
 							<p:column sortBy="#{u.name}" filterBy="#{u.name}"
-								filterMatchMode="contains"
+								filterMatchMode="contains" style="width:150px"
 								headerText="#{bundle['page.student.labelStudentName']}">
 								#{u.name}
 							</p:column>
-							<p:column sortBy="#{u.email}" filterBy="#{u.email}"
-								filterMatchMode="contains"
-								headerText="#{bundle['page.student.labelStudentEmail']}">
-								#{u.email}
+							<p:column sortBy="#{u.nameSedRole}" filterBy="#{u.nameSedRole}"
+								filterMatchMode="contains" style="width:150px"
+								headerText="#{bundle['page.seduser.labelUserType']}">
+								#{u.nameSedRole}
 							</p:column>
 
-							<p:column>
+							<p:column style="width:25px">
 								<div align="center">
 									<p:commandLink title="#{bundle['page.core.labelDetail']}"
 										action="#{sedUserBean.goDetailUser}">
@@ -83,7 +84,7 @@
 								</div>
 							</p:column>
 
-							<p:column>
+							<p:column style="width:25px">
 								<div align="center">
 									<p:commandLink title="#{bundle['page.core.labelEdit']}"
 										action="#{sedUserBean.goEditUser}">

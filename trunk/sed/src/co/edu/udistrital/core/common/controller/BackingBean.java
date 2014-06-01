@@ -53,7 +53,7 @@ public abstract class BackingBean implements Serializable {
 			// if (!initializedGeneral && getResponse() != null)
 			// setInitializedGeneral(true);
 			//
-			if(!getValidateExpiredSession())
+			if (!getValidateExpiredSession())
 				redirectToLogin();
 			// if (getUserSession() != null) {
 			// setValidateLogin(true);
@@ -88,9 +88,9 @@ public abstract class BackingBean implements Serializable {
 				if (currentSession.startsWith(idSession)) {
 					User userA = (User) getSession(false).getAttribute("user");
 
-					if (userA == null) 
+					if (userA == null)
 						return false;
-					
+
 
 					if (userA != null) {
 						if (getUserSession() != null)
@@ -99,7 +99,7 @@ public abstract class BackingBean implements Serializable {
 						setUserSession(userA);
 						setUniqueLogin(false);
 						return true;
-//						redirectToLogin();
+						// redirectToLogin();
 					}
 				}
 
@@ -316,24 +316,34 @@ public abstract class BackingBean implements Serializable {
 	public List<Tree> loadTreeListByRole(Long idRole) {
 		try {
 			List<Tree> treeRoleList = new ArrayList<Tree>();
-			for (TreeSedRole tr : getTreeSedRoleList()) {
 
-				if (tr.getIdSedRole().equals(idRole)) {
+			List<Long> idTreeList = new ArrayList<Long>();
 
-					for (Tree t : BeanList.getTreeList()) {
-						if (tr.getIdTree().equals(t.getId()) && t.isRoot()) {
+			// Verificar id de todos los Tree
+			for (TreeSedRole tsr : getTreeSedRoleList()) {
+				if (tsr.getIdSedRole().equals(idRole))
+					idTreeList.add(tsr.getIdTree());
+			}
 
-							for (Tree tl : BeanList.getTreeList()) {
-								if (!tl.isRoot() && tl.getIdTreeRoot().equals(t.getId()))
-									t.getLeafTreeList().add(tl);
-							}
-							treeRoleList.add(t);
+			List<Long> idTreeUsed = new ArrayList<>(idTreeList.size());
+			// Recorrer Tree en busca de los id que coincidan
+			for (Tree t : BeanList.getTreeList()) {
+
+				if (t.isRoot() && idTreeList.contains(t.getId())) {
+
+					for (Tree lt : BeanList.getTreeList()) {
+						//verificando que sea una hoja de la rama principal
+						if (!lt.getId().equals(t.getId()) && !lt.isRoot() && idTreeList.contains(lt.getId()) && !idTreeUsed.contains(lt.getId())
+							&& t.getId().equals(lt.getIdTreeRoot())) {
+							t.getLeafTreeList().add(lt);
+							idTreeUsed.add(lt.getId());
 						}
 
 					}
+					treeRoleList.add(t);
+
 				}
 			}
-
 			return treeRoleList;
 		} catch (Exception e) {
 			e.printStackTrace();

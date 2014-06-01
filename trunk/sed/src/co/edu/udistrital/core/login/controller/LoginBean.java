@@ -63,33 +63,34 @@ public class LoginBean extends BackingBean implements Serializable {
 				String sessionId = getSession(false).getId();
 				setUserSession(this.controller.validateSedUser(this.userName, this.userPassword));
 				User u = getUserSession();
-				
 
-				if (getUserSession() != null) { 
+
+				if (getUserSession() != null) {
+					System.out.println(u.getSedRoleName() + u.getIdSedRoleUser());
 					addUserCookieList();
 					this.treeList = null;
-					this.treeList = loadTreeListByRole(getUserSession().getIdSedRoleUser());
+					this.treeList = loadTreeListByRole(getUserSession().getIdSedRole());
 
 					setUniqueEnter(true);
 					getUserSession().setIdSession(sessionId);
 					userSessionList = SedSession.getLoginUser(getUserSession().getId().toString());
 					getSession(false).setAttribute("user", getUserSession());
-					
+
 					redirect("/portal/menu");
 				} else {
 					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
 					return;
 				}
-			}else 
+			} else
 				redirect("/portal/menu");
-			
-				
+
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			setUserSession(null);
-		}finally{
-//			setUserSession(null);
+		} finally {
+			// setUserSession(null);
 		}
 	}
 

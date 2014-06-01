@@ -43,9 +43,12 @@ public class SedUserDAO extends HibernateDAO {
 				hql.append(" su.lastName AS lastName, ");
 				hql.append(" su.identification AS identification, ");
 				hql.append(" su.email AS email, ");
-				hql.append(" sru.id AS idSedRoleUser ");
-				hql.append(" FROM SedUser su, SedRoleUser sru ");
+				hql.append(" sru.id AS idSedRoleUser, ");
+				hql.append(" sr.id AS idSedRole, ");
+				hql.append(" sr.name AS sedRoleName ");
+				hql.append(" FROM SedUser su, SedRoleUser sru, SedRole sr ");
 				hql.append(" WHERE sru.idSedUser = su.id ");
+				hql.append(" AND sr.id = sru.idSedRole ");
 				hql.append(" AND su.id = :idSedUser ");
 				hql.append(" AND su.state = :state ");
 				hql.append(" AND sru.state = :state ");
@@ -73,19 +76,25 @@ public class SedUserDAO extends HibernateDAO {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
-			hql.append(" ");
 			hql.append(" SELECT su.id AS id, ");
 			hql.append(" su.idIdentificationType AS idIdentificationType, ");
 			hql.append(" su.name AS name, ");
 			hql.append(" su.lastName AS lastName, ");
 			hql.append(" su.identification AS identification, ");
 			hql.append(" su.email AS email, ");
-			hql.append(" it.name AS nameIdentificationType ");
+			hql.append(" it.name AS nameIdentificationType, ");
+			hql.append(" sr.name AS nameSedRole ");
 			hql.append(" FROM SedUser su, ");
-			hql.append(" IdentificationType it ");
+			hql.append(" IdentificationType it, ");
+			hql.append(" SedRoleUser sru, ");
+			hql.append(" SedRole sr ");
 			hql.append(" WHERE su.idIdentificationType = it.id ");
+			hql.append(" AND sru.idSedUser = su.id ");
+			hql.append(" AND sr.id = sru.idSedRole ");
 			hql.append(" AND su.state = :state ");
 			hql.append(" AND it.state = :state ");
+			hql.append(" AND sru.state = :state ");
+			hql.append(" AND sr.state = :state ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
 
