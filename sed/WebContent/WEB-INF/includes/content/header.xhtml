@@ -6,11 +6,24 @@
 <f:view>
 	<h:form id="headerForm">
 		<div id="sedHeader" align="center">
-			<table>
+			<table style="width:100%">
 				<tr>
-					<td><p:graphicImage value="../css/images/bogotaShield.png"
-							height="85" width="70" /></td>
-					<td><p:graphicImage value="../css/images/logoSed.png" /></td>
+					<td style="width:60%"/>
+					<td style="width:20%"/>
+					<td style="width:10%"/>
+					<td style="width:10%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td style="text-align:center;color: #2E6E9E">
+						#{loginBean.userSession.name} #{loginBean.userSession.lastName} 
+					</td>
+					<td style="text-align:center; color: #2E6E9E">
+						#{loginBean.userSession.sedRoleName}
+					</td>
+					<td style="text-align:center;">
+						<p:commandButton value="Cerrar Sesión"/>
+					</td>
 				</tr>
 			</table>
 		</div>

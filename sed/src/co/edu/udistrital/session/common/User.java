@@ -12,8 +12,10 @@ public class User implements Serializable {
 	private String lastName;
 	private String identification;
 	private String email;
+	private String sedRoleName;
 	private String idSession;
 	private Long idSedRoleUser;
+	private Long idSedRole;
 
 	public Long getId() {
 		return id;
@@ -86,5 +88,21 @@ public class User implements Serializable {
 	public void setIdSession(String idSession) {
 		this.idSession = idSession;
 	}
-		
+
+	public String getSedRoleName() {
+		return sedRoleName;
+	}
+
+	public void setSedRoleName(String sedRoleName) {
+		this.sedRoleName = sedRoleName;
+	}
+
+	public Long getIdSedRole() {
+		return idSedRole;
+	}
+
+	public void setIdSedRole(Long idSedRole) {
+		this.idSedRole = idSedRole;
+	}
+				
 }
