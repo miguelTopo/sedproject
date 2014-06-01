@@ -84,28 +84,28 @@
 									<div align="right">
 										<h:outputText value="#{bundle['page.core.labelSearch']}:" />
 										<p:inputText id="globalFilter"
-											onkeyup="studentListWV.filter();" style="width:150px;" />
+											onkeyup="PF('studentListWV').filter();" style="width:150px;" />
 									</div>
 								</p:outputPanel>
 							</f:facet>
 
 							<p:column headerText="#{bundle['page.student.labelStudentIdentification']}"
-								sortBy="identification" filterBy="identification" filterMatchMode="contains">
+								sortBy="#{s.identification}" filterBy="#{s.identification}" filterMatchMode="contains">
 								#{s.identification}
 							</p:column>
 							
 							<p:column headerText="#{bundle['page.student.labelStudentLastName']}"
-								sortBy="lastName" filterBy="lastName" filterMatchMode="contains">
+								sortBy="#{s.lastName}" filterBy="#{s.lastName}" filterMatchMode="contains">
 								#{s.lastName}
 							</p:column>
 
 							<p:column headerText="#{bundle['page.student.labelStudentName']}"
-								sortBy="name" filterBy="name" filterMatchMode="contains">
+								sortBy="#{s.name}" filterBy="#{s.name}" filterMatchMode="contains">
 								#{s.name}
 							</p:column>
 
 							<p:column headerText="#{bundle['page.sed.labelCourse']}"
-								sortBy="courseName" filterBy="courseName"
+								sortBy="#{s.courseName}" filterBy="#{s.courseName}"
 								filterMatchMode="contains">
 								#{s.courseName}
 							</p:column>

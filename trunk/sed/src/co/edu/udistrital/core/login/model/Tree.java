@@ -32,6 +32,7 @@ public class Tree extends AParameter implements Serializable {
 	private Long idTreeRoot;
 	private String urlPattern;
 	private String icon;
+	private String iconClass;
 
 	// User Transient List
 	private transient List<Tree> leafTreeList;
@@ -142,6 +143,13 @@ public class Tree extends AParameter implements Serializable {
 		this.icon = icon;
 	}
 
+	public String getIconClass() {
+		return iconClass;
+	}
+
+	public void setIconClass(String iconClass) {
+		this.iconClass = iconClass;
+	}
 	// ////////----------Transient----------//////////
 
 	@Transient

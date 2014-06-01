@@ -32,44 +32,43 @@
 							paginatorAlwaysVisible="false" resizableColumns="false" widgetVar="sedUserTableWV"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="20,40,60" paginator="true" rows="20"
-							filterDelay="600"
-							emptyMessage="#{bundle['page.seduser.labelEmptyList']}"
+							filterDelay="600" emptyMessage="#{bundle['page.seduser.labelEmptyList']}"
 							style="width:95%">
 							
 							<f:facet name="header">
 								<div style="text-align: right;padding:10px;">
 									<p:outputPanel>
 										<h:outputText value="#{bundle['page.core.labelSearch']}:" />
-										<p:inputText id="globalFilter" onkeyup="sedUserTableWV.filter();" style="width:200px;"/>
+										<p:inputText id="globalFilter" onkeyup="PF('sedUserTableWV').filter();" style="width:200px;"/>
 									</p:outputPanel>
 								</div>
 							</f:facet>
 							
-							<p:column sortBy="identification" filterBy="identification"
+							<p:column sortBy="#{u.identification}" filterBy="#{u.identification}"
 								filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelStudentIdentification']}">
-								<h:outputText value="#{u.identification}" />
+								#{u.identification}
 							</p:column>
 							
-							<p:column sortBy="nameIdentificationType" filterBy="nameIdentificationType" filterMatchMode="contains"
+							<p:column sortBy="#{u.nameIdentificationType}" filterBy="#{u.nameIdentificationType}" filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelIdentificationType']}">
-								<h:outputText value="#{u.nameIdentificationType}" />
+								#{u.nameIdentificationType}
 							</p:column>
 							
-							<p:column sortBy="lastName" filterBy="lastName"
+							<p:column sortBy="#{u.lastName}" filterBy="#{u.lastName}"
 								filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelStudentLastName']}">
 								<h:outputText value="#{u.lastName}" />
 							</p:column>
-							<p:column sortBy="name" filterBy="name"
+							<p:column sortBy="#{u.name}" filterBy="#{u.name}"
 								filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelStudentName']}">
-								<h:outputText value="#{u.name}" />
+								#{u.name}
 							</p:column>
-							<p:column sortBy="email" filterBy="email"
+							<p:column sortBy="#{u.email}" filterBy="#{u.email}"
 								filterMatchMode="contains"
 								headerText="#{bundle['page.student.labelStudentEmail']}">
-								<h:outputText value="#{u.email}" />
+								#{u.email}
 							</p:column>
 
 							<p:column>

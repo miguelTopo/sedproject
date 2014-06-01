@@ -38,8 +38,8 @@
 			</tr>
 		</table>
 		<div style="text-align: center;">
-			<p:commandButton value="Aceptar" action="#{studentBean.deleteStudent}" onstart="statusDialog.show();" 
-				update=":studentListForm:opStudentList" oncomplete="statusDialog.hide();dlgStudentDeleteWV.hide();"/>
+			<p:commandButton value="Aceptar" action="#{studentBean.deleteStudent}" onstart="PF('statusDialog').show();" 
+				update=":studentListForm:opStudentList" oncomplete="PF('statusDialog').hide();dlgStudentDeleteWV.hide();"/>
 			<p:spacer width="5"/>
 			<p:commandButton value="Cancelar" type="button" onclick="dlgStudentDeleteWV.hide();"/>
 		</div>

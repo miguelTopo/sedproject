@@ -108,14 +108,14 @@ function validateAddStudent() {
 	
 	valid = LiveValidation.massValidate([ txtName, txtLastName, txtEmail, stdBirthday, txtIdentification ]);
 	if (valid && selectIdType && selectGrade && selectCourse) {
-		statusDialog.show();
+		PF('statusDialog').show();
 		PrimeFaces.ab({
 			formId : form,
 			partialSubmit : true,
 			source : form + ':btnAddStudent',
 			process : '@all',
 			oncomplete : function(xhr, status, args) {
-				statusDialog.hide();
+				PF('statusDialog').hide();
 			}
 		});
 		return false;
@@ -130,7 +130,7 @@ function validateAddStudent() {
 	selectCourse = addSelectValidation(form + ":somStdCourse_input","valStdCourseList_DIV");
 	
 	if (selectGrade && selectCourse) {
-		statusDialog.show();
+		PF('statusDialog').show();
 		PrimeFaces.ab({
 			formId : form,
 			partialSubmit : true,
@@ -138,7 +138,7 @@ function validateAddStudent() {
 			process : '@all',
 			update: 'studentListForm:opStudentList',
 			oncomplete : function(xhr, status, args) {
-				statusDialog.hide();
+				PF('statusDialog').hide();
 			}
 		});
 		return false;
@@ -166,7 +166,7 @@ function validateAddStudent() {
 		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail ]);
 	 
 	 if (valid && selectIdType && selectRole) {
-			statusDialog.show();
+			PF('statusDialog').show();
 			PrimeFaces.ab({
 				formId : form,
 				partialSubmit : true,
@@ -174,7 +174,7 @@ function validateAddStudent() {
 				process : '@all',
 				update :'addSedUserForm:addSedUserPanel',
 				oncomplete : function(xhr, status, args) {
-					statusDialog.hide();
+					PF('statusDialog').hide();
 				}
 			});
 			return false;
