@@ -21,7 +21,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 @URLMapping(id = "passrecover", pattern = "/portal/recuperar", viewId = "/pages/forgetPassword.jspx")
 public class PasswordRecoverBean implements Serializable {
 
-	// Primitices
+	// Primitives
 	private boolean exitUserEmail = true, invalidEmail = false;
 
 	// Java Object

@@ -6,38 +6,29 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
-		<style type="text/css">
-			.logging{
-			color: gray;
-			background-color: black;
-			border-bottom: 1px solid white;
-			}
-
-			.ui-menu{
-			width: 190px;
-			}
-		</style>
-		<script type="text/javascript">
-			$(function(){
-				$('#menu').menu({
-
-				});
-
-			});
-	</script>
 	<div style="width:100%">
-	<ul id="menu">
-		<c:forEach begin="0" end="#{fn:length(loginBean.treeList)-1}" var="i">
-			<li>
-			<a><span class="#{loginBean.treeList.get(i).iconClass}"></span>#{loginBean.treeList.get(i).name}</a>
-				<ul>
+		<p:accordionPanel multiple="true">
+			<c:forEach begin="0" end="#{fn:length(loginBean.treeList)-1}" var="i">
+				<p:tab title="#{loginBean.treeList.get(i).name}">
 					<c:forEach begin="0" end="#{fn:length(loginBean.treeList.get(i).leafTreeList)-1}" var="j">
-						<li><a href="/sed#{loginBean.treeList.get(i).leafTreeList.get(j).urlPattern}"><span class="#{loginBean.treeList.get(i).leafTreeList.get(j).iconClass}"></span>#{loginBean.treeList.get(i).leafTreeList.get(j).name}</a></li>		
+							<table>
+								<tr>
+									<td>
+										<a href="/sed#{loginBean.treeList.get(i).leafTreeList.get(j).urlPattern}">
+											<span class="#{loginBean.treeList.get(i).leafTreeList.get(j).iconClass}"/>											
+										</a>
+									</td>
+									<td>
+										<a href="/sed#{loginBean.treeList.get(i).leafTreeList.get(j).urlPattern}">
+											#{loginBean.treeList.get(i).leafTreeList.get(j).name}
+										</a>			
+									</td>
+								</tr>
+							</table>
 					</c:forEach>
-				</ul>
-			</li>
+				</p:tab>
 		</c:forEach>
-	</ul>
+		</p:accordionPanel>
 	</div>
 </f:view>
 </html>

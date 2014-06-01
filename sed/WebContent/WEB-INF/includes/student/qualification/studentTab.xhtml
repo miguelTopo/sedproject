@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<p:tabView id="studentTab" activeIndex="#{studentQualificationBean.activeIndex}">
+		
+		<p:ajax event="tabChange" listener="#{studentQualificationBean.handleTabChange}"/>
+		
+		<p:tab title="Mis notas">
+			<h:form>
+				<ui:include src="/WEB-INF/includes/student/qualification/studentQualification.xhtml" />
+			</h:form>
+		</p:tab>
+		<p:tab title="Histórico de Notas">
+			<h:form>
+				<ui:include src="/WEB-INF/includes/student/qualification/historicalQualification.xhtml" />
+			</h:form>
+		</p:tab>
+	</p:tabView>
+</f:view>
+</html>
