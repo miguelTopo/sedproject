@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -9,6 +9,7 @@
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link type="text/css" rel="stylesheet" href="../css/sedStyle.css" />
+		<link href="https://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.css" rel="styleSheet" />
 		<script type="text/javascript">
 		var lmPresence = <h:outputText value="#{bundle.labelPresence}"/>; 
 		var lmNotNumber = <h:outputText value="#{bundle.labelNotANumberMessage}"/>; 
@@ -27,7 +28,8 @@
 		var lmNotAcept = <h:outputText value="#{bundle.labelNotAcept}"/>;
 		var lmMustSelectOne= <h:outputText value="#{bundle.labelMustSelectOne}"/>;
 		</script>
-		
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<script type="text/javascript" src="../js/sedFunction.js"/>
 		<script type="text/javascript" src="../js/livevalidation.js"/>
 		<f:loadBundle
@@ -42,15 +44,18 @@
 			<p:growl id="generalGrowl" globalOnly="true" sticky="false"
 				life="6000" showDetail="true" autoUpdate="true" />
 			<p:dialog id="dlgGeneralStatus" widgetVar="statusDialog"
-				closable="false" header="Procesando..." resizable="false"jjquery ui icon name mapjjquery ui icon name mapjjquery ui icon name mapjjquery ui icon name map
+				closable="false" header="Procesando..." resizable="false"
 				draggable="false" modal="true">
 				<div align="center">
 					<p:graphicImage value="../css/images/loadingAjax.gif" />
 				</div>
 			</p:dialog>
 			<ui:include src="/WEB-INF/includes/content/header.xhtml" />
-			<div id="content" style="padding-left: 7%; padding-right: 7%;">
-				<div id="contentInside">
+			<div id="content" style="padding-right: 5%;padding-left: 2%;">
+				<div id="userMenu" style="width: 20%;float: left;padding-top: 20px;">
+					<ui:include src="/WEB-INF/includes/content/sedUserMenu.xhtml" />
+				</div>
+				<div id="contentInside" style="float: right;width: 80%;">
 					<p:outputPanel id="panelStack">
 						<ui:insert name="main">...</ui:insert>
 					</p:outputPanel>

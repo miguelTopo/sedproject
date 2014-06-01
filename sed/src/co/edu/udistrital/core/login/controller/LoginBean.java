@@ -63,7 +63,7 @@ public class LoginBean extends BackingBean implements Serializable {
 				String sessionId = getSession(false).getId();
 				setUserSession(this.controller.validateSedUser(this.userName, this.userPassword));
 				User u = getUserSession();
-				System.out.println(u.getEmail());
+				
 
 				if (getUserSession() != null) { 
 					addUserCookieList();

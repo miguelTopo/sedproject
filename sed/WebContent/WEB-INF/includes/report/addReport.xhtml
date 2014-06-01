@@ -81,8 +81,8 @@
 									fileUploadListener="#{reportBean.handleFileUpload}"
 									cancelLabel="#{bundle['page.core.labelCancel']}" deletelabel="#{bundle['page.core.labelDelete']}"
 									uploadLabel="#{bundle['page.core.file.labelUpload']}" label="#{bundle['page.core.labelSelect']}"
-									onstart="statusDialog.show();" update=":addReportForm:opFileError"
-									oncomplete="statusDialog.hide();"
+									onstart="PF('statusDialog').show();" update=":addReportForm:opFileError"
+									oncomplete="PF('statusDialog').hide();"
 									allowTypes="/(\.|\/)(xls?x)$/" />
 							</p:outputPanel>
 						</p:outputPanel>

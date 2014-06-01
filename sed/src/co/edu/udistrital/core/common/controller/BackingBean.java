@@ -320,7 +320,6 @@ public abstract class BackingBean implements Serializable {
 
 				if (tr.getIdSedRole().equals(idRole)) {
 
-
 					for (Tree t : BeanList.getTreeList()) {
 						if (tr.getIdTree().equals(t.getId()) && t.isRoot()) {
 
