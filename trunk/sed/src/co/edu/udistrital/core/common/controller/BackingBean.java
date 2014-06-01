@@ -341,7 +341,6 @@ public abstract class BackingBean implements Serializable {
 
 					}
 					treeRoleList.add(t);
-
 				}
 			}
 			return treeRoleList;
