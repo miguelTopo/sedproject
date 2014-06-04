@@ -22,7 +22,8 @@
 						#{loginBean.userSession.sedRoleName}
 					</td>
 					<td style="text-align:center;">
-						<p:commandButton value="Cerrar Sesión"/>
+						<p:commandButton value="Cerrar Sesión" onstart="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();" 
+							action="#{loginBean.logout()}"/>
 					</td>
 				</tr>
 			</table>
