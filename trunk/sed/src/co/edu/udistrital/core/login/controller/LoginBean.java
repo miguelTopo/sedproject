@@ -84,16 +84,25 @@ public class LoginBean extends BackingBean implements Serializable {
 			} else
 				redirect("/portal/menu");
 
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			setUserSession(null);
-		} finally {
-			// setUserSession(null);
+		}
+	}
+	
+	/**@author MTorres*/
+	public void logout(){
+		try {
+			ManageCookie.removeCookieByName("uID");
+			ManageCookie.removeCookieByName("locate");
+			getSession(false).setAttribute("user", null);
+			redirectToLogin();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
+	/**@author MTorres*/
 	private void addUserCookieList() {
 		try {
 			ManageCookie.addCookie("uID", getUserSession().getId().toString(), 30, "user", true);

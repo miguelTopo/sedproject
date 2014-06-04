@@ -25,7 +25,6 @@ import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.Subject;
-import co.edu.udistrital.session.common.SedSession;
 import co.edu.udistrital.session.common.User;
 
 public abstract class BackingBean implements Serializable {
@@ -90,7 +89,6 @@ public abstract class BackingBean implements Serializable {
 
 					if (userA == null)
 						return false;
-
 
 					if (userA != null) {
 						if (getUserSession() != null)

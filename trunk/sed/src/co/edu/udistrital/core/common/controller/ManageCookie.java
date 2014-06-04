@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 public class ManageCookie {
-	
+
 	public ManageCookie() {
-	
+
 	}
 
 	public static void addCookie(String name, String value, int expire, String comment, boolean secure) {
@@ -26,6 +26,24 @@ public class ManageCookie {
 		}
 	}
 
+	public static boolean removeCookieByName(String cookieName) {
+		try {
+			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			Cookie cookieList[] = request.getCookies();
+			if (cookieList != null) {
+				for (Cookie c : cookieList) {
+					if (c.getName().equals(cookieName)) {
+						c.setMaxAge(0);
+						return true;
+					}
+				}
+			}
+			return false;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	public static String getCookieByName(String cookieName) {
 		try {
 			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -36,7 +54,7 @@ public class ManageCookie {
 						return c.getValue();
 				}
 			}
-				return null;
+			return null;
 		} catch (Exception e) {
 			throw e;
 		}

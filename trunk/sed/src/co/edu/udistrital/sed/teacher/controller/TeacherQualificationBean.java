@@ -13,7 +13,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
 @ViewScoped
-@URLMapping(id = "tQualification", pattern = "/portal/calificaciones", viewId = "/pages/teacherqualification/teacherqualification.jspx")
+@URLMapping(id = "tQualification", pattern = "/portal/calificar", viewId = "/pages/teacherqualification/teacherqualification.jspx")
 public class TeacherQualificationBean extends BackingBean {
 
 	/**
