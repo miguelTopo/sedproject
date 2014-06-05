@@ -36,7 +36,6 @@ public class StudentBean extends BackingBean {
 	private Long grade;
 	private Long course;
 	private Long miDato;
-	private Long idStudentSelected;
 	private Date studentBirthday;
 
 	// User List
@@ -310,7 +309,8 @@ public class StudentBean extends BackingBean {
 	/** @author MTorres */
 	private Student loadStudent() throws Exception {
 		try {
-			return this.controller.loadStudent(this.idStudentSelected, this.course);
+//			return this.controller.loadStudent(this.idStudentSelected, this.course);
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -320,14 +320,14 @@ public class StudentBean extends BackingBean {
 	/** @author MTorres */
 	public void goEdit() {
 		try {
-			if (this.idStudentSelected != null) {
-				hideAll();
-				setShowEdit(true);
-				this.student = loadStudent();
-				this.studentBirthday = ManageDate.stringToDate(this.student.getBirthday(), ManageDate.YYYY_MM_DD);
-				System.out.println(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
-				setPanelView("addStudent", "Editar Estudiante", "studentBean");
-			}
+//			if (this.idStudentSelected != null) {
+//				hideAll();
+//				setShowEdit(true);
+//				this.student = loadStudent();
+//				this.studentBirthday = ManageDate.stringToDate(this.student.getBirthday(), ManageDate.YYYY_MM_DD);
+//				System.out.println(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
+//				setPanelView("addStudent", "Editar Estudiante", "studentBean");
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -487,14 +487,6 @@ public class StudentBean extends BackingBean {
 
 	public void setStudentBirthday(Date studentBirthday) {
 		this.studentBirthday = studentBirthday;
-	}
-
-	public Long getIdStudentSelected() {
-		return idStudentSelected;
-	}
-
-	public void setIdStudentSelected(Long idStudentSelected) {
-		this.idStudentSelected = idStudentSelected;
 	}
 
 }
