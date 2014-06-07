@@ -24,6 +24,7 @@ import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
+import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.session.common.User;
 
@@ -330,7 +331,7 @@ public abstract class BackingBean implements Serializable {
 				if (t.isRoot() && idTreeList.contains(t.getId())) {
 
 					for (Tree lt : BeanList.getTreeList()) {
-						//verificando que sea una hoja de la rama principal
+						// verificando que sea una hoja de la rama principal
 						if (!lt.getId().equals(t.getId()) && !lt.isRoot() && idTreeList.contains(lt.getId()) && !idTreeUsed.contains(lt.getId())
 							&& t.getId().equals(lt.getIdTreeRoot())) {
 							t.getLeafTreeList().add(lt);
@@ -384,6 +385,14 @@ public abstract class BackingBean implements Serializable {
 	public List<Tree> getTreeList() {
 		try {
 			return BeanList.getTreeList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<QualificationType> getQualificationTypeList() {
+		try {
+			return BeanList.getQualificationTypeList();
 		} catch (Exception e) {
 			throw e;
 		}

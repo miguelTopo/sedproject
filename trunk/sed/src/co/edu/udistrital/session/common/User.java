@@ -8,6 +8,7 @@ public class User implements Serializable {
 	private Long id;
 	private Long idSedUser;
 	private Long idIdentificationType;
+	private Long idStudent;
 	private String name;
 	private String lastName;
 	private String identification;
@@ -104,5 +105,13 @@ public class User implements Serializable {
 	public void setIdSedRole(Long idSedRole) {
 		this.idSedRole = idSedRole;
 	}
-				
+
+	public Long getIdStudent() {
+		return idStudent;
+	}
+
+	public void setIdStudent(Long idStudent) {
+		this.idStudent = idStudent;
+	}
+					
 }

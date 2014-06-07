@@ -98,7 +98,7 @@ public class StudentDAO extends HibernateDAO {
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
 			qo.setParameter("idCourse", idCourse);
 			qo.setParameter("state", IState.ACTIVE);
-			
+
 			return qo.list();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,6 +179,46 @@ public class StudentDAO extends HibernateDAO {
 			return qo.list();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	/** @author MTorres 7/06/2014 */
+	public Student loadStudent(Long idSedUser) throws Exception {
+		StringBuilder hql = null;
+		Query qo = null;
+
+		try {
+			hql = new StringBuilder();
+			hql.append(" SELECT s.id AS id, ");
+			hql.append(" s.name AS name, ");
+			hql.append(" s.lastName AS lastName, ");
+			hql.append(" s.identification AS identification, ");
+			hql.append(" s.idIdentificationType AS idIdentificationType, ");
+			hql.append(" su.email AS email ");
+			hql.append(" FROM Student s, ");
+			hql.append(" SedUser su, ");
+			hql.append(" IdentificationType it ");
+			hql.append(" WHERE su.id = s.idSedUser ");
+			hql.append(" AND it.id = su.idIdentificationType ");
+			hql.append(" AND it.id = su.idIdentificationType ");
+			hql.append(" AND su.id = :idSedUser ");
+			hql.append(" AND s.state = :state ");
+			hql.append(" AND su.state = :state ");
+			hql.append(" AND it.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
+
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setMaxResults(1);
+
+			return (Student) qo.uniqueResult();
+
+		} catch (Exception e) {
 			throw e;
 		} finally {
 			hql = null;

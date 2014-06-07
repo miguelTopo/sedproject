@@ -51,3 +51,6 @@ a {
 .ui-emphasize-text{
 	color:#3CB3DB;
 }
+.ui-table-filter{
+	width:80% !important;
+}

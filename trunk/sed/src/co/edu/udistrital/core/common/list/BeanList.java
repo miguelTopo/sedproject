@@ -16,6 +16,7 @@ import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
+import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Subject;
 
 @ManagedBean(eager = true)
@@ -38,6 +39,7 @@ public class BeanList implements Serializable {
 	private static List<TreeSedRole> treeSedRoleList;
 	private static List<IdentificationType> identificationTypeList;
 	private static List<SedRole> sedRoleList;
+	private static List<QualificationType> qualificationTypeList; 
 
 	private static List<EmailTemplate> emailTemplateList;
 
@@ -58,6 +60,16 @@ public class BeanList implements Serializable {
 			loadIdentificationTypeList();
 			loadSedRoleList();
 			loadEmailTemplateList();
+			loadQualificationTypeList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loadQualificationTypeList(){
+		try {
+			if(qualificationTypeList==null)
+				qualificationTypeList = controller.loadQualificationTypeList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -178,5 +190,8 @@ public class BeanList implements Serializable {
 		return emailTemplateList;
 	}
 
+	public static List<QualificationType> getQualificationTypeList() {
+		return qualificationTypeList;
+	}
 
 }

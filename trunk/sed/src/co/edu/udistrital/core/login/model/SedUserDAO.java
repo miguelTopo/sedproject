@@ -7,6 +7,7 @@ import org.hibernate.transform.Transformers;
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.connection.HibernateDAO;
+import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.session.common.User;
 
 public class SedUserDAO extends HibernateDAO {
@@ -56,7 +57,26 @@ public class SedUserDAO extends HibernateDAO {
 				qo.setParameter("state", IState.ACTIVE);
 				qo.setMaxResults(1);
 
-				return (User) qo.uniqueResult();
+
+				User u = (User) qo.uniqueResult();
+				if (u.getIdSedRole().equals(ISedRole.STUDENT)) {
+					hql = null;
+					qo = null;
+					hql = new StringBuilder();
+					hql.append(" SELECT s.id ");
+					hql.append(" FROM Student s ");
+					hql.append(" WHERE s.idSedUser = :idSedUser ");
+					hql.append(" AND s.state = :state ");
+
+					qo = getSession().createQuery(hql.toString());
+					qo.setParameter("state", IState.ACTIVE);
+					qo.setParameter("idSedUser", u.getIdSedUser());
+					qo.setMaxResults(1);
+
+					u.setIdStudent((Long) qo.uniqueResult());
+
+				}
+				return u;
 
 			} else
 				return null;
