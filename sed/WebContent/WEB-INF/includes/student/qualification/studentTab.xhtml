@@ -5,26 +5,85 @@
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
 
+	<p:panel header="Calificaciones">
 	<table style="width:100%;border-spacing:5px">
 		<tr>
-			
+			<td style="width:5%"/>
+			<td style="width:15%"/>
+			<td style="width:27%"/>
+			<td style="width:6%"/>
+			<td style="width:15%"/>
+			<td style="width:27%"/>			
+			<td style="width:5%"/>		
 		</tr>
-	
+		<tr>
+			<td>
+				<br/>
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<strong>#{bundle['page.student.labelStudentName']}:</strong>
+			</td>
+			<td>
+				#{studentQualificationBean.student.name}
+			</td>
+			<td/>
+			<td>
+				<strong>#{bundle['page.student.labelStudentLastName']}:</strong>
+			</td>
+			<td>
+				#{studentQualificationBean.student.lastName}
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<strong>#{bundle['page.student.labelIdentificationType']}:</strong>
+			</td>
+			<td>
+				#{studentQualificationBean.student.identificationTypeName}
+			</td>
+			<td/>
+			<td>
+				<strong>#{bundle['page.student.labelStudentIdentification']}:</strong>
+			</td>
+			<td>
+				#{studentQualificationBean.student.identification}
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<strong>#{bundle['page.student.labelStudentEmail']}:</strong>
+			</td>
+			<td>
+				#{studentQualificationBean.student.email}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<br/><br/>
+			</td>
+		</tr>
 	</table>
 	
-	<p:tabView id="studentTab" activeIndex="#{studentQualificationBean.activeIndex}">
-		<p:ajax event="tabChange" listener="#{studentQualificationBean.handleTabChange}"/>
-		<p:tab title="Mis notas">
-			<h:form>
+	<p:tabView id="studentTab" activeIndex="#{studentQualificationBean.activeIndex}" cache="false" dynamic="true">
+
+		<p:ajax event="tabChange" listener="#{studentQualificationBean.handleTabChange}" global="false" />
+		
+		<p:tab id="stdQualificationTab" title="Mis notas">
+			<h:form id="studentQualificationForm">
 				<ui:include src="/WEB-INF/includes/student/qualification/studentQualification.xhtml" />
 			</h:form>
 		</p:tab>
-		<p:tab title="Histórico de Notas">
+		<p:tab id="stdHistoricalTab" title="Histórico de Notas">
 			<h:form>
 				<ui:include src="/WEB-INF/includes/student/qualification/historicalQualification.xhtml" />
 			</h:form>
 		</p:tab>
 	</p:tabView>
-	
+	</p:panel>
 </f:view>
 </html>

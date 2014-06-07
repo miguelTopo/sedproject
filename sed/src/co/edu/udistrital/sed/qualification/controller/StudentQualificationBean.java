@@ -7,6 +7,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.poi.ss.usermodel.BorderFormatting;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
@@ -133,6 +140,45 @@ public class StudentQualificationBean extends BackingBean {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void handleDataExporter(Object o) {
+		try {
+			Workbook wb = (Workbook) o;
+			wb.setSheetName(0, "Datos Educacional");
+			CellStyle bs = wb.createCellStyle();
+			bs.setBorderBottom(BorderFormatting.BORDER_THIN);
+			bs.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+			bs.setBorderTop(BorderFormatting.BORDER_THIN);
+			bs.setTopBorderColor(IndexedColors.BLACK.getIndex());
+			bs.setBorderLeft(BorderFormatting.BORDER_THIN);
+			bs.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+			bs.setBorderRight(BorderFormatting.BORDER_THIN);
+			bs.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			CellStyle hs = wb.createCellStyle();
+			hs.cloneStyleFrom(bs);
+			hs.setFillForegroundColor(IndexedColors.AQUA.getIndex());
+			hs.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+			for (Row r : wb.getSheetAt(0)) {
+				for (Cell c : r) {
+					if (c.getRowIndex() == 0)
+						c.setCellStyle(hs);
+					else
+						c.setCellStyle(bs);
+				}
+			}
+
+			int maxIndex = getQualificationTypeList().size() + 2;
+
+			for (int i = 0; i < maxIndex; i++) {
+				wb.getSheetAt(0).autoSizeColumn(i);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public boolean getValidateSedUserRole() throws Exception {
