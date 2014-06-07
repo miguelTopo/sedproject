@@ -4,10 +4,16 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
+
+	<table style="width:100%;border-spacing:5px">
+		<tr>
+			
+		</tr>
+	
+	</table>
+	
 	<p:tabView id="studentTab" activeIndex="#{studentQualificationBean.activeIndex}">
-		
 		<p:ajax event="tabChange" listener="#{studentQualificationBean.handleTabChange}"/>
-		
 		<p:tab title="Mis notas">
 			<h:form>
 				<ui:include src="/WEB-INF/includes/student/qualification/studentQualification.xhtml" />
@@ -19,5 +25,6 @@
 			</h:form>
 		</p:tab>
 	</p:tabView>
+	
 </f:view>
 </html>

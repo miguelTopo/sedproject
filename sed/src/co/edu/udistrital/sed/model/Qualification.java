@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,15 +18,17 @@ import co.edu.udistrital.core.common.model.ASEDModel;
 @Table(name = "qualification")
 public class Qualification extends ASEDModel implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1184189519737803513L;
-
 	private Long idStudentCourse;
 	private Long idQualificationType;
 	private Long idSubject;
 	private Double value;
+
+	// Transient
+	private transient Long idStudent;
+	private transient Long idKnowledgeArea;
+	private transient String studentName;
+	private transient String subjectName;
+	private transient String knowledgeAreaName;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -117,6 +120,51 @@ public class Qualification extends ASEDModel implements Serializable {
 
 	public void setValue(Double value) {
 		this.value = value;
+	}
+
+	@Transient
+	public Long getIdStudent() {
+		return idStudent;
+	}
+
+	public void setIdStudent(Long idStudent) {
+		this.idStudent = idStudent;
+	}
+
+	@Transient
+	public Long getIdKnowledgeArea() {
+		return idKnowledgeArea;
+	}
+
+	public void setIdKnowledgeArea(Long idKnowledgeArea) {
+		this.idKnowledgeArea = idKnowledgeArea;
+	}
+
+	@Transient
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	@Transient
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	@Transient
+	public String getKnowledgeAreaName() {
+		return knowledgeAreaName;
+	}
+
+	public void setKnowledgeAreaName(String knowledgeAreaName) {
+		this.knowledgeAreaName = knowledgeAreaName;
 	}
 
 }

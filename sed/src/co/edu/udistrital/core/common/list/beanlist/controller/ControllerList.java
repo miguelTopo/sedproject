@@ -20,6 +20,8 @@ import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.GradeDAO;
 import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.IdentificationTypeDAO;
+import co.edu.udistrital.sed.model.QualificationType;
+import co.edu.udistrital.sed.model.QualificationTypeDAO;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.sed.model.SubjectDAO;
 
@@ -153,6 +155,7 @@ public class ControllerList extends Controller {
 		}
 	}
 
+	/**@author MTorres 7/06/2014*/
 	public List<EmailTemplate> loadEmailTemplateList() throws Exception{
 		EmailTemplateDAO dao = new EmailTemplateDAO();
 		Transaction tx = null;
@@ -168,5 +171,26 @@ public class ControllerList extends Controller {
 			dao = null;
 			tx = null;
 		}
+	}
+
+	/**@author MTorres 7/06/2014*/
+	public List<QualificationType> loadQualificationTypeList() throws Exception {
+		QualificationTypeDAO dao = null;
+		Transaction tx = null;
+		try {
+			dao = new QualificationTypeDAO();
+			tx = dao.getSession().beginTransaction();
+			return dao.findAll();
+		} catch (Exception e) {
+			if (tx != null && tx.isActive())
+				tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().cancelQuery();
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+
 	}
 }
