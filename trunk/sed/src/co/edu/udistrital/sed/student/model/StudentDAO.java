@@ -198,7 +198,8 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" s.lastName AS lastName, ");
 			hql.append(" s.identification AS identification, ");
 			hql.append(" s.idIdentificationType AS idIdentificationType, ");
-			hql.append(" su.email AS email ");
+			hql.append(" su.email AS email, ");
+			hql.append(" it.name AS identificationTypeName ");
 			hql.append(" FROM Student s, ");
 			hql.append(" SedUser su, ");
 			hql.append(" IdentificationType it ");

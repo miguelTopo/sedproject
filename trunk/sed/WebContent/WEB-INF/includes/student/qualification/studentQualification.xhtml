@@ -6,16 +6,16 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
-	<h:form>
-		<p:dataTable id="stdQuaificationTable" value="#{studentQualificationBean.studentQualificationList}" var="q" 
+		<p:dataTable id="stdQualificationTable" value="#{studentQualificationBean.studentQualificationList}" var="q" 
 			filteredValue="#{studentQualificationBean.studentQualificationFilterList}">
 		
-			<p:column headerText="Área de Conocimiento" sortBy="#{q.knowledgeAreaName}" filterBy="#{q.knowledgeAreaName}" filterMatchMode="contains"
-				filterStyleClass="ui-table-filter">
+			<p:column headerText="#{bundle['page.sed.labelKnowledgeArea']}" sortBy="#{q.knowledgeAreaName}" filterBy="#{q.knowledgeAreaName}" filterMatchMode="contains"
+				filterStyleClass="ui-table-filter" style="width:360px">
 				<h:outputText value="#{q.knowledgeAreaName}"/>
 			</p:column>
 			
-			<p:column headerText="Materia" sortBy="#{q.subjectName}" filterBy="#{q.subjectName}" filterMatchMode="contains" filterStyleClass="ui-table-filter">
+			<p:column headerText="#{bundle['page.sed.labelSubject']}" sortBy="#{q.subjectName}" filterBy="#{q.subjectName}" filterMatchMode="contains" filterStyleClass="ui-table-filter"
+				style="width:150px">
 				<h:outputText value="#{q.subjectName}"/>
 			</p:column>
 			
@@ -27,13 +27,13 @@
 				</p:column>	
 			</c:forEach>
 			
-			
 		</p:dataTable>
 		<div style="text-align:center; padding-top: 20px;">
-			<p:commandButton value="Aqui mi boton de descargar">
-			
-			</p:commandButton>
+			<p:commandLink title="#{bundle['page.sq.labelDownloadQualification']}" ajax="false">
+				<p:graphicImage value="../css/icon/excel.png" height="40" width="40"/>
+				<p:dataExporter target="stdQualificationTable" type="xls" fileName="Mis notas" 
+					postProcessor="#{studentQualificationBean.handleDataExporter}"/>
+			</p:commandLink>
 		</div>
-	</h:form>
 </f:view>
 </html>
