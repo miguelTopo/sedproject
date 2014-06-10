@@ -30,10 +30,10 @@ public class SedUser extends AParameter implements Serializable {
 	private String email;
 
 	// Transient
-	private transient Long idSedRole;
-	private transient String nameSedRole;
-	private transient String nameIdentificationType;
-	private transient String userName;
+	private Long idSedRole;
+	private String nameSedRole;
+	private String nameIdentificationType;
+	private String userName;
 
 	public SedUser() {
 
