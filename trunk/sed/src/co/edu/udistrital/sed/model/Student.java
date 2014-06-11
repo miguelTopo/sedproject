@@ -26,13 +26,14 @@ public class Student extends AParameter implements Serializable {
 	private Long idSedUser;
 	private String birthday;
 
-	private transient String courseName;
-	private transient String gradeName;
-	private transient String identificationTypeName;
-	private transient String email;
-	private transient Long idGrade;
-	private transient Long idCourse;
-	private transient Long idStudentCourse;
+	//Transient
+	private String courseName;
+	private String gradeName;
+	private String identificationTypeName;
+	private String email;
+	private Long idGrade;
+	private Long idCourse;
+	private Long idStudentCourse;
 
 
 	private transient List<Integer> invalidColumn;

@@ -100,7 +100,9 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" su.lastName AS lastName, ");
 			hql.append(" su.identification AS identification, ");
 			hql.append(" su.email AS email, ");
+			hql.append(" it.id AS idIdentificationType, ");
 			hql.append(" it.name AS nameIdentificationType, ");
+			hql.append(" sr.id AS idSedRole, ");
 			hql.append(" sr.name AS nameSedRole ");
 			hql.append(" FROM SedUser su, ");
 			hql.append(" IdentificationType it, ");

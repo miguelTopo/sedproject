@@ -33,11 +33,11 @@ public class SedUserBean extends BackingBean {
 	private boolean existIdentification = false, existEmail = false, existUserName = false;
 	private boolean randomPassword;
 
-
-
 	// Basic Java Data Object
 	private String userPassword;
 	private String confirmPassword;
+	private Long idFilterSedRole;
+	private Long idFilterIdentificationType;
 
 	// User List
 	private List<SedUser> sedUserList;
@@ -420,4 +420,19 @@ public class SedUserBean extends BackingBean {
 		this.sedUserFilteredList = sedUserFilteredList;
 	}
 
+	public Long getIdFilterSedRole() {
+		return idFilterSedRole;
+	}
+
+	public void setIdFilterSedRole(Long idFilterSedRole) {
+		this.idFilterSedRole = idFilterSedRole;
+	}
+
+	public Long getIdFilterIdentificationType() {
+		return idFilterIdentificationType;
+	}
+
+	public void setIdFilterIdentificationType(Long idFilterIdentificationType) {
+		this.idFilterIdentificationType = idFilterIdentificationType;
+	}
 }
