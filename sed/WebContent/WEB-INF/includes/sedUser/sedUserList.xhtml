@@ -6,7 +6,7 @@
 <f:view>
 	<h:form id="sedUserForm">
 		  <h:inputHidden id="disableEnter"/><p:defaultCommand target="disableEnter"/>
-		<p:panel header="Usuarios del Sistema">
+			<p:panel header="Usuarios del Sistema">
 			<table width="100%" cellpadding="3" cellspacing="3">
 				<tr>
 					<td width="3%" />
@@ -50,8 +50,15 @@
 								#{u.identification}
 							</p:column>
 							
-							<p:column sortBy="#{u.nameIdentificationType}" filterBy="#{u.nameIdentificationType}" filterMatchMode="contains"
+							<p:column filterBy="#{u.idIdentificationType}" filterMatchMode="exact"
 								headerText="#{bundle['page.student.labelIdentificationType']}" style="width:140px">
+								<f:facet name="filter">
+									<p:selectOneMenu value="#{sedUserBean.idFilterIdentificationType}" onchange="PF('sedUserTableWV').filter();" style="width:135px">
+										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="#{null}" noSelectionOption="true"/>
+										<f:selectItems value="#{sedUserBean.identificationTypeList}" var="it" itemLabel="#{it.name}" itemValue="#{it.id}"/>
+									</p:selectOneMenu>
+									
+								</f:facet>
 								#{u.nameIdentificationType}
 							</p:column>
 							
@@ -66,9 +73,15 @@
 								headerText="#{bundle['page.student.labelStudentName']}">
 								#{u.name}
 							</p:column>
-							<p:column sortBy="#{u.nameSedRole}" filterBy="#{u.nameSedRole}"
-								filterMatchMode="contains" style="width:150px"
+							<p:column filterBy="#{u.idSedRole}"
+								filterMatchMode="exact" style="width:150px"
 								headerText="#{bundle['page.seduser.labelUserType']}">
+								<f:facet name="filter">
+									<p:selectOneMenu value="#{sedUserBean.idFilterSedRole}" onchange="PF('sedUserTableWV').filter();">
+										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="#{null}" noSelectionOption="true"/>
+										<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
+									</p:selectOneMenu>
+								</f:facet>
 								#{u.nameSedRole}
 							</p:column>
 
