@@ -4,157 +4,187 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:pe="http://primefaces.org/ui/extensions">
-<f:view contentType="text/html">
+<f:view>
+	<style type="text/css">
+		section article{
+		width: 350px;
+		display: inline-block;
+		margin-left:25px; 
+		margin-right:11px;
+		}
+		table{
+			width:100%;
+			border-spacing: 5px;
+		}
+		.ui-label-table{
+			width:35%;
+		}
+		.ui-content-table{
+			width:65%;
+		}
+	</style>
 	<h:form id="addStudentForm">
-		<p:panel header="#{bundle['page.student.labelAddStudent']}">
-			<table style="width:100%; border-spacing: 5px;">
-				<tr>
-					<td style="width:5%"/>
-					<td style="width:20%"/>
-					<td style="width:23%"/>
-					<td style="width:6%"/>
-					<td style="width:20%"/>
-					<td style="width:23%"/>
-					<td style="width:5%"/>
-				</tr>
-				<tr>
-					<td/>
-					<td colspan="2">
-						#{bundle['page.core.labelDataObligatory']}
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<br/><br/>
-					</td>
-				</tr>
-				<tr>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.student.labelStudentName']}:
-						</strong>
-					</td>
-					<td>
-						<p:inputText id="txtStdName" value="#{studentBean.student.name}" style="width:95%"/>
-					</td>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.student.labelStudentLastName']}:
-						</strong>
-					</td>
-					<td>
-						<p:inputText id="txtStdLastname" value="#{studentBean.student.lastName}" style="width:95%"></p:inputText>
-					</td>
-				</tr>
-				<tr>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.student.labelStudentEmail']}:
-						</strong>
-					</td>
-					<td>
-						<p:inputText id="txtStdEmail" value="#{studentBean.student.email}" style="width:95%;text-transform:lowercase;" onkeyup="parseLowerCase('addStudentForm','txtStdEmail');">
-							<p:ajax process="@this" listener="#{studentBean.validateEmail}" update=":addStudentForm:opExistEmail" event="blur"/>
-						</p:inputText>
+		<p:panel header="#{bundle['page.student.labelAddStudent']}" style="width:100%;padding:20px;">
+			<div style="padding:25px;">
+				#{bundle['page.core.labelDataObligatory']}
+			</div>
+			<section>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.student.labelStudentName']}:
+								</strong>			
+							</td>
+							<td class="ui-content-table">
+								<p:inputText id="txtStdName" value="#{studentBean.student.name}" style="width:95%"/>			
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.student.labelStudentLastName']}:
+								</strong>			
+							</td>
+							<td class="ui-content-table">
+								<p:inputText id="txtStdLastname" value="#{studentBean.student.lastName}" style="width:95%"/>											
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.student.labelStudentEmail']}:
+								</strong>			
+							</td>
+							<td class="ui-content-table">
+								<p:inputText id="txtStdEmail" value="#{studentBean.student.email}" style="width:95%;text-transform:lowercase;" onkeyup="parseLowerCase('addStudentForm','txtStdEmail');">
+									<p:ajax process="@this" listener="#{studentBean.validateEmail}" update=":addStudentForm:opExistEmail" event="blur"/>
+								</p:inputText>
 						
-						<p:outputPanel id="opExistEmail">
-							<p:outputPanel rendered="#{studentBean.existEmail}">
-								<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-field-invalid" />
-							</p:outputPanel>
-						</p:outputPanel>
-					</td>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.student.labelStudentBirthday']}:
-						</strong> 
-					</td>
-					<td>
-						<p:calendar id="cStdBirthday" value="#{studentBean.studentBirthday}" locale="es" navigator="true" maxdate="new Date();" styleClass="student-calendar" pattern="MM/dd/yyyy"/>
-					</td>
-				</tr>
-				<tr>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.student.labelIdentificationType']}:
-						</strong>
-					</td>
-					<td>
-						<p:selectOneMenu id="somIdentificationType" value="#{studentBean.student.idIdentificationType}" style="width:95%">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-							<f:selectItems value="#{studentBean.identificationTypeList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
-						</p:selectOneMenu>
-						<div id="valIdType_DIV" class="ui-field-invalid"/>
-					</td>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.student.labelStudentIdentification']}:
-						</strong>
-					</td>
-					<td>
-						<p:inputText id="txtDocument" value="#{studentBean.student.identification}" style="width:95%">
-							<p:ajax process="@this" update=":addStudentForm:opExistDoc" listener="#{studentBean.validateIdentification}" event="blur"/>
-						</p:inputText>
-						<pe:keyFilter for="txtDocument" mask="pint"/>
+								<p:outputPanel id="opExistEmail">
+									<p:outputPanel rendered="#{studentBean.existEmail}">
+										<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-field-invalid" />
+									</p:outputPanel>
+								</p:outputPanel>											
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.student.labelStudentBirthday']}:
+								</strong> 			
+							</td>
+							<td class="ui-content-table">
+								<p:calendar id="cStdBirthday" value="#{studentBean.studentBirthday}" locale="es" navigator="true" maxdate="new Date();" styleClass="student-calendar" pattern="MM/dd/yyyy"/>											
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.student.labelIdentificationType']}:
+								</strong> 			
+							</td>
+							<td class="ui-content-table">
+								<p:selectOneMenu id="somIdentificationType" value="#{studentBean.student.idIdentificationType}" style="width:98%">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{studentBean.identificationTypeList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+								</p:selectOneMenu>
+								<div id="valIdType_DIV" class="ui-field-invalid"/>											
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.student.labelStudentIdentification']}:
+								</strong> 			
+							</td>
+							<td class="ui-content-table">
+								<p:inputText id="txtDocument" value="#{studentBean.student.identification}" style="width:95%">
+									<p:ajax process="@this" update=":addStudentForm:opExistDoc" listener="#{studentBean.validateIdentification}" event="blur"/>
+								</p:inputText>
+								<pe:keyFilter for="txtDocument" mask="pint"/>
 						
-						<p:outputPanel id="opExistDoc">
-							<p:outputPanel rendered="#{studentBean.existDocument}">
-								<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-field-invalid" />
-							</p:outputPanel>
-						</p:outputPanel>						
-					</td>
-				</tr>
-				<tr>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.sed.labelGrade']}:
-						</strong>
-					</td>
-					<td>
-						<p:selectOneMenu id="somGrade" value="#{studentBean.student.idGrade}" style="width:95%">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-							<f:selectItems value="#{studentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
-							<p:ajax process="@this" listener="#{studentBean.handleGradeChange}" update=":addStudentForm:opCourseStudent"/>						
-						</p:selectOneMenu>
-						<div id="valGrade_DIV" class="ui-field-invalid"/>
-					</td>
-					<td/>
-					<td>
-						<strong>
-							* #{bundle['page.sed.labelCourse']}:
-						</strong>
-					</td>
-					<td>
-						<p:outputPanel id="opCourseStudent">
-							<p:selectOneMenu id="somCourse" value="#{studentBean.student.idCourse}" disabled="#{studentBean.student.idGrade eq 0}" style="width:95%">
-								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-								<f:selectItems value="#{studentBean.courseTmpList}" var="ct" itemLabel="#{ct.name}" itemValue="#{ct.id}"/>	
-							</p:selectOneMenu>
-							<div id="valCourse_DIV" class="ui-field-invalid"/>
-						</p:outputPanel>	
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<br/><br/>
-					</td>
-				</tr>
-			</table>
+								<p:outputPanel id="opExistDoc">
+									<p:outputPanel rendered="#{studentBean.existDocument}">
+										<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-field-invalid" />
+									</p:outputPanel>
+								</p:outputPanel>											
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.sed.labelGrade']}:
+								</strong>			
+							</td>
+							<td class="ui-content-table">
+								<p:selectOneMenu id="somGrade" value="#{studentBean.student.idGrade}" style="width:98%">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{studentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+									<p:ajax process="@this" listener="#{studentBean.handleGradeChange}" update=":addStudentForm:opCourseStudent"/>						
+								</p:selectOneMenu>
+								<div id="valGrade_DIV" class="ui-field-invalid"/>											
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article style="margin-left:36px;">
+					<table>
+						<tr>
+							<td class="ui-label-table">
+								<strong>
+									* #{bundle['page.sed.labelCourse']}:
+								</strong>			
+							</td>
+							<td class="ui-content-table">
+								<p:outputPanel id="opCourseStudent">
+									<p:selectOneMenu id="somCourse" value="#{studentBean.student.idCourse}" disabled="#{studentBean.student.idGrade eq 0}" style="width:98%">
+										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+										<f:selectItems value="#{studentBean.courseTmpList}" var="ct" itemLabel="#{ct.name}" itemValue="#{ct.id}"/>	
+									</p:selectOneMenu>
+									<div id="valCourse_DIV" class="ui-field-invalid"/>
+								</p:outputPanel>											
+							</td>
+						</tr>
+					</table>
+				</article>
+			</section>
+			
+			<br/><br/><br/>
+			
 			<div style="text-align:center;">
 				<p:commandButton id="btnAddStudent" value="Guardar Estudiante" action="#{studentBean.saveStudent}" styleClass="ui-priority-primary"
-					onclick="validateAddStudent();" type="button"
-				/>
+					onclick="validateAddStudent();" type="button"/>
 			</div>
 			<div style="text-align: right;">
 				<p:commandButton value="#{bundle['page.core.labelGoBack']}" icon="ui-icon-carat-1-w"
 					action="#{studentBean.goBack}" />
-			</div>
+			</div> 
 		</p:panel>
 	</h:form>
 </f:view>
