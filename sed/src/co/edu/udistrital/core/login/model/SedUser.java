@@ -17,7 +17,7 @@ import co.edu.udistrital.sed.model.Student;
 
 @Entity
 @Table(name = "seduser")
-public class SedUser extends AParameter implements Serializable {
+public class SedUser extends AParameter implements Serializable, Cloneable {
 
 	/**
 	 * 
@@ -33,7 +33,6 @@ public class SedUser extends AParameter implements Serializable {
 	private Long idSedRole;
 	private String nameSedRole;
 	private String nameIdentificationType;
-	private String userName;
 
 	public SedUser() {
 
@@ -43,12 +42,22 @@ public class SedUser extends AParameter implements Serializable {
 		try {
 			this.idIdentificationType = student.getIdIdentificationType();
 			this.name = student.getName();
-			this.lastName=student.getLastName();
+			this.lastName = student.getLastName();
 			this.identification = student.getIdentification();
 			this.email = student.getEmail();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public SedUser clone() {
+		SedUser su = null;
+		try {
+			su = (SedUser) super.clone(); 
+		} catch (CloneNotSupportedException e) {
+			System.out.println("No se puede duplicar");
+		}
+		return su;
 	}
 
 
@@ -183,15 +192,6 @@ public class SedUser extends AParameter implements Serializable {
 
 	public void setNameIdentificationType(String nameIdentificationType) {
 		this.nameIdentificationType = nameIdentificationType;
-	}
-
-	@Transient
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 }

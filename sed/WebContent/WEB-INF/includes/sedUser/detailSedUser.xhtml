@@ -6,7 +6,7 @@
 <f:view>
 	<h:form id="detailUserForm">
 		<p:panel id="detailPanel" header="Detallar Usuario">
-			<table width="100%" cellpadding="3" cellspacing="3">
+			<table style="width:100%;border-spacing:5px">
 				<tr>
 					<td width="7%" />
 					<td width="20%" />
@@ -45,9 +45,8 @@
 			</table>
 		</p:panel>
 		<br />
-		<div align="center">
-			<p:commandButton value="#{bundle['page.core.labelGoBack']}"
-				action="#{sedUserBean.goBack}" />
+		<div align="right">
+			<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" icon="ui-icon-arrow-1-w" />
 		</div>
 	</h:form>
 </f:view>

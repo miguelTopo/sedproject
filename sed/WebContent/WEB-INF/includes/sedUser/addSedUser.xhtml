@@ -7,7 +7,7 @@
 <f:view>
 		<style type="text/css">
 			section article{
-			width: 350px;
+			width: 370px;
 			display: inline-block;
 			}
 			table{
@@ -25,12 +25,21 @@
 	<h:form id="addSedUserForm">
 		<p:panel id="addSedUserPanel" header="#{sedUserBean.showAdd ? bundle['page.seduser.labelAddUser'] : bundle['page.seduser.labelEditUser']}">
 			<div style="padding:25px;">
+				<div style="padding-bottom: 25px;">
+					<p>
+						<h:outputText value="#{bundle['page.seduser.labelGuideAddSedUser']}" rendered="#{sedUserBean.showAdd}" />
+						<h:outputText value="#{bundle['page.seduser.labelGuideEditSedUser']}" rendered="#{sedUserBean.showEdit}" />
+					</p>
+				</div>
 				<section>
-					<div class="ui-subtitle-sed">
+					<article style="width:100%">
+					<div class="ui-subtitle-sed" style="padding-bottom: 25px;">
 						<h4 style="color: white;">
 							#{bundle['page.seduser.labelPersonalData']}
 						</h4>
 					</div>
+					
+					</article>
 					<article>
 						<table>
 							<tr>
@@ -110,8 +119,8 @@
 									</strong>
 								</td>
 								<td class="ui-content-table">
-									<p:inputText id="txtSuEmail" value="#{sedUserBean.sedUser.email}" style="width:95%">
-										<p:ajax process="@this" update=":addSedUserForm:opEmailExist" listener="#{sedUserBean.validateEmail}" />
+									<p:inputText id="txtSuEmail" value="#{sedUserBean.sedUser.email}" style="width:95%;text-transform:lowercase;">
+										<p:ajax process="@this" update=":addSedUserForm:opEmailExist" listener="#{sedUserBean.validateEmail}" event="blur" />
 									</p:inputText> 
 						
 									<p:outputPanel id="opEmailExist">
@@ -128,28 +137,12 @@
 							#{bundle['page.seduser.labelUserData']}
 						</h4>
 					</div>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.login.labelUserUser']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:inputText id="txtSuUsername" value="#{sedUserBean.sedUser.userName}" style="width:95%">
-										<p:ajax process="@this" update=":addSedUserForm:opUserNameExist" listener="#{sedUserBean.validateSedUserName}" />
-									</p:inputText> 
-						
-									<p:outputPanel id="opUserNameExist">
-										<p:outputPanel rendered="#{sedUserBean.existUserName}">
-											<h:outputText value="#{bundle['page.seduser.labelUserName']}" styleClass="ui-field-invalid" />
-										</p:outputPanel>
-									</p:outputPanel>
-								</td>
-							</tr>
-						</table>
-					</article>
+					<div style="padding-top: 25px;">
+						<p>
+							<h:outputText value="#{bundle['page.seduser.pw.labelGuideAddSedUser']}" escape="false" rendered="#{sedUserBean.showAdd}" />
+							<h:outputText value="#{bundle['page.seduser.pw.labelGuideEditSedUser']}" escape="false" rendered="#{sedUserBean.showEdit}" />
+						</p>
+					</div>
 					<article>
 						<table>
 							<tr>
@@ -196,19 +189,9 @@
 							</tr>
 						</table>
 					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									
-								</td>
-								<td class="ui-content-table">
-								
-								</td>
-							</tr>
-						</table>
-					</article>
 				</section>
+				<br/>
+				<br/>
 				<section>
 					<article style="width:100%;">
 						<p:selectBooleanCheckbox id="booleanPassword" value="#{sedUserBean.randomPassword}">
@@ -224,9 +207,10 @@
 
 			<div align="center">
 				<p:commandButton id="btnAddSedUser" value="#{bundle['page.seduser.labelAddUser']}" onclick="validateAddSedUser(#{sedUserBean.randomPassword});" 
-					type="button" styleClass="ui-priority-primary" action="#{sedUserBean.saveSedUser}" />
+					type="button" styleClass="ui-priority-primary" action="#{sedUserBean.saveSedUser}" rendered="#{sedUserBean.showAdd}" />
+				<p:commandButton value="Guardar Cambios" action="#{sedUserBean.updateSedUser}" rendered="#{sedUserBean.showEdit}"/>
 				<p:spacer width="5" />
-				<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" />
+				<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" icon="ui-icon-arrow-1-w" />
 			</div>
 			</div>
 		</p:panel>

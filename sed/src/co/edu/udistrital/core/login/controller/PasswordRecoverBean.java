@@ -85,7 +85,7 @@ public class PasswordRecoverBean implements Serializable {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.PASSWORD_RECOVER);
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), sedUser.getName()
-				+ " " + sedUser.getLastName(), sedUser.getUserName(), password), this.userEmail.trim());
+				+ " " + sedUser.getLastName(), sedUser.getIdentification(), password), this.userEmail.trim());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

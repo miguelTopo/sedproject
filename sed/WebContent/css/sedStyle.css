@@ -4,14 +4,20 @@ body {
 	margin-right: 0px;
 	text-decoration: none;
 }
-p{
-	font-family: "Arial",Helvetica,sans-serif;
-	color: black;
+
+a {
+	color: #2E6E9E !important;
+	text-decoration: none;
+}
+
+p {
+	font-family: "Arial", Helvetica, sans-serif;
+	color: #848788;
 }
 
 body,td,th {
 	font-size: 12px;
-	font-family: "Arial",Helvetica,sans-serif;
+	font-family: "Arial", Helvetica, sans-serif;
 	font-style: normal;
 	line-height: normal;
 	text-align: justify;
@@ -29,28 +35,38 @@ body,td,th {
 	padding-top: 40px;
 	padding-bottom: 20px;
 }
-a {
-	text-decoration: none;
-	color: #2337BC !important;
-}
 
 #footerDiv {
 	padding-bottom: 10px;
 	padding-top: 10px;
 	height: 30px;
 }
+
 .ui-inputfield {
-	color:#5A5D5E !important;
+	color: #5A5D5E !important;
 }
-.ui-field-invalid{
-	color:#F1473A;
+
+.ui-field-invalid {
+	color: #F1473A;
 }
-.student-calendar input{
+
+.student-calendar input {
 	width: 95%;
 }
-.ui-emphasize-text{
-	color:#3CB3DB;
+
+.ui-emphasize-text {
+	color: #3CB3DB;
 }
-.ui-table-filter{
-	width:80% !important;
+
+.ui-table-filter {
+	width: 80% !important;
+}
+
+.ui-subtitle-sed {
+	background-color: #2E6E9E;
+	height: 35px;
+	padding-left: 20px;
+	border-radius: 5px 5px 5px 5px;
+	padding-top: 0.5px;
+	padding-bottom: 1.5px;
 }

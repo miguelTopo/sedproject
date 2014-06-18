@@ -12,7 +12,6 @@ import co.edu.udistrital.core.common.util.FieldValidator;
 import co.edu.udistrital.core.common.util.RandomPassword;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
-import co.edu.udistrital.core.login.model.SedUserLogin;
 import co.edu.udistrital.core.mail.io.mn.aws.MailGeneratorFunction;
 import co.edu.udistrital.core.mail.io.mn.aws.SMTPEmail;
 
@@ -30,7 +29,7 @@ public class SedUserBean extends BackingBean {
 
 	// Primitives
 	private boolean showList = false, showAdd = false, showEdit = false, showDetail = false;
-	private boolean existIdentification = false, existEmail = false, existUserName = false;
+	private boolean existIdentification = false, existEmail = false;
 	private boolean randomPassword;
 
 	// Basic Java Data Object
@@ -45,6 +44,7 @@ public class SedUserBean extends BackingBean {
 
 	// User Object
 	private SedUser sedUser;
+	private SedUser sedUserCopy;
 	private SedUser selectedSedUser;
 
 	// Controller Object
@@ -62,22 +62,81 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
+	public void updateSedUser() {
+		try {
+			if (!validateSedUser())
+				return;
+
+			this.sedUser.setEmail(this.sedUser.getEmail().trim().toLowerCase());
+
+			boolean updSedLogin = false;
+			boolean updSedRoleUser = false;
+			if (isRandomPassword() || !this.userPassword.trim().isEmpty()
+				|| !this.sedUserCopy.getIdentification().equals(this.sedUser.getIdentification())) {
+				updSedLogin = true;
+			}
+			if (!this.sedUserCopy.getIdSedRole().equals(this.sedUser.getIdSedRole()))
+				updSedRoleUser = true;
+
+			String password = null;
+			if (isRandomPassword())
+				password = RandomPassword.getPassword(7);
+			else if (!this.userPassword.trim().isEmpty())
+				password = this.userPassword.trim();
+
+			if (this.controller.updateSedUser(this.sedUser, updSedLogin, updSedRoleUser, password)) {
+				addInfoMessage("Actualización", "");
+				//campo para email verificar como enviarlos
+				
+//				this.sedUserCopy = null;
+//				cleanVar();
+//				goBack();
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void saveSedUser() {
 		try {
 			if (!validateSedUser())
 				return;
-			else {
-				if (this.controller.saveSedUser(this.sedUser, this.userPassword, "admin")) {
-					sendNewSedUserAccount();
-					cleanVar();
-					goBack();
-					addInfoMessage("Guardar Usuario", "El Usuario se guardó exitosamente.");
-				}
+
+			this.sedUser.setEmail(this.sedUser.getEmail().trim().toLowerCase());
+
+			if (this.controller.saveSedUser(this.sedUser, this.userPassword, "admin")) {
+				this.sedUserList.add(this.sedUser);
+				this.sedUserFilteredList = this.sedUserList;
+				threadSaveSedUser();
+
+				cleanVar();
+				goBack();
+				addInfoMessage("Guardar Usuario", "El Usuario se guardó exitosamente.");
 			}
+
 		} catch (Exception e) {
 			addFatalMessage("Guardar Usuario",
 				"Ocurrió un error inesperado y no fué posible agregar el usuario. Por favor consulte al administrador del sistema.");
 			e.printStackTrace();
+		}
+	}
+
+	/** @author MTorres 17/06/2014 23:31:01 */
+	private boolean validateEditPassword() {
+		try {
+			if (!isRandomPassword() && this.userPassword.trim().isEmpty() && this.confirmPassword.trim().isEmpty())
+				return true;
+			else if (isRandomPassword())
+				return true;
+			else if (!this.userPassword.equals(this.confirmPassword)) {
+				addWarnMessage("Crear Usuario", "Las contraseñas no coinciden, por favor verifique.");
+				return false;
+			} else
+				return true;
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
@@ -105,13 +164,33 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres 17/06/2014 19:59:32 */
+	private void threadSaveSedUser() {
+		try {
+			final SedUser su = this.sedUser;
+			final String pw = this.userPassword;
+			new Thread(new Runnable() {
+
+				public void run() {
+					try {
+						sendNewSedUserAccount(su, pw);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	/** @author MTorres */
-	private void sendNewSedUserAccount() {
+	private void sendNewSedUserAccount(final SedUser su, final String userPassword) {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_SEDUSER_ACCOUNT);
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(),
-				this.sedUser.getName() + this.sedUser.getLastName(), this.sedUser.getUserName(), this.userPassword), "migueltrock@gmail.com");
+				su.getName() + su.getLastName(), su.getIdentification(), userPassword), su.getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -132,26 +211,14 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	public void validateSedUserName() {
-		try {
-			setExistUserName(false);
-			if (this.sedUser != null) {
-				if (this.sedUser.getUserName() != null && !this.sedUser.getUserName().trim().isEmpty()) {
-					setExistUserName(this.controller.validateExistField(SedUserLogin.class.getSimpleName(), "userName", this.sedUser.getUserName()));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/** @author MTorres */
 	public void validateEmail() {
 		try {
 			setExistEmail(false);
 			if (this.sedUser != null) {
 				if (this.sedUser.getEmail() != null && !this.sedUser.getEmail().trim().isEmpty()) {
-					setExistEmail(this.controller.validateExistField(SedUser.class.getSimpleName(), "email", this.sedUser.getEmail()));
+					setExistEmail(this.controller.validateExistField(SedUser.class.getSimpleName(), "email", this.sedUser.getEmail().trim()
+						.toLowerCase()));
 				}
 			}
 		} catch (Exception e) {
@@ -183,9 +250,6 @@ public class SedUserBean extends BackingBean {
 			} else if (!FieldValidator.isValidEmail(this.sedUser.getEmail().trim())) {
 				addWarnMessage("Crear Usuario", "El correo electrónico ingresado no es válido.");
 				return false;
-			} else if (this.sedUser.getUserName() == null || this.sedUser.getUserName().trim().isEmpty()) {
-				addWarnMessage("Crear Usuario", "Por favor diligencie el nombre de usuario.");
-				return false;
 			} else if (this.sedUser.getIdSedRole() == null || this.sedUser.getIdSedRole().equals(0L)) {
 				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de usuario.");
 				return false;
@@ -195,11 +259,13 @@ public class SedUserBean extends BackingBean {
 			} else if (isExistEmail()) {
 				addWarnMessage("Crear Usuario", "El correo seleccionado ya se encuentra registrado. Debe modificarlo para continuar.");
 				return false;
-			} else if (isExistUserName()) {
-				addWarnMessage("Crear Usuario", "El nombre de usaurio ya se encuentra registrado. Debe modificarlo para continuar.");
-				return false;
-			} else
+			} else if (isShowAdd())
 				return validatePassword();
+			else if (isShowEdit())
+				return validateEditPassword();
+
+			return true;
+
 		} catch (Exception e) {
 			throw e;
 		}
@@ -267,6 +333,7 @@ public class SedUserBean extends BackingBean {
 	public void goEditUser() {
 		try {
 			hideAll();
+			this.sedUserCopy = this.sedUser.clone();
 			setShowEdit(true);
 			setPanelView("addSedUser", "Editar Usuario", "SedUserBean");
 		} catch (Exception e) {
@@ -281,6 +348,7 @@ public class SedUserBean extends BackingBean {
 			setShowDetail(false);
 			setShowEdit(false);
 			setShowList(false);
+			this.sedUserCopy = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -393,15 +461,6 @@ public class SedUserBean extends BackingBean {
 
 	public void setExistEmail(boolean existEmail) {
 		this.existEmail = existEmail;
-	}
-
-	public boolean isExistUserName() {
-		return existUserName;
-	}
-
-	public void setExistUserName(boolean existUserName) {
-		this.userPassword = this.confirmPassword = null;
-		this.existUserName = existUserName;
 	}
 
 	public boolean isRandomPassword() {
