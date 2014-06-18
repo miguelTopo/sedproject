@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
+import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.connection.HibernateDAO;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.session.common.User;
@@ -213,5 +214,70 @@ public class SedUserDAO extends HibernateDAO {
 			hql = null;
 			qo = null;
 		}
+	}
+
+	/** @author MTorres 17/06/2014 23:54:10 * */
+	public void updateSedUserLogin(SedUser sedUser, String password) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" UPDATE SedUserLogin sul ");
+			hql.append(" SET sul.userName = :userName, ");
+			hql.append(" sul.userCreation = :userCreation, ");
+			hql.append(" sul.dateCreation = :dateCreation ");
+			hql.append(password != null ? " , sul.md5Password = :md5Password" : "");
+			hql.append(" WHERE sul.idSedUser = :idSedUser ");
+			hql.append(" AND sul.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("userName", sedUser.getIdentification());
+			qo.setParameter("userCreation", "admin");
+			qo.setParameter("dateCreation", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("idSedUser", sedUser.getId());
+			qo.setParameter("state", IState.ACTIVE);
+
+			if (password != null)
+				qo.setParameter("md5Password", ManageMD5.parseMD5(password));
+
+			qo.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+
+	}
+
+	/** @author MTorres 17/06/2014 23:54:10 * */
+	public void updateSedRoleUser(SedUser sedUser) throws Exception{
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" UPDATE SedRoleUser sru ");
+			hql.append(" SET sru.idSedRole = :idSedRole, ");
+			hql.append(" sru.userCreation = :userCreation, ");
+			hql.append(" sru.dateCreation = :dateCreation ");
+			hql.append(" WHERE sru.idSedUser = :idSedUser ");
+			hql.append(" AND sru.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idSedRole", sedUser.getIdSedRole());
+			qo.setParameter("userCreation", "admin");
+			qo.setParameter("dateCreation", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("idSedUser", sedUser.getId());
+			qo.setParameter("state", IState.ACTIVE);
+			
+			qo.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+		
 	}
 }
