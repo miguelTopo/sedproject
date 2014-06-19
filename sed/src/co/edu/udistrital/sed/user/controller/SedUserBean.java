@@ -62,6 +62,51 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres 18/06/2014 20:10:12 */
+	public void deleteSedUser() {
+		try {
+			if (this.selectedSedUser != null) {
+				if (this.controller.deleteSedUser(this.selectedSedUser, getUserSession() != null ? getUserSession().getIdentification() : "admin")) {
+					this.sedUserList.remove(this.selectedSedUser);
+					this.sedUserFilteredList.remove(this.selectedSedUser);
+					addInfoMessage("Eliminar Usuario", "El Usuario fue eliminado correctamente.");
+				}
+			}
+		} catch (Exception e) {
+			addErrorMessage(getMessage("page.core.labelHeaderError"), getMessage("page.core.labelSummaryError"));
+			e.printStackTrace();
+		}
+	}
+	
+	private void sendMailUpdateSedLogin(final SedUser su, final String password){
+		try {
+			
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres 18/06/2014 22:17:20 */
+	private void threadUpdateSedLogin(String userPassword) {
+		try {
+			final String password =userPassword;
+			final SedUser su = this.sedUser;
+			new Thread(new Runnable() {
+				
+				public void run() {
+					try {
+						sendMailUpdateSedLogin(su, password);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres 18/06/2014 20:10:12 */
 	public void updateSedUser() {
 		try {
 			if (!validateSedUser())
@@ -71,6 +116,7 @@ public class SedUserBean extends BackingBean {
 
 			boolean updSedLogin = false;
 			boolean updSedRoleUser = false;
+
 			if (isRandomPassword() || !this.userPassword.trim().isEmpty()
 				|| !this.sedUserCopy.getIdentification().equals(this.sedUser.getIdentification())) {
 				updSedLogin = true;
@@ -81,16 +127,21 @@ public class SedUserBean extends BackingBean {
 			String password = null;
 			if (isRandomPassword())
 				password = RandomPassword.getPassword(7);
+
 			else if (!this.userPassword.trim().isEmpty())
 				password = this.userPassword.trim();
 
 			if (this.controller.updateSedUser(this.sedUser, updSedLogin, updSedRoleUser, password)) {
-				addInfoMessage("Actualización", "");
-				//campo para email verificar como enviarlos
-				
-//				this.sedUserCopy = null;
-//				cleanVar();
-//				goBack();
+				addInfoMessage("Actualizar Usuario", "El Usuario se ha actualizado  correctamente.");
+
+				if (updSedLogin)
+					threadUpdateSedLogin(password);
+
+				// campo para email verificar como enviarlos
+
+				this.sedUserCopy = null;
+				cleanVar();
+				goBack();
 			}
 
 
@@ -298,6 +349,7 @@ public class SedUserBean extends BackingBean {
 			this.sedUser = new SedUser();
 			this.userPassword = null;
 			this.confirmPassword = null;
+			setRandomPassword(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

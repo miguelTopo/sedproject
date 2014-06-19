@@ -124,6 +124,23 @@ public class SedUserController extends Controller {
 		}
 	}
 
-
-
+	/** @author MTorres 18/06/2014 20:09:16 */
+	public boolean deleteSedUser(SedUser sedUser, String user) throws Exception {
+		SedUserDAO dao = new SedUserDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			boolean success = dao.deleteSedUser(sedUser, user);
+			tx.commit();
+			return success;
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
 }
