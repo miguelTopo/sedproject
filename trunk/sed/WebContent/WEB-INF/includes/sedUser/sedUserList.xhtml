@@ -97,7 +97,7 @@
 								</div>
 							</p:column>
 
-							<p:column style="width:25px">
+							<p:column width="25">
 								<div align="center">
 									<p:commandLink title="#{bundle['page.core.labelEdit']}"
 										action="#{sedUserBean.goEditUser}">
@@ -105,6 +105,15 @@
 											height="20" />
 										<f:setPropertyActionListener
 											target="#{sedUserBean.sedUser}" value="#{u}" />
+									</p:commandLink>
+								</div>
+							</p:column>
+							<p:column width="25">
+								<div align="center">
+									<p:commandLink title="#{bundle['page.core.labelDelete']}" oncomplete="PF('dlgDeleteUserWV').show();" 
+										update=":sedUserForm:dlgDeleteUser">
+										<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
+										<f:setPropertyActionListener target="#{sedUserBean.selectedSedUser}" value="#{u}" />
 									</p:commandLink>
 								</div>
 							</p:column>
@@ -117,6 +126,42 @@
 					action="#{sedUserBean.goAddUser}" />
 			</div>
 		</p:panel>
+		
+		<!-- Dialog Delete SedUser -->
+		<p:dialog id="dlgDeleteUser" header="Eliminar Usuario" widgetVar="dlgDeleteUserWV" modal="true" resizable="false" width="300" showEffect="drop" hideEffect="fade">
+			<table>
+				<tr>
+					<td style="width:10%"/>
+					<td style="width:80%"/>
+					<td style="width:10%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td style="text-align:center;">
+						El Usuario seleccionado es: <strong>#{sedUserBean.selectedSedUser.name} #{sedUserBean.selectedSedUser.lastName}</strong>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<br/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td style="text-align:center;">
+						<strong>
+							¿Está seguro que desea eliminar el usuario seleccionado?
+						</strong>
+					</td>
+				</tr>
+			</table>
+			<div style="padding-top:25px;text-align:center;">
+				<p:commandButton value="#{bundle['page.core.labelAccept']}" action="#{sedUserBean.deleteSedUser}" oncomplete="PF('statusDialog').hide();PF('dlgDeleteUserWV').hide();" 
+					onstart="PF('statusDialog').show();" update=":sedUserForm:sedUserTable"/>
+				<p:spacer width="5"/>
+				<p:commandButton value="#{bundle['page.core.labelCancel']}" type="button" onclick="PF('dlgDeleteUserWV').hide();"/>
+			</div>
+		</p:dialog>
 	</h:form>
 </f:view>
 </html>

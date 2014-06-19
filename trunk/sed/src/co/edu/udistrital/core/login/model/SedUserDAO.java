@@ -100,7 +100,10 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" su.name AS name, ");
 			hql.append(" su.lastName AS lastName, ");
 			hql.append(" su.identification AS identification, ");
+			hql.append(" su.userCreation AS userCreation, ");
+			hql.append(" su.dateCreation AS dateCreation, ");
 			hql.append(" su.email AS email, ");
+			hql.append(" su.state AS state, ");
 			hql.append(" it.id AS idIdentificationType, ");
 			hql.append(" it.name AS nameIdentificationType, ");
 			hql.append(" sr.id AS idSedRole, ");
@@ -251,7 +254,7 @@ public class SedUserDAO extends HibernateDAO {
 	}
 
 	/** @author MTorres 17/06/2014 23:54:10 * */
-	public void updateSedRoleUser(SedUser sedUser) throws Exception{
+	public void updateSedRoleUser(SedUser sedUser) throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -268,7 +271,7 @@ public class SedUserDAO extends HibernateDAO {
 			qo.setParameter("dateCreation", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 			qo.setParameter("idSedUser", sedUser.getId());
 			qo.setParameter("state", IState.ACTIVE);
-			
+
 			qo.executeUpdate();
 
 		} catch (Exception e) {
@@ -278,6 +281,51 @@ public class SedUserDAO extends HibernateDAO {
 			hql = null;
 			qo = null;
 		}
-		
+
+	}
+
+	/** @author MTorres 18/06/2014 20:08:48 */
+	public boolean deleteSedUser(SedUser sedUser, String user) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		int affectedRow = 0;
+		try {
+			hql.append(" UPDATE SedUser su ");
+			hql.append(" SET su.state = :inactiveState, ");
+			hql.append(" su.userChange = :userChange, ");
+			hql.append(" su.dateChange = :dateChange ");
+			hql.append(" WHERE su.id = :idSedUser ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("inactiveState", IState.INACTIVE);
+			qo.setParameter("userChange", user);
+			qo.setParameter("dateChange", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("idSedUser", sedUser.getId());
+			affectedRow += qo.executeUpdate();
+
+			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT)) {
+				hql = null;
+				qo = null;
+				hql = new StringBuilder();
+				hql.append(" UPDATE Student s ");
+				hql.append(" SET s.state = :inactiveState, ");
+				hql.append(" s.userChange = :userChange, ");
+				hql.append(" s.dateChange = :dateChange ");
+				hql.append(" WHERE s.idSedUser = :idSedUser ");
+				qo = getSession().createQuery(hql.toString());
+				qo.setParameter("inactiveState", IState.INACTIVE);
+				qo.setParameter("userChange", user);
+				qo.setParameter("dateChange", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+				qo.setParameter("idSedUser", sedUser.getId());
+				affectedRow += qo.executeUpdate();
+			}
+			return affectedRow > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
 	}
 }
