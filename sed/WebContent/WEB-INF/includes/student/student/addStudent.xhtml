@@ -72,7 +72,7 @@
 						
 								<p:outputPanel id="opExistEmail">
 									<p:outputPanel rendered="#{studentBean.existEmail}">
-										<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-field-invalid" />
+										<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-invalid-field" />
 									</p:outputPanel>
 								</p:outputPanel>											
 							</td>
@@ -106,7 +106,7 @@
 									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 									<f:selectItems value="#{studentBean.identificationTypeList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
 								</p:selectOneMenu>
-								<div id="valIdType_DIV" class="ui-field-invalid"/>											
+								<div id="valIdType_DIV" class="ui-invalid-field"/>											
 							</td>
 						</tr>
 					</table>
@@ -127,7 +127,7 @@
 						
 								<p:outputPanel id="opExistDoc">
 									<p:outputPanel rendered="#{studentBean.existDocument}">
-										<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-field-invalid" />
+										<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-invalid-field" />
 									</p:outputPanel>
 								</p:outputPanel>											
 							</td>
@@ -148,7 +148,7 @@
 									<f:selectItems value="#{studentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
 									<p:ajax process="@this" listener="#{studentBean.handleGradeChange}" update=":addStudentForm:opCourseStudent"/>						
 								</p:selectOneMenu>
-								<div id="valGrade_DIV" class="ui-field-invalid"/>											
+								<div id="valGrade_DIV" class="ui-invalid-field"/>											
 							</td>
 						</tr>
 					</table>
@@ -167,7 +167,7 @@
 										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 										<f:selectItems value="#{studentBean.courseTmpList}" var="ct" itemLabel="#{ct.name}" itemValue="#{ct.id}"/>	
 									</p:selectOneMenu>
-									<div id="valCourse_DIV" class="ui-field-invalid"/>
+									<div id="valCourse_DIV" class="ui-invalid-field"/>
 								</p:outputPanel>											
 							</td>
 						</tr>

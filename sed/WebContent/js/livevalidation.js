@@ -21,7 +21,7 @@ LiveValidation.massValidate = function(validations){
 LiveValidation.prototype = {
 
     validClass: 'LV_valid',
-    invalidClass: 'ui-field-invalid',
+    invalidClass: 'ui-invalid-field',
     messageClass: 'LV_validation_message',
     validFieldClass: 'LV_valid_field',
     invalidFieldClass: 'LV_invalid_field',

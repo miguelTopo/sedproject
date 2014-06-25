@@ -81,7 +81,7 @@
 										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 										<f:selectItems value="#{sedUserBean.identificationTypeList}" var="itl" itemLabel="#{itl.name}" itemValue="#{itl.id}" />
 									</p:selectOneMenu>
-									<div id="valIdType_DIV" class="ui-field-invalid"/>
+									<div id="valIdType_DIV" class="ui-invalid-field"/>
 								</td>
 							</tr>
 						</table>
@@ -103,7 +103,7 @@
 						
 									<p:outputPanel id="opIdentExist">
 										<p:outputPanel rendered="#{sedUserBean.existIdentification}">
-											<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-field-invalid" />
+											<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-invalid-field" />
 										</p:outputPanel>
 									</p:outputPanel>
 								</td>
@@ -125,13 +125,42 @@
 						
 									<p:outputPanel id="opEmailExist">
 										<p:outputPanel rendered="#{sedUserBean.existEmail}">
-											<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-field-invalid" />
+											<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-invalid-field" />
 										</p:outputPanel>
 									</p:outputPanel>
 								</td>
 							</tr>
 						</table>
 					</article>
+					<article style="padding-left: 176px;">
+						<table>
+							<tr>
+								<td class="ui-label-table">
+									<strong>
+										Tipo de usuario:
+									</strong>
+								</td>
+								<td>
+									<p:selectOneMenu value="#{sedUserBean.sedUser.idSedRole}" style="width:98%">
+										<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
+										<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
+										<p:ajax process="@this" update=":addSedUserForm:opChangeRole" listener="#{sedUserBean.handleRoleChange}"/>
+									</p:selectOneMenu>
+									<div id="valIdSedRole_DIV" class="ui-invalid-field"/>
+								</td>
+							</tr>
+						</table>
+					</article>
+					
+					<p:outputPanel id="opChangeRole">
+						<p:outputPanel rendered="#{sedUserBean.sedUser.idSedRole eq 3}">
+							<ui:include src="/WEB-INF/includes/sedUser/panelStudentRole.xhtml" />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{sedUserBean.sedUser.idSedRole eq 4}">
+							<ui:include src="/WEB-INF/includes/sedUser/panelStudentResponsibleRole.xhtml" />
+						</p:outputPanel>
+					</p:outputPanel>
+					
 					<div class="ui-subtitle-sed">
 						<h4 style="color: white;">
 							#{bundle['page.seduser.labelUserData']}
@@ -156,7 +185,7 @@
 										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 										<f:selectItems value="#{sedUserBean.sedRoleList}" var="sr" itemLabel="#{sr.name}" itemValue="#{sr.id}" />
 									</p:selectOneMenu>
-									<div id="valRole_DIV" class="ui-field-invalid"/>
+									<div id="valRole_DIV" class="ui-invalid-field"/>
 								</td>
 							</tr>
 						</table>
@@ -216,5 +245,7 @@
 		</p:panel>
 		<br />
 	</h:form>
+	<ui:include src="/WEB-INF/includes/sedUser/dialogSedUser.xhtml" />
+	
 </f:view>
 </html>

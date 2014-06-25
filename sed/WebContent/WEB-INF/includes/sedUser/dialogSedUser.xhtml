@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:view>
+	<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" height="550">
+		<h:form id="studentSelectForm">
+			<table style="width: 700px; border-spacing: 7px;">
+				<tr>
+					<td style="width: 5%" />
+					<td style="width: 13%" />
+					<td style="width: 23%" />
+					<td style="width: 13%" />
+					<td style="width: 23%" />
+					<td style="width: 18%" />
+					<td style="width: 5%" />
+				</tr>
+				<tr>
+					<td />
+					<td colspan="5" style="text-align:center;">Por favor seleccione el (los) estudiante(s)
+						que estan a cargo del usuario que está creando.</td>
+				</tr>
+				<tr>
+					<td />
+					<td style="text-align: center">
+						Grado:
+					</td>
+					<td>
+						<p:selectOneMenu id="somStdGrade" value="#{sedUserBean.student.idGrade}" style="width:98%">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+							<f:selectItems value="#{sedUserBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
+							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":studentSelectForm:somStdCourse" process="@this" />
+						</p:selectOneMenu>
+					</td>
+					<td style="text-align: center">
+						Curso:
+					</td>
+					<td>
+						<p:selectOneMenu id="somStdCourse" value="#{sedUserBean.student.idCourse}" style="width:98%"
+							disabled="#{empty sedUserBean.student.idGrade or sedUserBean.student.idGrade eq 0}">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+							<f:selectItems value="#{sedUserBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
+						</p:selectOneMenu>
+					</td>
+					<td>
+						<p:commandButton value="Buscar" action="#{sedUserBean.loadStudentByCourse}" update=":studentSelectForm:stdResponsibleTable" />
+					</td>
+				</tr>
+				<tr>
+					<td />
+					<td colspan="5">
+						<p:dataTable id="stdResponsibleTable" value="#{sedUserBean.studentList}" var="s"
+							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" scrollHeight="200">
+							<p:column headerText="Nombres" width="150">
+									#{s.name}	
+								</p:column>
+
+							<p:column headerText="Apellidos" width="150">
+									#{s.lastName}	
+							</p:column>
+
+							<p:column style="text-align:center" width="35">
+								<p:commandLink title="#{bundle['page.core.labelSelect']}" action="#{sedUserBean.addStudent}" 
+									update=":studentSelectForm:responsibleStdOp">
+									<p:graphicImage value="../css/icon/select.png" width="20" height="20" />
+									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{s}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<br/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="5">
+						<p:outputPanel id="responsibleStdOp">
+							<p:outputPanel rendered="#{!empty sedUserBean.studentResponsibleList}">
+						El Usuario es responsable y/o acudiente de: 
+							<p:dataTable id="responsibleStdTable" value="#{sedUserBean.studentResponsibleList}" var="sr" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
+								scrollable="true" scrollHeight="75">
+								
+								<p:column headerText="Nombres">
+									#{sr.name}	
+								</p:column>
+
+							<p:column headerText="Apellidos">
+									#{sr.lastName}	
+							</p:column>
+							
+							<p:column style="text-align:center" width="35">
+								<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
+									update=":studentSelectForm:responsibleStdOp">
+									<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
+									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
+								</p:commandLink>
+							</p:column>
+							</p:dataTable>
+							</p:outputPanel>
+						</p:outputPanel>
+					</td>
+				</tr>
+			</table>
+			<div style="text-align:center;">
+				<p:commandButton value="#{bundle['page.core.labelSave']}" onclick="PF('dlgStudentSelectWV').hide();"/>
+				<p:spacer width="5"/>
+				<p:commandButton value="#{bundle['page.core.labelCancel']}" action="#{sedUserBean.cancelStudentList}" oncomplete="PF('dlgStudentSelectWV').hide();" 
+					update="studentSelectForm"/>
+			</div>
+		</h:form>
+	</p:dialog>
+</f:view>
+</html>

@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:view>
+		<article>
+			<table>
+				<tr>
+					<td class="ui-label-table">
+						<strong>
+							Grado:
+						</strong>
+					</td>
+					<td class="ui-content-table">
+						<p:selectOneMenu id="somGrade" value="#{sedUserBean.student.idGrade}" style="width:98%">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+							<f:selectItems value="#{sedUserBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
+							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":addSedUserForm:somCourse" process="@this"/>
+						</p:selectOneMenu>
+						<div id="valGrade_DIV" class="ui-invalid-field"/>
+					</td>
+				</tr>
+			</table>
+		</article>
+		<article>
+			<table>
+				<tr>
+					<td class="ui-label-table">
+						<strong>
+							Curso:
+						</strong>
+					</td>
+					<td class="ui-content-table">
+						<p:selectOneMenu id="somCourse" value="#{sedUserBean.student.idCourse}" style="width:98%" 
+							disabled="#{empty sedUserBean.student.idGrade or sedUserBean.student.idGrade eq 0}">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+							<f:selectItems value="#{sedUserBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
+						</p:selectOneMenu>
+						<div id="valCourse_DIV" class="ui-invalid-field"/>
+					</td>
+				</tr>
+			</table>
+		</article>
+</f:view>
+</html>
