@@ -45,7 +45,7 @@
 							<p:ajax listener="#{studentBean.handleGradeChange}"
 								update=":studentListForm:somStdCourse" />
 						</p:selectOneMenu>
-						<div id="valStdGradeList_DIV" class="ui-field-invalid"/>
+						<div id="valStdGradeList_DIV" class="ui-invalid-field"/>
 					</td>
 					<td style="text-align:center">
 						#{bundle['page.sed.labelCourse']}:
@@ -55,7 +55,7 @@
 							<f:selectItem itemLabel="Seleccione uno" itemValue="0" />
 							<f:selectItems value="#{studentBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
 						</p:selectOneMenu>
-						<div id="valStdCourseList_DIV" class="ui-field-invalid"/>
+						<div id="valStdCourseList_DIV" class="ui-invalid-field"/>
 					</td>
 					<td>
 						<div style="text-align:center">

@@ -46,7 +46,7 @@ body,td,th {
 	color: #5A5D5E !important;
 }
 
-.ui-field-invalid {
+.ui-invalid-field {
 	color: #F1473A;
 }
 

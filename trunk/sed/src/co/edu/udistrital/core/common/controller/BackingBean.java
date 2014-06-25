@@ -1,5 +1,4 @@
 package co.edu.udistrital.core.common.controller;
-
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -77,8 +76,7 @@ public abstract class BackingBean implements Serializable {
 			throw e;
 		}
 	}
-
-
+	
 	public boolean getValidateExpiredSession() {
 		try {
 			String idSession = ManageCookie.getCookieByName("JSESSIONID");

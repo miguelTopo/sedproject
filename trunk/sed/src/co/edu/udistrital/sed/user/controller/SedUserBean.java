@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.user.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,8 @@ import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.mail.io.mn.aws.MailGeneratorFunction;
 import co.edu.udistrital.core.mail.io.mn.aws.SMTPEmail;
+import co.edu.udistrital.sed.model.Course;
+import co.edu.udistrital.sed.model.Student;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
@@ -37,15 +40,21 @@ public class SedUserBean extends BackingBean {
 	private String confirmPassword;
 	private Long idFilterSedRole;
 	private Long idFilterIdentificationType;
+	private Long idStudentResponsible;
 
 	// User List
 	private List<SedUser> sedUserList;
 	private List<SedUser> sedUserFilteredList;
+	private List<Course> courseTmpList;
+	private List<Student> studentResponsibleList;
+	private List<Student> studentList;
 
 	// User Object
 	private SedUser sedUser;
 	private SedUser sedUserCopy;
 	private SedUser selectedSedUser;
+	private Student student;
+	private Student studentSelected;
 
 	// Controller Object
 	private SedUserController controller;
@@ -77,10 +86,25 @@ public class SedUserBean extends BackingBean {
 			e.printStackTrace();
 		}
 	}
-	
-	private void sendMailUpdateSedLogin(final SedUser su, final String password){
+
+	/** @author MTorres 22/06/2014 13:15:19 */
+	private void sendMailUpdateSedLogin(final SedUser su, final String password) {
 		try {
-			
+			EmailTemplate t =
+				MailGeneratorFunction.getEmailTemplate(password != null ? IEmailTemplate.SED_PASSWORD_USER_CHANGE : IEmailTemplate.SED_USER_CHANGE);
+			SMTPEmail e = new SMTPEmail();
+
+			String[] paramList = new String[password != null ? 3 : 2];
+			paramList[0] = su.getName() + " " + su.getLastName();
+			paramList[1] = su.getIdentification();
+
+			if (password != null)
+				paramList[2] = password;
+
+			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), paramList),
+				su.getEmail());
+
+
 		} catch (Exception e) {
 			throw e;
 		}
@@ -89,10 +113,10 @@ public class SedUserBean extends BackingBean {
 	/** @author MTorres 18/06/2014 22:17:20 */
 	private void threadUpdateSedLogin(String userPassword) {
 		try {
-			final String password =userPassword;
+			final String password = userPassword;
 			final SedUser su = this.sedUser;
 			new Thread(new Runnable() {
-				
+
 				public void run() {
 					try {
 						sendMailUpdateSedLogin(su, password);
@@ -136,8 +160,6 @@ public class SedUserBean extends BackingBean {
 
 				if (updSedLogin)
 					threadUpdateSedLogin(password);
-
-				// campo para email verificar como enviarlos
 
 				this.sedUserCopy = null;
 				cleanVar();
@@ -266,7 +288,11 @@ public class SedUserBean extends BackingBean {
 	public void validateEmail() {
 		try {
 			setExistEmail(false);
-			if (this.sedUser != null) {
+			if (isShowEdit()) {
+				if (!this.sedUser.getEmail().trim().toLowerCase().equals(this.sedUserCopy.getEmail().trim().toLowerCase()))
+					setExistEmail(this.controller.validateExistField(SedUser.class.getSimpleName(), "email", this.sedUser.getEmail().trim()
+						.toLowerCase()));
+			} else if (this.sedUser != null) {
 				if (this.sedUser.getEmail() != null && !this.sedUser.getEmail().trim().isEmpty()) {
 					setExistEmail(this.controller.validateExistField(SedUser.class.getSimpleName(), "email", this.sedUser.getEmail().trim()
 						.toLowerCase()));
@@ -331,12 +357,101 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres 22/06/2014 18:59:52 */
+	public void loadStudentByCourse() {
+		try {
+			this.studentList = null;
+			if (this.student != null && this.student.getIdGrade() != null && !this.student.getIdGrade().equals(0L)
+				&& this.student.getIdCourse() != null && !this.student.getIdCourse().equals(0L))
+				this.studentList = this.controller.loadStudentList(this.student.getIdCourse());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeStudent() {
+		try {
+			if (this.studentSelected != null && this.studentResponsibleList != null) {
+				this.studentResponsibleList.remove(this.studentSelected);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void cancelStudentList() {
+		try {
+			this.studentResponsibleList = null;
+			this.studentList = null;
+			this.studentList = new ArrayList<Student>();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addStudent() {
+		try {
+			if (this.studentSelected != null) {
+				if (this.studentResponsibleList != null) {
+					if (this.studentResponsibleList.contains(this.studentSelected))
+						addWarnMessage("Seleccionar Estudiante", "El estudiante no se puede elegir más de una vez.");
+					else
+						this.studentResponsibleList.add(this.studentSelected);
+				} else
+					getStudentResponsibleList().add(this.studentSelected);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleGradeChange() {
+		try {
+			this.courseTmpList = null;
+			if (this.student != null) {
+				if (this.student.getIdGrade() != null && !this.student.getIdGrade().equals(0L))
+					this.courseTmpList = loadCourseListByGrade(this.student.getIdGrade());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleRoleChange() {
+		try {
+			if (this.sedUser != null) {
+				this.student = null;
+				this.studentResponsibleList = null;
+				if (this.sedUser.getIdSedRole().equals(ISedRole.STUDENT) || this.sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE))
+					this.student = new Student();
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goSelectStudent() {
+		try {
+			this.courseTmpList = null;
+			this.idStudentResponsible = null;
+			this.idStudentResponsible = 0L;
+			this.student = null;
+			this.student = new Student();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/** @author MTorres */
 	public void goAddUser() {
 		try {
 			hideAll();
 			setShowAdd(true);
 			this.sedUser = new SedUser();
+			this.student = new Student();
 			setPanelView("addSedUser", "Agregar Usuario", "SedUserBean");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -386,6 +501,8 @@ public class SedUserBean extends BackingBean {
 		try {
 			hideAll();
 			this.sedUserCopy = this.sedUser.clone();
+			setExistEmail(false);
+			setExistIdentification(false);
 			setShowEdit(true);
 			setPanelView("addSedUser", "Editar Usuario", "SedUserBean");
 		} catch (Exception e) {
@@ -546,4 +663,56 @@ public class SedUserBean extends BackingBean {
 	public void setIdFilterIdentificationType(Long idFilterIdentificationType) {
 		this.idFilterIdentificationType = idFilterIdentificationType;
 	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	public List<Course> getCourseTmpList() {
+		return courseTmpList;
+	}
+
+	public void setCourseTmpList(List<Course> courseTmpList) {
+		this.courseTmpList = courseTmpList;
+	}
+
+	public Long getIdStudentResponsible() {
+		return idStudentResponsible;
+	}
+
+	public void setIdStudentResponsible(Long idStudentResponsible) {
+		this.idStudentResponsible = idStudentResponsible;
+	}
+
+	public List<Student> getStudentResponsibleList() {
+		if (studentResponsibleList == null)
+			studentResponsibleList = new ArrayList<Student>();
+		return studentResponsibleList;
+	}
+
+	public void setStudentResponsibleList(List<Student> studentResponsibleList) {
+		this.studentResponsibleList = studentResponsibleList;
+	}
+
+	public List<Student> getStudentList() {
+		return studentList;
+	}
+
+	public void setStudentList(List<Student> studentList) {
+		this.studentList = studentList;
+	}
+
+	public Student getStudentSelected() {
+		return studentSelected;
+	}
+
+	public void setStudentSelected(Student studentSelected) {
+		this.studentSelected = studentSelected;
+	}
+
+
 }

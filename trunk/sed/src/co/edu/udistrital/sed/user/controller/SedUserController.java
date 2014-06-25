@@ -13,6 +13,8 @@ import co.edu.udistrital.core.login.model.SedRoleUser;
 import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.login.model.SedUserDAO;
 import co.edu.udistrital.core.login.model.SedUserLogin;
+import co.edu.udistrital.sed.model.Student;
+import co.edu.udistrital.sed.student.model.StudentDAO;
 
 public class SedUserController extends Controller {
 
@@ -133,6 +135,24 @@ public class SedUserController extends Controller {
 			boolean success = dao.deleteSedUser(sedUser, user);
 			tx.commit();
 			return success;
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	/** @author MTorres 22/06/2014 18:57:30 */
+	public List<Student> loadStudentList(Long idCourse) throws Exception {
+		StudentDAO dao = new StudentDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			return dao.loadStudentList(idCourse);
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			tx.rollback();
