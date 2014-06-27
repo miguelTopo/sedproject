@@ -145,7 +145,8 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 							// reeemplazar numero de documento de estudiantes con id en la BD
 							replaceIdentificationId(studentGradeList);
 
-							if (this.controller.saveCalificationList(this.properStudentList)) {
+							if (this.controller.saveCalificationList(this.properStudentList, getUserSession() != null ? getUserSession()
+								.getIdentification() : "admin")) {
 								addInfoMessage("Cargar archivo", "El archivo fué leido y almacenado en la base de datos correctamente.");
 							}
 
