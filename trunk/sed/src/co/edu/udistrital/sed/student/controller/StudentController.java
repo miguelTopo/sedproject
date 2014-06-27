@@ -92,7 +92,7 @@ public class StudentController extends Controller {
 
 				// Save SedUser
 				SedUser su = new SedUser(student);
-				su.initialize(true);
+				su.initialize(true, user);
 				dao.getSession().save(su);
 
 				idSedUser = su.getId();
@@ -119,7 +119,7 @@ public class StudentController extends Controller {
 				dao.getSession().save(sul);
 			}
 
-			student.initialize(isNew);
+			student.initialize(isNew, user);
 			student.setIdSedUser(isNew ? idSedUser : student.getIdSedUser());
 			// save Student
 			dao.getSession().saveOrUpdate(student);
@@ -131,7 +131,7 @@ public class StudentController extends Controller {
 				sc.setIdStudent(student.getId());
 				sc.setIdCourse(student.getIdCourse());
 				sc.setIdPeriod(Long.valueOf(c.get(Calendar.YEAR)));
-				sc.initialize(true);
+				sc.initialize(true, user);
 
 				dao.getSession().save(sc);
 			}

@@ -140,7 +140,7 @@
 										Tipo de usuario:
 									</strong>
 								</td>
-								<td>
+								<td class="ui-content-table">
 									<p:selectOneMenu value="#{sedUserBean.sedUser.idSedRole}" style="width:98%">
 										<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
 										<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
@@ -244,8 +244,9 @@
 			</div>
 		</p:panel>
 		<br />
+		<ui:include src="/WEB-INF/includes/sedUser/dialogSedUser.xhtml" />
 	</h:form>
-	<ui:include src="/WEB-INF/includes/sedUser/dialogSedUser.xhtml" />
+	
 	
 </f:view>
 </html>

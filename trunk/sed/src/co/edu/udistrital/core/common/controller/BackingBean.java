@@ -69,7 +69,7 @@ public abstract class BackingBean implements Serializable {
 			if (requestUrl != null && !requestUrl.trim().isEmpty() && !requestUrl.endsWith("login")) {
 				// redirect to login
 				redirect("/portal/login");
-				getSession(false).setAttribute("requestPath", requestUrl);
+//				getSession(false).setAttribute("requestPath", requestUrl);
 			}
 
 		} catch (Exception e) {

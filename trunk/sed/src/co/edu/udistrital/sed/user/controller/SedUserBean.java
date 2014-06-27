@@ -155,7 +155,8 @@ public class SedUserBean extends BackingBean {
 			else if (!this.userPassword.trim().isEmpty())
 				password = this.userPassword.trim();
 
-			if (this.controller.updateSedUser(this.sedUser, updSedLogin, updSedRoleUser, password)) {
+			if (this.controller.updateSedUser(this.sedUser, updSedLogin, updSedRoleUser, password, getUserSession() != null ? getUserSession()
+				.getIdentification() : "admin")) {
 				addInfoMessage("Actualizar Usuario", "El Usuario se ha actualizado  correctamente.");
 
 				if (updSedLogin)
@@ -179,7 +180,8 @@ public class SedUserBean extends BackingBean {
 
 			this.sedUser.setEmail(this.sedUser.getEmail().trim().toLowerCase());
 
-			if (this.controller.saveSedUser(this.sedUser, this.userPassword, "admin")) {
+			if (this.controller.saveSedUser(this.sedUser, this.userPassword, getUserSession() != null ? getUserSession().getIdentification()
+				: "admin")) {
 				this.sedUserList.add(this.sedUser);
 				this.sedUserFilteredList = this.sedUserList;
 				threadSaveSedUser();
@@ -264,6 +266,21 @@ public class SedUserBean extends BackingBean {
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(),
 				su.getName() + su.getLastName(), su.getIdentification(), userPassword), su.getEmail());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** @author MTorres 25/06/2014 21:38:50 */
+	public void validateStudentList() {
+		try {
+			if (this.studentResponsibleList != null && !this.studentResponsibleList.isEmpty()) {
+				getRequestContext().execute("PF('dlgStudentSelectWV').hide();");
+				addInfoMessage("Agregar Estudiante(s)", "Estudiantes seleccionados correctamente.");
+			} else {
+				addWarnMessage("Agregar Estudiante(s)", "No ha seleccionado ningún estudiante.");
+				return;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

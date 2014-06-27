@@ -42,7 +42,7 @@ public class ReportController extends Controller {
 	}
 
 	/** @author MTorres */
-	public boolean saveCalificationList(List<Student> properStudentList) throws Exception {
+	public boolean saveCalificationList(List<Student> properStudentList, String user) throws Exception {
 		QualificationDAO dao = new QualificationDAO();
 		Transaction tx = null;
 		try {
@@ -52,7 +52,7 @@ public class ReportController extends Controller {
 
 			for (Student s : properStudentList) {
 				for (Qualification q : s.getQualificationList()) {
-					q.initialize(true);
+					q.initialize(true, user);
 
 					dao.getSession().save(q);
 

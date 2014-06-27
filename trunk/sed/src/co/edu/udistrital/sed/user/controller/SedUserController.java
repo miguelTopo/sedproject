@@ -9,6 +9,7 @@ import co.edu.udistrital.core.common.controller.Controller;
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.common.util.ManageDate;
+import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedRoleUser;
 import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.login.model.SedUserDAO;
@@ -54,12 +55,12 @@ public class SedUserController extends Controller {
 	}
 
 	/** @author MTorres */
-	public boolean saveSedUser(SedUser sedUser, String userPassword, String string) throws Exception {
+	public boolean saveSedUser(SedUser sedUser, String userPassword, String user) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
 
-			sedUser.initialize(true);
+			sedUser.initialize(true, user);
 			sedUser.setState(IState.ACTIVE);
 			tx = dao.getSession().beginTransaction();
 
@@ -84,6 +85,24 @@ public class SedUserController extends Controller {
 			sru.setState(IState.ACTIVE);
 			dao.getSession().save(sru);
 
+			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT)) {
+				// Crear estudiante
+				Student s = new Student();
+				s.setName(sedUser.getName());
+				s.setLastName(sedUser.getLastName());
+				s.setIdentification(sedUser.getIdentification());
+				s.setIdIdentificationType(sedUser.getIdIdentificationType());
+				s.setIdSedUser(sedUser.getId());
+				s.initialize(true, user);
+
+				dao.getSession().save(s);
+
+			}
+
+			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
+				// Hacer un loop para actualizar el campo idResponsible de Student
+			}
+
 			tx.commit();
 
 			return true;
@@ -99,12 +118,13 @@ public class SedUserController extends Controller {
 	}
 
 	/** @author MTorres 17/06/2014 23:59:50 */
-	public boolean updateSedUser(SedUser sedUser, boolean updSedLogin, boolean updSedRoleUser, String password) throws HibernateException, Exception {
+	public boolean updateSedUser(SedUser sedUser, boolean updSedLogin, boolean updSedRoleUser, String password, String user)
+		throws HibernateException, Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();
-			sedUser.initialize(false);
+			sedUser.initialize(false, user);
 			dao.getSession().update(sedUser);
 
 			if (updSedLogin)
