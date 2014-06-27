@@ -29,4 +29,19 @@ public class FieldValidator {
 			return false;
 		}
 	}
+	
+	public static boolean isText(String value) {
+		try {
+			if (value.length()>0)
+			return true;
+			else 
+				return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	
 }

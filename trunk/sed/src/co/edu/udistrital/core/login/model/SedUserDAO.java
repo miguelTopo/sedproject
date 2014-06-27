@@ -89,7 +89,42 @@ public class SedUserDAO extends HibernateDAO {
 			qo = null;
 		}
 	}
+	
+	public Boolean validateOldPassword(Long idUser, String password) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT sul.idSedUser ");
+			hql.append(" FROM SedUserLogin sul ");
+			hql.append(" WHERE sul.idSedUser = :idUser ");
+			hql.append(" AND sul.md5Password = :md5Password ");
+			hql.append(" AND sul.state = :state ");
 
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idUser", idUser);
+			qo.setParameter("md5Password", ManageMD5.parseMD5(password));
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setMaxResults(1);
+
+			Long idSedUser = (Long) qo.uniqueResult();
+
+			if (idSedUser != null) {
+				hql = new StringBuilder();
+				qo = null;
+				return true;
+
+			} else
+				return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	
 	/** @author MTorres */
 	public List<SedUser> loadSedUserList() throws Exception {
 		StringBuilder hql = new StringBuilder();
