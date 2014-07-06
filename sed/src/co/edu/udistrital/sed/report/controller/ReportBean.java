@@ -2,7 +2,6 @@ package co.edu.udistrital.sed.report.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 	// Controller
 	private ReportController controller;
 
-	public ReportBean() {
+	public ReportBean() throws Exception{
 		try {
 			this.controller = new ReportController();
 			setShowAdd(true);
@@ -112,7 +111,7 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 			System.out.println("ingresando ");
 			if (this.idSelectedGrade == null || this.idSelectedGrade.equals(0L)) {
 				addWarnMessage("Agregar Archivo",
-					"Para poder subir el archivo es necesario que indique el grado al cual quiere subir la información.");
+					"Para poder subir el archivo es necesario que indique el grado al cual quiere subir la informaciï¿½n.");
 				return;
 			} else {
 				this.tmpCourseList = loadCourseListByGrade(this.idSelectedGrade);
@@ -131,7 +130,7 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 					else if (inputFile.getFileName().endsWith(".xlsx"))
 						this.wbDegree = ManageExcel.parseXLSXFile(inputFile.getInputstream());
 
-					// Procesar Archivo Excel en busca de errores de inserción
+					// Procesar Archivo Excel en busca de errores de inserciï¿½n
 					if (this.wbDegree != null) {
 						processDegreeFile();
 
@@ -147,13 +146,13 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 
 							if (this.controller.saveCalificationList(this.properStudentList, getUserSession() != null ? getUserSession()
 								.getIdentification() : "admin")) {
-								addInfoMessage("Cargar archivo", "El archivo fué leido y almacenado en la base de datos correctamente.");
+								addInfoMessage("Cargar archivo", "El archivo fuï¿½ leido y almacenado en la base de datos correctamente.");
 							}
 
 						} else {
 							setFileError(true);
 							addWarnMessage("Cargar archivo",
-								"Se analizó el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
+								"Se analizï¿½ el archivo y se encontraron algunas fallas, por favor verifique el archivo e intente nuevamente.");
 							return;
 						}
 						cleanVarList();
@@ -201,8 +200,9 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 
 	}
 
-	/** @author MTorres */
-	public boolean getDataBasicDegreeFile(int indexSheet) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public boolean getDataBasicDegreeFile(int indexSheet) throws Exception {
 		try {
 			Sheet sheet = this.wbDegree.getSheetAt(indexSheet);
 			this.basicInformation = new ArrayList<String>(IReport.CELL_REFERENCE_LIST.size());
@@ -366,8 +366,9 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	private void addStudent(int indexSheet) {
+	/** @author MTorres 
+	 * @throws Exception */
+	private void addStudent(int indexSheet) throws Exception {
 		try {
 			if (this.student.getIdentification() != null && !this.student.getIdentification().trim().isEmpty()) {
 				getTotalStudentList().add(this.student);
@@ -505,8 +506,9 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public boolean validateNote(Double numericValue, Long idCourt) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public boolean validateNote(Double numericValue, Long idCourt) throws Exception {
 		try {
 			if (numericValue != null) {
 				if (idCourt.equals(ICourt.FIRST_COURT)) {
@@ -527,8 +529,9 @@ public class ReportBean extends BackingBean implements IReport, Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	private void cleanVarList() {
+	/** @author MTorres 
+	 * @throws Exception */
+	private void cleanVarList() throws Exception {
 		try {
 			this.properStudentList = this.totalStudentList = null;
 			this.idGrade = null;

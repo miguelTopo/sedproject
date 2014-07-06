@@ -16,7 +16,7 @@ public class TestBean extends BackingBean {
 
 	private boolean showList = false, showAdd = false, showDetail = false;
 
-	public TestBean() {
+	public TestBean()throws Exception {
 		try {
 			setShowList(false);
 		} catch (Exception e) {

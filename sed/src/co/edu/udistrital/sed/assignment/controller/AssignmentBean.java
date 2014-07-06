@@ -1,11 +1,8 @@
 package co.edu.udistrital.sed.assignment.controller;
 
-import java.util.Date;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleModel;
 
@@ -27,7 +24,7 @@ public class AssignmentBean extends BackingBean {
 
 	private ScheduleModel model;
 
-	public AssignmentBean() {
+	public AssignmentBean() throws Exception{
 		try {
 			this.model= new DefaultScheduleModel();
 			

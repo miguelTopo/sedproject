@@ -25,7 +25,7 @@ public class SMTPEmail {
 
 	private Session mailSession;
 
-	public SMTPEmail() {
+	public SMTPEmail() throws Exception {
 		try {
 			System.out.println("ingresando al metodo....");
 			Properties properties = new Properties();

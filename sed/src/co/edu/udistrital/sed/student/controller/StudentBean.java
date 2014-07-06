@@ -51,7 +51,7 @@ public class StudentBean extends BackingBean {
 	private StudentController controller;
 
 	/** @author MTorres */
-	public StudentBean() {
+	public StudentBean() throws Exception{
 		try {
 			if (getUserSession() != null && getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)) {
 				this.controller = new StudentController();
@@ -70,7 +70,7 @@ public class StudentBean extends BackingBean {
 
 			this.studentList = this.studentFilteredList = this.controller.loadStudentList(this.course);
 			if (this.studentList == null || this.studentList.isEmpty()) {
-				addWarnMessage("Cargar Estudiantes", "No existen estudiantes con los parámetros ingresados.");
+				addWarnMessage("Cargar Estudiantes", "No existen estudiantes con los parï¿½metros ingresados.");
 				return;
 			}
 
@@ -80,8 +80,9 @@ public class StudentBean extends BackingBean {
 
 	}
 
-	/** @author MTorres */
-	private void threadSaveStudent(String password) {
+	/** @author MTorres 
+	 * @throws Exception */
+	private void threadSaveStudent(String password) throws Exception {
 		try {
 			final String pass = password;
 			final Student s = this.student;
@@ -105,8 +106,9 @@ public class StudentBean extends BackingBean {
 
 	}
 
-	/** @author MTorres */
-	private void sendAddStudentEmail(final String userPassword, final Student s) {
+	/** @author MTorres 
+	 * @throws Exception */
+	private void sendAddStudentEmail(final String userPassword, final Student s) throws Exception {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_STUDENT);
 			SMTPEmail e = new SMTPEmail();
@@ -127,13 +129,13 @@ public class StudentBean extends BackingBean {
 				return;
 
 			String password = RandomPassword.getPassword(7);
-			System.out.println("************************************LA CONTRASEÑA ES: " + password + "****************************");
+			System.out.println("************************************LA CONTRASEï¿½A ES: " + password + "****************************");
 			this.student.setBirthday(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
 
 			if (this.controller.saveStudent(this.student, getUserSession() != null ? getUserSession().getIdentification() : "admin", password)) {
 				threadSaveStudent(password);
 				password = null;
-				addInfoMessage("Guardar Estudiante", "El estudiante fué almacenado correctamente.");
+				addInfoMessage("Guardar Estudiante", "El estudiante fuï¿½ almacenado correctamente.");
 				goBack();
 			}
 
@@ -152,7 +154,7 @@ public class StudentBean extends BackingBean {
 					this.studentFilteredList = this.studentList;
 					this.studentSelected = null;
 					this.studentSelected = new Student();
-					addInfoMessage("Eliminar Estudiante", "El estudiante se eliminó correctamente.");
+					addInfoMessage("Eliminar Estudiante", "El estudiante se eliminï¿½ correctamente.");
 				}
 			}
 		} catch (Exception e) {
@@ -187,7 +189,7 @@ public class StudentBean extends BackingBean {
 				addWarnMessage("Guardar Estudiante", "El documento ya existe por favor verifique.");
 				return false;
 			} else if (isExistEmail()) {
-				addWarnMessage("Guardar Estudiante", "El coreo electrónico ya existe por favor verifique.");
+				addWarnMessage("Guardar Estudiante", "El coreo electrï¿½nico ya existe por favor verifique.");
 				return false;
 			} else if (this.student.getName() == null || this.student.getName().trim().isEmpty()) {
 				addWarnMessage("Guardar Estudiante", "Por favor digite los nombres del estudiante.");
@@ -199,16 +201,16 @@ public class StudentBean extends BackingBean {
 				addWarnMessage("Guardar Estudiante", "Por favor digite el correo del estudiante.");
 				return false;
 			} else if (!FieldValidator.isValidEmail(this.student.getEmail())) {
-				addWarnMessage("Guardar Estudiante", "El correo ingresado no es un correo válido. Por favor verifique.");
+				addWarnMessage("Guardar Estudiante", "El correo ingresado no es un correo vï¿½lido. Por favor verifique.");
 				return false;
 			} else if (this.studentBirthday == null) {
 				addWarnMessage("Guardar Estudiante", "Por favor ingrese la fecha de nacimiento.");
 				return false;
 			} else if (this.student.getIdIdentificationType() == null || this.student.getIdIdentificationType().equals(0L)) {
-				addWarnMessage("Guardar Estudiante", "Por favor seleccione el tipo de identificación.");
+				addWarnMessage("Guardar Estudiante", "Por favor seleccione el tipo de identificaciï¿½n.");
 				return false;
 			} else if (this.student.getIdentification() == null || this.student.getIdentification().trim().isEmpty()) {
-				addWarnMessage("Guardar Estudiante", "Por favor digite la identificación del estudiante.");
+				addWarnMessage("Guardar Estudiante", "Por favor digite la identificaciï¿½n del estudiante.");
 				return false;
 			} else if (this.student.getIdGrade() == null || this.student.getIdGrade().equals(0L)) {
 				addWarnMessage("Guardar Estudiante", "Por favor seleccione el grado del estudiante.");

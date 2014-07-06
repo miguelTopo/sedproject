@@ -18,13 +18,14 @@ public interface IReport {
 		}
 	};
 	
-	/**@author MTorres Este método permite interactuar con pagina JSF y capturar el archivo XLS */
+	/**@author MTorres Este mï¿½todo permite interactuar con pagina JSF y capturar el archivo XLS */
 	public abstract void handleFileUpload(FileUploadEvent event);
 	
-	/**@author MTorres Este método permite capturar los datos básicos del archivo XLS como Sede, director de grupo y otros*/
-	public abstract boolean getDataBasicDegreeFile(int indexSheet);
+	/**@author MTorres Este mï¿½todo permite capturar los datos bï¿½sicos del archivo XLS como Sede, director de grupo y otros
+	 * @throws Exception */
+	public abstract boolean getDataBasicDegreeFile(int indexSheet) throws Exception;
 	
-	/**@author MTorres Este método permite procesar el archivo XLS*/
+	/**@author MTorres Este mï¿½todo permite procesar el archivo XLS*/
 	public abstract void processDegreeFile();
 	
 }

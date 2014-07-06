@@ -25,7 +25,7 @@ public class ManageDate {
 		}
 	}
 
-	public static String formatDate(Date date, String format) {
+	public static String formatDate(Date date, String format) throws Exception {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat(format);
 			return sdf.format(date);
@@ -34,8 +34,9 @@ public class ManageDate {
 		}
 	}
 
-	/** @author MTorres */
-	public static Date stringToDate(String stringDate, String format) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public static Date stringToDate(String stringDate, String format) throws Exception {
 		try {
 			Calendar c = Calendar.getInstance();
 			if (format.equals(ManageDate.YYYY_MM_DD)) {

@@ -40,7 +40,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	// User
 	private LoginController controller;
 
-	public LoginBean() {
+	public LoginBean() throws Exception{
 		try {
 			this.controller = new LoginController();
 			if (getUserSession() == null) {
@@ -78,7 +78,7 @@ public class LoginBean extends BackingBean implements Serializable {
 
 					redirect("/portal/menu");
 				} else {
-					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
+					addWarnMessage("Ingresar", "Los datos de usuario y contraseï¿½a no coinciden, por favor verifique e intente nuevamente.");
 					return;
 				}
 			} else
@@ -102,8 +102,9 @@ public class LoginBean extends BackingBean implements Serializable {
 		}
 	}
 
-	/**@author MTorres*/
-	private void addUserCookieList() {
+	/**@author MTorres
+	 * @throws Exception */
+	private void addUserCookieList() throws Exception {
 		try {
 			ManageCookie.addCookie("uID", getUserSession().getId().toString(), 30, "user", true);
 			ManageCookie.addCookie("locate", "es_co", 30, "user", true);
@@ -113,14 +114,15 @@ public class LoginBean extends BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	private boolean validateLoginData() {
+	/** @author MTorres 
+	 * @throws Exception */
+	private boolean validateLoginData() throws Exception {
 		try {
 			if (this.userName == null || this.userName.trim().isEmpty()) {
 				addWarnMessage("Ingresar", "Por favor ingrese el nombre de usuario.");
 				return false;
 			} else if (this.userPassword == null || this.userPassword.trim().isEmpty()) {
-				addWarnMessage("Ingresar", "Por favor ingrese la contraseña.");
+				addWarnMessage("Ingresar", "Por favor ingrese la contraseï¿½a.");
 				return false;
 			} else
 				return true;

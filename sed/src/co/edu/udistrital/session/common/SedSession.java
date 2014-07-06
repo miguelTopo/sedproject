@@ -13,7 +13,7 @@ public class SedSession {
 
 	}
 
-	public static synchronized void addLoginUser(User user) {
+	public static synchronized void addLoginUser(User user) throws Exception {
 		try {
 			if (user != null)
 				getListUserSession().add(user);
@@ -23,7 +23,7 @@ public class SedSession {
 
 	}
 
-	public static synchronized List<User> getLoginUser(String idUser) {
+	public static synchronized List<User> getLoginUser(String idUser) throws Exception {
 		try {
 			List<User> loginList = new ArrayList<User>();
 			if (listUserSession != null) {
@@ -41,7 +41,7 @@ public class SedSession {
 		}
 	}
 
-	public static synchronized User getUserBySession(String idSession) {
+	public static synchronized User getUserBySession(String idSession) throws Exception {
 		try {
 			if (idSession != null && !idSession.trim().isEmpty()) {
 				if (listUserSession == null)
@@ -57,7 +57,7 @@ public class SedSession {
 		}
 	}
 
-	public static void deleteLoginSessionId(String idSession, String idUser) {
+	public static void deleteLoginSessionId(String idSession, String idUser) throws Exception {
 		try {
 			int index = -1;
 			if (idSession != null || idUser != null) {
