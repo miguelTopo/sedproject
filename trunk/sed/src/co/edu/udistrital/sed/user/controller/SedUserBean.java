@@ -60,7 +60,7 @@ public class SedUserBean extends BackingBean {
 	private SedUserController controller;
 
 	/** @author MTorres */
-	public SedUserBean() {
+	public SedUserBean() throws Exception{
 		try {
 			this.controller = new SedUserController();
 			this.sedUserList = this.sedUserFilteredList = this.controller.loadSedUserList();
@@ -71,8 +71,9 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 18/06/2014 20:10:12 */
-	public void deleteSedUser() {
+	/** @author MTorres 18/06/2014 20:10:12 
+	 * @throws Exception */
+	public void deleteSedUser() throws Exception {
 		try {
 			if (this.selectedSedUser != null) {
 				if (this.controller.deleteSedUser(this.selectedSedUser, getUserSession() != null ? getUserSession().getIdentification() : "admin")) {
@@ -87,8 +88,9 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 22/06/2014 13:15:19 */
-	private void sendMailUpdateSedLogin(final SedUser su, final String password) {
+	/** @author MTorres 22/06/2014 13:15:19 
+	 * @throws Exception */
+	private void sendMailUpdateSedLogin(final SedUser su, final String password) throws Exception {
 		try {
 			EmailTemplate t =
 				MailGeneratorFunction.getEmailTemplate(password != null ? IEmailTemplate.SED_PASSWORD_USER_CHANGE : IEmailTemplate.SED_USER_CHANGE);
@@ -110,8 +112,9 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 18/06/2014 22:17:20 */
-	private void threadUpdateSedLogin(String userPassword) {
+	/** @author MTorres 18/06/2014 22:17:20 
+	 * @throws Exception */
+	private void threadUpdateSedLogin(String userPassword) throws Exception {
 		try {
 			final String password = userPassword;
 			final SedUser su = this.sedUser;
@@ -188,25 +191,26 @@ public class SedUserBean extends BackingBean {
 
 				cleanVar();
 				goBack();
-				addInfoMessage("Guardar Usuario", "El Usuario se guardó exitosamente.");
+				addInfoMessage("Guardar Usuario", "El Usuario se guardï¿½ exitosamente.");
 			}
 
 		} catch (Exception e) {
 			addFatalMessage("Guardar Usuario",
-				"Ocurrió un error inesperado y no fué posible agregar el usuario. Por favor consulte al administrador del sistema.");
+				"Ocurriï¿½ un error inesperado y no fuï¿½ posible agregar el usuario. Por favor consulte al administrador del sistema.");
 			e.printStackTrace();
 		}
 	}
 
-	/** @author MTorres 17/06/2014 23:31:01 */
-	private boolean validateEditPassword() {
+	/** @author MTorres 17/06/2014 23:31:01 
+	 * @throws Exception */
+	private boolean validateEditPassword() throws Exception {
 		try {
 			if (!isRandomPassword() && this.userPassword.trim().isEmpty() && this.confirmPassword.trim().isEmpty())
 				return true;
 			else if (isRandomPassword())
 				return true;
 			else if (!this.userPassword.equals(this.confirmPassword)) {
-				addWarnMessage("Crear Usuario", "Las contraseñas no coinciden, por favor verifique.");
+				addWarnMessage("Crear Usuario", "Las contraseï¿½as no coinciden, por favor verifique.");
 				return false;
 			} else
 				return true;
@@ -215,18 +219,19 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres */
-	private boolean validatePassword() {
+	/** @author MTorres 
+	 * @throws Exception */
+	private boolean validatePassword() throws Exception {
 		try {
 			if (!isRandomPassword()) {
 				if (this.userPassword == null || this.userPassword.trim().isEmpty()) {
-					addWarnMessage("Crear Usuario", "Por favor diligencie la contraseña.");
+					addWarnMessage("Crear Usuario", "Por favor diligencie la contraseï¿½a.");
 					return false;
 				} else if (this.confirmPassword == null || this.confirmPassword.trim().isEmpty()) {
-					addWarnMessage("Crear Usuario", "Por favor repita la contraseña.");
+					addWarnMessage("Crear Usuario", "Por favor repita la contraseï¿½a.");
 					return false;
 				} else if (!this.userPassword.equals(this.confirmPassword)) {
-					addWarnMessage("Crear Usuario", "Las contraseñas no coinciden, por favor verifique.");
+					addWarnMessage("Crear Usuario", "Las contraseï¿½as no coinciden, por favor verifique.");
 					return false;
 				} else
 					return true;
@@ -239,8 +244,9 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 17/06/2014 19:59:32 */
-	private void threadSaveSedUser() {
+	/** @author MTorres 17/06/2014 19:59:32 
+	 * @throws Exception */
+	private void threadSaveSedUser() throws Exception {
 		try {
 			final SedUser su = this.sedUser;
 			final String pw = this.userPassword;
@@ -278,7 +284,7 @@ public class SedUserBean extends BackingBean {
 				getRequestContext().execute("PF('dlgStudentSelectWV').hide();");
 				addInfoMessage("Agregar Estudiante(s)", "Estudiantes seleccionados correctamente.");
 			} else {
-				addWarnMessage("Agregar Estudiante(s)", "No ha seleccionado ningún estudiante.");
+				addWarnMessage("Agregar Estudiante(s)", "No ha seleccionado ningï¿½n estudiante.");
 				return;
 			}
 		} catch (Exception e) {
@@ -320,8 +326,9 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres */
-	private boolean validateSedUser() {
+	/** @author MTorres 
+	 * @throws Exception */
+	private boolean validateSedUser() throws Exception {
 		try {
 			if (this.sedUser == null) {
 				addWarnMessage("Crear Usuario", "Por favor diligencie todos los valores para crear el usuario.");
@@ -333,22 +340,22 @@ public class SedUserBean extends BackingBean {
 				addWarnMessage("Crear Usuario", "Por favor diligencie los nombres.");
 				return false;
 			} else if (this.sedUser.getIdIdentificationType() == null || this.sedUser.getIdIdentificationType().equals(0L)) {
-				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de identificación.");
+				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de identificaciï¿½n.");
 				return false;
 			} else if (this.sedUser.getIdentification() == null || this.sedUser.getIdentification().trim().isEmpty()) {
-				addWarnMessage("Crear Usuario", "Por favor diligencie el número de identificación.");
+				addWarnMessage("Crear Usuario", "Por favor diligencie el nï¿½mero de identificaciï¿½n.");
 				return false;
 			} else if (this.sedUser.getEmail() == null || this.sedUser.getEmail().trim().isEmpty()) {
-				addWarnMessage("Crear Usuario", "Por favor diligencie el correo electrónico.");
+				addWarnMessage("Crear Usuario", "Por favor diligencie el correo electrï¿½nico.");
 				return false;
 			} else if (!FieldValidator.isValidEmail(this.sedUser.getEmail().trim())) {
-				addWarnMessage("Crear Usuario", "El correo electrónico ingresado no es válido.");
+				addWarnMessage("Crear Usuario", "El correo electrï¿½nico ingresado no es vï¿½lido.");
 				return false;
 			} else if (this.sedUser.getIdSedRole() == null || this.sedUser.getIdSedRole().equals(0L)) {
 				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de usuario.");
 				return false;
 			} else if (isExistIdentification()) {
-				addWarnMessage("Crear Usuario", "El número de identificación ya se encuentra registrado. Debe modificarlo para continuar.");
+				addWarnMessage("Crear Usuario", "El nï¿½mero de identificaciï¿½n ya se encuentra registrado. Debe modificarlo para continuar.");
 				return false;
 			} else if (isExistEmail()) {
 				addWarnMessage("Crear Usuario", "El correo seleccionado ya se encuentra registrado. Debe modificarlo para continuar.");
@@ -411,7 +418,7 @@ public class SedUserBean extends BackingBean {
 			if (this.studentSelected != null) {
 				if (this.studentResponsibleList != null) {
 					if (this.studentResponsibleList.contains(this.studentSelected))
-						addWarnMessage("Seleccionar Estudiante", "El estudiante no se puede elegir más de una vez.");
+						addWarnMessage("Seleccionar Estudiante", "El estudiante no se puede elegir mï¿½s de una vez.");
 					else
 						this.studentResponsibleList.add(this.studentSelected);
 				} else

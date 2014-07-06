@@ -5,8 +5,12 @@ import co.edu.udistrital.core.common.model.EmailTemplate;
 
 public class MailGeneratorFunction {
 
-	/** @author MTorres */
-	public static EmailTemplate getEmailTemplate(Long idEmailTemplate) {
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
+	public static EmailTemplate getEmailTemplate(Long idEmailTemplate)
+			throws Exception {
 		try {
 			for (EmailTemplate et : BeanList.getEmailTemplateList()) {
 				if (et.getId().equals(idEmailTemplate))
@@ -19,7 +23,8 @@ public class MailGeneratorFunction {
 		}
 	}
 
-	public static String createGenericMessage(String body, String googleAnalytics, Object... params) {
+	public static String createGenericMessage(String body,
+			String googleAnalytics, Object... params) throws Exception {
 		try {
 			String b = body;
 			b = addGoogleAnalytics(googleAnalytics, b);
@@ -32,20 +37,28 @@ public class MailGeneratorFunction {
 		}
 	}
 
-	public static String replaceParameterWithFunction(String b, Object... params) {
-		int i = 0;
-		for (Object object : params) {
-			if (object != null && !object.toString().isEmpty())
-				b = replaceMessage(b, "{" + i + "}", object.toString());
-			i++;
+	public static String replaceParameterWithFunction(String b,
+			Object... params) throws Exception {
+		try {
+			int i = 0;
+			for (Object object : params) {
+				if (object != null && !object.toString().isEmpty())
+					b = replaceMessage(b, "{" + i + "}", object.toString());
+				i++;
+			}
+			return b;
+		} catch (Exception e) {
+			throw e;
 		}
-		return b;
+
 	}
 
-	public static String addGoogleAnalytics(String googleAnalytics, String b) {
+	public static String addGoogleAnalytics(String googleAnalytics, String b)
+			throws Exception {
 		try {
 			if (googleAnalytics != null && !googleAnalytics.isEmpty())
-				b = replaceMessage(b, "<body>", getAnalyticsHTMLCode(googleAnalytics));
+				b = replaceMessage(b, "<body>",
+						getAnalyticsHTMLCode(googleAnalytics));
 			return b;
 		} catch (Exception e) {
 			throw e;
@@ -57,7 +70,8 @@ public class MailGeneratorFunction {
 		return "";
 	}
 
-	public static String replaceMessage(String message, String token, String value) {
+	public static String replaceMessage(String message, String token,
+			String value) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
 			int index = message.indexOf(token);

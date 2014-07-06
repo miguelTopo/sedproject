@@ -12,7 +12,7 @@ public class ManageCookie {
 
 	}
 
-	public static void addCookie(String name, String value, int expire, String comment, boolean secure) {
+	public static void addCookie(String name, String value, int expire, String comment, boolean secure) throws Exception {
 		try {
 			Cookie cookie = null;
 			if (cookie == null) {
@@ -26,7 +26,7 @@ public class ManageCookie {
 		}
 	}
 
-	public static boolean removeCookieByName(String cookieName) {
+	public static boolean removeCookieByName(String cookieName) throws Exception {
 		try {
 			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			Cookie cookieList[] = request.getCookies();
@@ -44,7 +44,7 @@ public class ManageCookie {
 		}
 	}
 
-	public static String getCookieByName(String cookieName) {
+	public static String getCookieByName(String cookieName) throws Exception {
 		try {
 			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			Cookie cookieList[] = request.getCookies();

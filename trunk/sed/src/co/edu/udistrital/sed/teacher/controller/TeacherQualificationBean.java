@@ -27,7 +27,7 @@ public class TeacherQualificationBean extends BackingBean {
 
 	private List<Student> studentList;
 
-	public TeacherQualificationBean() {
+	public TeacherQualificationBean() throws Exception{
 		try {
 			setShowP1(true);
 			this.studentList = new ArrayList<Student>(10);

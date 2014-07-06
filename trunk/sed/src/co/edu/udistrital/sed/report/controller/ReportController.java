@@ -23,7 +23,7 @@ public class ReportController extends Controller {
 	public List<Student> loadStudentListByGrade(List<Course> courseStudentList) throws Exception {
 		StudentDAO dao = new StudentDAO();
 		Transaction tx = null;
-		List<Long> idCourseList = new ArrayList<>(courseStudentList.size());
+		List<Long> idCourseList = new ArrayList<Long>(courseStudentList.size());
 		try {
 			for (Course c : courseStudentList) {
 				idCourseList.add(c.getId());

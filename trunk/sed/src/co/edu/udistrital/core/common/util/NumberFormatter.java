@@ -7,8 +7,9 @@ public class NumberFormatter {
 
 	public static final String FORMAT_0 = "#0";
 
-	/** @author MTorres */
-	public static String parseDoubleToString(Double number, String format) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public static String parseDoubleToString(Double number, String format) throws Exception {
 		try {
 			NumberFormat formatter = new DecimalFormat(format);
 			return formatter.format(number);

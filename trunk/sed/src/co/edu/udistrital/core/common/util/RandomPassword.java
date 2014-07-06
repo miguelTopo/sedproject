@@ -6,7 +6,7 @@ public class RandomPassword {
 	public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
 
-	public static String getPassword(int passwordLength) {
+	public static String getPassword(int passwordLength) throws Exception {
 		try {
 			return getPassword(NUMBERS + UPPER + LOWER, passwordLength);
 		} catch (Exception e) {
@@ -15,7 +15,7 @@ public class RandomPassword {
 		}
 	}
 
-	private static String getPassword(String key, int length) {
+	private static String getPassword(String key, int length) throws Exception {
 		try {
 			StringBuilder pswd = new StringBuilder();
 			for (int i = 0; i < length; i++) {

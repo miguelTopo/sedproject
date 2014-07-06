@@ -1,6 +1,5 @@
 package co.edu.udistrital.core.common.controller;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public abstract class BackingBean implements Serializable {
 
 
 
-	public BackingBean() {
+	public BackingBean() throws Exception {
 		try {
 			// if (!initializedGeneral && getResponse() != null)
 			// setInitializedGeneral(true);
@@ -63,7 +62,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public static void redirectToLogin() {
+	public static void redirectToLogin() throws Exception {
 		try {
 			String requestUrl = PrettyContext.getCurrentInstance().getRequestURL().toURL();
 			if (requestUrl != null && !requestUrl.trim().isEmpty() && !requestUrl.endsWith("login")) {
@@ -77,7 +76,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 	
-	public boolean getValidateExpiredSession() {
+	public boolean getValidateExpiredSession() throws Exception {
 		try {
 			String idSession = ManageCookie.getCookieByName("JSESSIONID");
 
@@ -153,8 +152,9 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public static FacesContext getFacesContext() {
+	/** @author MTorres 
+	 * @throws Exception */
+	public static FacesContext getFacesContext() throws Exception {
 		try {
 			return FacesContext.getCurrentInstance();
 		} catch (Exception e) {
@@ -182,8 +182,9 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public static RequestContext getRequestContext() {
+	/** @author MTorres 
+	 * @throws Exception */
+	public static RequestContext getRequestContext() throws Exception {
 		try {
 			return RequestContext.getCurrentInstance();
 		} catch (Exception e) {
@@ -210,7 +211,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public static HttpServletRequest getRequest() {
+	public static HttpServletRequest getRequest() throws Exception {
 		try {
 			return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		} catch (Exception e) {
@@ -219,7 +220,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public static HttpSession getSession(boolean isNew) {
+	public static HttpSession getSession(boolean isNew) throws Exception {
 		try {
 			if (FacesContext.getCurrentInstance().getExternalContext() != null)
 				return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(isNew);
@@ -239,8 +240,9 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public PanelStackBean getPanelStackBean() {
+	/** @author MTorres 
+	 * @throws Exception */
+	public PanelStackBean getPanelStackBean() throws Exception {
 		try {
 			if (panelStackBean == null) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -261,8 +263,9 @@ public abstract class BackingBean implements Serializable {
 	}
 
 
-	/** @author MTorres */
-	public List<Course> loadCourseListByGrade(Long idGrade) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public List<Course> loadCourseListByGrade(Long idGrade) throws Exception {
 		try {
 			List<Course> courseList = new ArrayList<Course>();
 			for (Course c : getCourseList()) {
@@ -275,10 +278,11 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public List<Subject> loadSubjectListByGrade(Long idGrade) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public List<Subject> loadSubjectListByGrade(Long idGrade) throws Exception {
 		try {
-			List<Subject> subjectGradeList = new ArrayList<>();
+			List<Subject> subjectGradeList = new ArrayList<Subject>();
 
 			for (Subject s : getSubjectList()) {
 				if (s.getIdGrade().equals(idGrade))
@@ -291,8 +295,9 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public static String getProperty(String key) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public static String getProperty(String key) throws Exception {
 		try {
 			return BeanList.getProperties().getProperty(key);
 		} catch (Exception e) {
@@ -300,8 +305,9 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public static String getMessage(String key) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public static String getMessage(String key) throws Exception {
 		try {
 			return BeanList.getProperties().getWebMessage(key);
 		} catch (Exception e) {
@@ -309,8 +315,9 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres */
-	public List<Tree> loadTreeListByRole(Long idRole) {
+	/** @author MTorres 
+	 * @throws Exception */
+	public List<Tree> loadTreeListByRole(Long idRole) throws Exception {
 		try {
 			List<Tree> treeRoleList = new ArrayList<Tree>();
 
@@ -322,7 +329,7 @@ public abstract class BackingBean implements Serializable {
 					idTreeList.add(tsr.getIdTree());
 			}
 
-			List<Long> idTreeUsed = new ArrayList<>(idTreeList.size());
+			List<Long> idTreeUsed = new ArrayList<Long>(idTreeList.size());
 			// Recorrer Tree en busca de los id que coincidan
 			for (Tree t : BeanList.getTreeList()) {
 
@@ -347,7 +354,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<Subject> getSubjectList() {
+	public List<Subject> getSubjectList() throws Exception {
 		try {
 			return BeanList.getSubjectList();
 		} catch (Exception e) {
@@ -355,7 +362,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<Course> getCourseList() {
+	public List<Course> getCourseList() throws Exception {
 		try {
 			return BeanList.getCourseList();
 		} catch (Exception e) {
@@ -363,7 +370,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<Grade> getGradeList() {
+	public List<Grade> getGradeList() throws Exception {
 		try {
 			return BeanList.getGradeList();
 		} catch (Exception e) {
@@ -372,7 +379,7 @@ public abstract class BackingBean implements Serializable {
 	}
 
 
-	public List<TreeSedRole> getTreeSedRoleList() {
+	public List<TreeSedRole> getTreeSedRoleList() throws Exception {
 		try {
 			return BeanList.getTreeSedRoleList();
 		} catch (Exception e) {
@@ -380,7 +387,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<Tree> getTreeList() {
+	public List<Tree> getTreeList() throws Exception {
 		try {
 			return BeanList.getTreeList();
 		} catch (Exception e) {
@@ -388,7 +395,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<QualificationType> getQualificationTypeList() {
+	public List<QualificationType> getQualificationTypeList() throws Exception {
 		try {
 			return BeanList.getQualificationTypeList();
 		} catch (Exception e) {
@@ -396,7 +403,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<IdentificationType> getIdentificationTypeList() {
+	public List<IdentificationType> getIdentificationTypeList() throws Exception {
 		try {
 			return BeanList.getIdentificationTypeList();
 		} catch (Exception e) {
@@ -404,7 +411,7 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	public List<SedRole> getSedRoleList() {
+	public List<SedRole> getSedRoleList() throws Exception {
 		try {
 			return BeanList.getSedRoleList();
 		} catch (Exception e) {

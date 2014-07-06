@@ -28,7 +28,7 @@ public class PasswordBean extends BackingBean {
 	private String password;
 	private String newPass2;
 
-	public PasswordBean() {
+	public PasswordBean() throws Exception{
 		try {
 			this.controller = new PasswordController();
 			getUserSession().getIdSedUser();
@@ -37,11 +37,11 @@ public class PasswordBean extends BackingBean {
 		}
 	}
 
-	public boolean isRightNewPass() {
+	public boolean isRightNewPass() throws Exception {
 		try {
 			if (this.newPass == null || this.newPass.trim().isEmpty()) {
 				addWarnMessage("Valida",
-						"Por favor ingrese la nueva contraseña");
+						"Por favor ingrese la nueva contraseï¿½a");
 				return false;
 			} else if (this.newPass2 == null || this.newPass2.trim().isEmpty()) {
 				addWarnMessage("Valida", "Por favor ingrese la ");
@@ -66,8 +66,8 @@ public class PasswordBean extends BackingBean {
 					this.password)) {
 				this.controller.updateSedUserPassword(getUserSession()
 						.getIdSedUser(), this.newPass);
-				BackingBean.addInfoMessage("Restablecer contraseña",
-						"Cambio de contraseña exitoso.");
+				BackingBean.addInfoMessage("Restablecer contraseï¿½a",
+						"Cambio de contraseï¿½a exitoso.");
 
 			} else {
 
