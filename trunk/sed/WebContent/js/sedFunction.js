@@ -180,3 +180,29 @@ function validateAddStudent() {
 			return false;
 		}	  
  }
+ /**@author MTorres*/
+ function validateUpdatePw(){
+	 
+	 var idForm = "passwordChangeForm";
+	 valOldPass = addTextValidation(idForm + ":txtPasswordOld", true, true, 6, 100);
+	 valPass = addTextValidation(idForm + ":txtPassword", true, true, 6, 100);
+	 valRetryPass = addTextValidation(idForm + ":txtRetryPassword", true, true, 6, 100);
+	 
+	 valid = LiveValidation.massValidate([ valOldPass, valPass, valRetryPass ]);
+	 
+	 if (valid) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnUpdatePw',
+				process : '@all',
+				update :'passwordChangeForm:passwordChangePanel',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}	
+ }
+ 

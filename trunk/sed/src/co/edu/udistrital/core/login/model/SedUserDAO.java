@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
+
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.common.util.ManageDate;
@@ -14,7 +15,8 @@ import co.edu.udistrital.session.common.User;
 public class SedUserDAO extends HibernateDAO {
 
 	/** @author MTorres */
-	public User validateSedUser(String userName, String password) throws Exception {
+	public User validateSedUser(String userName, String password)
+			throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -53,11 +55,12 @@ public class SedUserDAO extends HibernateDAO {
 				hql.append(" AND su.state = :state ");
 				hql.append(" AND sru.state = :state ");
 
-				qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(User.class));
+				qo = getSession().createQuery(hql.toString())
+						.setResultTransformer(
+								Transformers.aliasToBean(User.class));
 				qo.setParameter("idSedUser", idSedUser);
 				qo.setParameter("state", IState.ACTIVE);
 				qo.setMaxResults(1);
-
 
 				User u = (User) qo.uniqueResult();
 				if (u.getIdSedRole().equals(ISedRole.STUDENT)) {
@@ -89,8 +92,9 @@ public class SedUserDAO extends HibernateDAO {
 			qo = null;
 		}
 	}
-	
-	public Boolean validateOldPassword(Long idUser, String password) throws Exception {
+
+	public Boolean validateOldPassword(Long idUser, String password)
+			throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -124,7 +128,6 @@ public class SedUserDAO extends HibernateDAO {
 		}
 	}
 
-	
 	/** @author MTorres */
 	public List<SedUser> loadSedUserList() throws Exception {
 		StringBuilder hql = new StringBuilder();
@@ -155,7 +158,8 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" AND sru.state = :state ");
 			hql.append(" AND sr.state = :state ");
 
-			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(
+					Transformers.aliasToBean(SedUser.class));
 
 			qo.setParameter("state", IState.ACTIVE);
 
@@ -170,7 +174,8 @@ public class SedUserDAO extends HibernateDAO {
 		}
 	}
 
-	public boolean validateExistField(String className, String field, String fieldCompare) throws Exception {
+	public boolean validateExistField(String className, String field,
+			String fieldCompare) throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -214,7 +219,8 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" AND su.email = :sedUserEmail ");
 			hql.append(" AND su.state = :state ");
 
-			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(
+					Transformers.aliasToBean(SedUser.class));
 			qo.setParameter("sedUserEmail", email);
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setMaxResults(1);
@@ -230,7 +236,8 @@ public class SedUserDAO extends HibernateDAO {
 
 	}
 
-	public boolean updateSedUserPassword(Long idSedUser, String password) throws Exception {
+	public boolean updateSedUserPassword(Long idSedUser, String password)
+			throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -255,7 +262,8 @@ public class SedUserDAO extends HibernateDAO {
 	}
 
 	/** @author MTorres 17/06/2014 23:54:10 * */
-	public void updateSedUserLogin(SedUser sedUser, String password) throws Exception {
+	public void updateSedUserLogin(SedUser sedUser, String password)
+			throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -263,14 +271,16 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" SET sul.userName = :userName, ");
 			hql.append(" sul.userCreation = :userCreation, ");
 			hql.append(" sul.dateCreation = :dateCreation ");
-			hql.append(password != null ? " , sul.md5Password = :md5Password" : "");
+			hql.append(password != null ? " , sul.md5Password = :md5Password"
+					: "");
 			hql.append(" WHERE sul.idSedUser = :idSedUser ");
 			hql.append(" AND sul.state = :state ");
 
 			qo = getSession().createQuery(hql.toString());
 			qo.setParameter("userName", sedUser.getIdentification());
 			qo.setParameter("userCreation", "admin");
-			qo.setParameter("dateCreation", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("dateCreation",
+					ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 			qo.setParameter("idSedUser", sedUser.getId());
 			qo.setParameter("state", IState.ACTIVE);
 
@@ -303,7 +313,8 @@ public class SedUserDAO extends HibernateDAO {
 			qo = getSession().createQuery(hql.toString());
 			qo.setParameter("idSedRole", sedUser.getIdSedRole());
 			qo.setParameter("userCreation", "admin");
-			qo.setParameter("dateCreation", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("dateCreation",
+					ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 			qo.setParameter("idSedUser", sedUser.getId());
 			qo.setParameter("state", IState.ACTIVE);
 
@@ -334,7 +345,8 @@ public class SedUserDAO extends HibernateDAO {
 			qo = getSession().createQuery(hql.toString());
 			qo.setParameter("inactiveState", IState.INACTIVE);
 			qo.setParameter("userChange", user);
-			qo.setParameter("dateChange", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("dateChange",
+					ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 			qo.setParameter("idSedUser", sedUser.getId());
 			affectedRow += qo.executeUpdate();
 
@@ -350,7 +362,8 @@ public class SedUserDAO extends HibernateDAO {
 				qo = getSession().createQuery(hql.toString());
 				qo.setParameter("inactiveState", IState.INACTIVE);
 				qo.setParameter("userChange", user);
-				qo.setParameter("dateChange", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+				qo.setParameter("dateChange",
+						ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 				qo.setParameter("idSedUser", sedUser.getId());
 				affectedRow += qo.executeUpdate();
 			}
@@ -359,6 +372,69 @@ public class SedUserDAO extends HibernateDAO {
 			e.printStackTrace();
 			throw e;
 		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
+	public boolean validateOldUserPassword(Long idSedUser, String md5OldPw)
+			throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT sul.md5Password ");
+			hql.append(" FROM SedUserLogin sul ");
+			hql.append(" WHERE sul.idSedUser = :idSedUser ");
+			hql.append(" AND sul.md5Password = :md5Pass ");
+			hql.append(" AND sul.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("md5Pass", md5OldPw);
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setMaxResults(1);
+
+			Object pw = qo.uniqueResult();
+
+			return (pw == null) ? false : pw.toString().equals(md5OldPw);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	/**@author MTorres*/
+	public boolean updatePassword(Long idSedUser, String pwMD5, String user) throws Exception{
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" UPDATE SedUserLogin sul ");
+			hql.append(" SET sul.md5Password = :md5Password, ");
+			hql.append(" sul.dateChange = :dateChange, ");
+			hql.append(" sul.userChange = :userChange ");
+			hql.append(" WHERE sul.idSedUser = :idSedUser ");
+			hql.append(" AND sul.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("md5Password", pwMD5);
+			qo.setParameter("dateChange",
+					ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("userChange", user);
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("state", IState.ACTIVE);
+
+			return qo.executeUpdate() == 1;
+		} catch (Exception e) {
+			throw e;
+		}finally{
 			hql = null;
 			qo = null;
 		}

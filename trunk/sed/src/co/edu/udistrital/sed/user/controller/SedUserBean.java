@@ -281,10 +281,11 @@ public class SedUserBean extends BackingBean {
 	public void validateStudentList() {
 		try {
 			if (this.studentResponsibleList != null && !this.studentResponsibleList.isEmpty()) {
+				getRequestContext().update(":addSedUserForm:studentRespListOp");
 				getRequestContext().execute("PF('dlgStudentSelectWV').hide();");
 				addInfoMessage("Agregar Estudiante(s)", "Estudiantes seleccionados correctamente.");
 			} else {
-				addWarnMessage("Agregar Estudiante(s)", "No ha seleccionado ning�n estudiante.");
+				addWarnMessage("Agregar Estudiante(s)", "No ha seleccionado ningún estudiante.");
 				return;
 			}
 		} catch (Exception e) {
@@ -464,6 +465,7 @@ public class SedUserBean extends BackingBean {
 			this.idStudentResponsible = 0L;
 			this.student = null;
 			this.student = new Student();
+			System.out.println(this.sedUser.getIdSedRole());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
