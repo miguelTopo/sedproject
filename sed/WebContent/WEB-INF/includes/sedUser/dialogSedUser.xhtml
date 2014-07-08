@@ -29,7 +29,8 @@
 						<p:selectOneMenu id="somStdGrade" value="#{sedUserBean.student.idGrade}" style="width:98%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{sedUserBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
-							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":addSedUserForm:somStdCourse" process="@this" />
+							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":addSedUserForm:somStdCourse" process="@this :addSedUserForm:somSedRole" />
+						
 						</p:selectOneMenu>
 					</td>
 					<td style="text-align: center">
@@ -40,7 +41,7 @@
 							disabled="#{empty sedUserBean.student.idGrade or sedUserBean.student.idGrade eq 0}">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{sedUserBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
-							<p:ajax listener="#{sedUserBean.loadStudentByCourse}" update=":addSedUserForm:stdResponsibleTable" />
+							<p:ajax listener="#{sedUserBean.loadStudentByCourse}" update=":addSedUserForm:stdResponsibleTable" process="@this :addSedUserForm:somSedRole" />
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -48,7 +49,7 @@
 					<td />
 					<td colspan="4">
 						<p:dataTable id="stdResponsibleTable" value="#{sedUserBean.studentList}" var="s"
-							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" scrollHeight="200">
+							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" style="max-height: 200px;">
 							<p:column headerText="Nombres" width="150">
 									#{s.name}	
 								</p:column>
@@ -103,7 +104,7 @@
 				</tr>
 			</table>
 			<div style="text-align:center;">
-				<p:commandButton value="#{bundle['page.core.labelSave']}" action="#{sedUserBean.validateStudentList}" update=":addSedUserForm:studentRespListOp"/>
+				<p:commandButton value="#{bundle['page.core.labelSave']}" action="#{sedUserBean.validateStudentList}"/>
 				<p:spacer width="5"/>
 				<p:commandButton value="#{bundle['page.core.labelCancel']}" action="#{sedUserBean.cancelStudentList}" oncomplete="PF('dlgStudentSelectWV').hide();" 
 					update="addSedUserForm"/>

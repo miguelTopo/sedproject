@@ -19,80 +19,108 @@ import co.edu.udistrital.core.login.model.SedUserDAO;
 @URLMapping(id = "password", pattern = "/portal/clave", viewId = "/pages/password/password.jspx")
 public class PasswordBean extends BackingBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9075256738266226834L;
-	private PasswordController controller;
-	private String newPass;
-	private String password;
-	private String newPass2;
 
-	public PasswordBean() throws Exception{
+	private String passwordOld;
+	private String password;
+	private String retryPassword;
+
+	private PasswordController controller;
+
+	public PasswordBean() throws Exception {
 		try {
 			this.controller = new PasswordController();
-			getUserSession().getIdSedUser();
 		} catch (Exception e) {
 			throw e;
 		}
 	}
 
-	public boolean isRightNewPass() throws Exception {
+	/** @author MTorres */
+	private boolean validateSuccessPassword() throws Exception {
 		try {
-			if (this.newPass == null || this.newPass.trim().isEmpty()) {
-				addWarnMessage("Valida",
-						"Por favor ingrese la nueva contrase�a");
+			if (!this.password.equals(this.retryPassword)) {
+				addWarnMessage("Cambiar contraseña",
+						"Las contraseñas ingresadas como nuevas no coinciden, por favor verifique.");
 				return false;
-			} else if (this.newPass2 == null || this.newPass2.trim().isEmpty()) {
-				addWarnMessage("Valida", "Por favor ingrese la ");
-				return false;
-			} else if (!this.newPass.equals(this.newPass2)) {
-				addWarnMessage("Valida", "Por favor ingrese la ");
-				return false;
-			}
-
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
-
-	public void changePassword() {
-		try {
-			if (!isRightNewPass())
-				return;
-			if (this.controller.rightOldPass(getUserSession().getIdSedUser(),
-					this.password)) {
-				this.controller.updateSedUserPassword(getUserSession()
-						.getIdSedUser(), this.newPass);
-				BackingBean.addInfoMessage("Restablecer contrase�a",
-						"Cambio de contrase�a exitoso.");
-
 			} else {
-
-				BackingBean.addInfoMessage("Clave Antigua Incorrecta",
-						"Por favor ingrese la clave correcta.");
-				return;
+				String pwMd5 = ManageMD5.parseMD5(this.passwordOld);
+				this.passwordOld = null;
+				if (!this.controller.validateOldUserPassword(getUserSession()
+						.getIdSedUser(), pwMd5)) {
+					addWarnMessage("Cambiar contraseña",
+							"La contraseña antigua no coincide.");
+					return false;
+				}
+				return true;
 			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
+	private boolean validateUpdatePassword() throws Exception {
+		try {
+			if (this.passwordOld == null || this.passwordOld.trim().isEmpty()) {
+				addWarnMessage("Cambiar contraseña",
+						"Por favor diligencie la contraseña antigua.");
+				return false;
+			} else if (this.password == null || this.password.trim().isEmpty()) {
+				addWarnMessage("Cambiar contraseña",
+						"Por favor diligencie la nueva contraseña.");
+				return false;
+			} else if (this.retryPassword == null
+					|| this.retryPassword.trim().isEmpty()) {
+				addWarnMessage(
+						"Cambiar contraseña",
+						"Por favor diligencie nuevamente la nueva contraseña en el campo 'Confirmar contraseña'.");
+				return false;
+			} else
+				return validateSuccessPassword();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public void updatePassword() {
+		try {
+			if (!validateUpdatePassword())
+				return;
+
+			if (this.controller.updatePassword(getUserSession().getIdSedUser(),
+					ManageMD5.parseMD5(this.password), getUserSession()
+							.getIdentification())) {
+				clearVar();
+				addInfoMessage("Cambiar contraseña",
+						"La contraseña se actualizó exitosamente.");
+			} else {
+				addErrorMessage("Cambiar contraseña", "Ocurriò un error al intentar modificar la contraseña, por favor comuniquese con el administrador del sistema.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void clearVar() throws Exception{
+		try {
+			this.passwordOld = this.password = this.retryPassword = null;
+			this.passwordOld = this.password = this.retryPassword = "";
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	@Override
 	public boolean getValidateSedUserRole() throws Exception {
-		String md5Pass = ManageMD5.parseMD5("123456");
-
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	public String getNewPass() {
-		return newPass;
+	public String getPasswordOld() {
+		return passwordOld;
 	}
 
-	public void setNewPass(String newPass) {
-		this.newPass = newPass;
+	public void setPasswordOld(String passwordOld) {
+		this.passwordOld = passwordOld;
 	}
 
 	public String getPassword() {
@@ -103,13 +131,12 @@ public class PasswordBean extends BackingBean {
 		this.password = password;
 	}
 
-	public String getNewPass2() {
-		return newPass2;
+	public String getRetryPassword() {
+		return retryPassword;
 	}
 
-	public void setNewPass2(String newPass2) {
-		this.newPass2 = newPass2;
+	public void setRetryPassword(String retryPassword) {
+		this.retryPassword = retryPassword;
 	}
-	
 
 }

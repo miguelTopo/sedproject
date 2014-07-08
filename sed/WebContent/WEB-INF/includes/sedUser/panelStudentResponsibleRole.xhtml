@@ -10,40 +10,27 @@
 			<p:commandButton value="Seleccionar Estudiante" action="#{sedUserBean.goSelectStudent}" oncomplete="PF('dlgStudentSelectWV').show();" update=":addSedUserForm:dlgStudentSelect"/>
 		</div>
 		<p:outputPanel id="studentRespListOp">
-		<p:outputPanel rendered="#{!empty sedUserBean.studentResponsibleList}">
+		<p:outputPanel>
 		<div>
-			<table>
-				<tr>
-					<td style="width:5%"/>
-					<td style="width:90%"/>
-					<td style="width:5%"/>
-				</tr>
-				<tr>
-					<td/>
-					<td>
-						<p:dataTable id="stdResList" value="#{sedUserBean.studentResponsibleList}" var="sr" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
-								scrollable="true" scrollHeight="75">
-								
-								<p:column headerText="Nombres">
-									#{sr.name}	
-								</p:column>
-
-							<p:column headerText="Apellidos">
-									#{sr.lastName}	
-							</p:column>
-							
-							<p:column style="text-align:center" width="35">
-								<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
-									update=":addSedUserForm:responsibleStdTable">
-									<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
-									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
-								</p:commandLink>
-							</p:column>
-							</p:dataTable>
-					</td>		
-				</tr>
-			</table>
+			<p:dataTable id="stdResList" value="#{sedUserBean.studentResponsibleList}" var="sr" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
+				scrollable="true" scrollHeight="75">
 			
+				<p:column headerText="Nombres">
+					#{sr.name}	
+				</p:column>
+
+				<p:column headerText="Apellidos">
+					#{sr.lastName}	
+				</p:column>
+							
+				<p:column style="text-align:center" width="35">
+					<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
+						update=":addSedUserForm:responsibleStdTable">
+						<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
+						<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
 		</div>
 		</p:outputPanel>
 		</p:outputPanel>
