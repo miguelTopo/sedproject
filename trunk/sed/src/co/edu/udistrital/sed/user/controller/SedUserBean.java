@@ -398,6 +398,7 @@ public class SedUserBean extends BackingBean {
 		try {
 			if (this.studentSelected != null && this.studentResponsibleList != null) {
 				this.studentResponsibleList.remove(this.studentSelected);
+				this.studentSelected = new Student();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -465,7 +466,8 @@ public class SedUserBean extends BackingBean {
 			this.idStudentResponsible = 0L;
 			this.student = null;
 			this.student = new Student();
-			System.out.println(this.sedUser.getIdSedRole());
+			this.studentList = null;
+			this.studentList = new ArrayList<Student>();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

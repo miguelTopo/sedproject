@@ -8,6 +8,7 @@
 
 <p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" style="max-height:550px">
 	<h:form id="dlgStdSelectForm">
+		<p:outputPanel id="studentSelectOp">
 	<table style="width: 700px; border-spacing: 7px;">
 				<tr>
 					<td style="width: 5%" />
@@ -94,7 +95,7 @@
 							
 							<p:column style="text-align:center" width="35">
 								<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
-									update=":dlgStdSelectForm:responsibleStdOp">
+									update=":dlgStdSelectForm:responsibleStdOp :addSedUserForm:opChangeRole">
 									<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
 									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
 								</p:commandLink>
@@ -110,6 +111,7 @@
 				<p:spacer width="5"/>
 				<p:commandButton value="#{bundle['page.core.labelCancel']}" action="#{sedUserBean.cancelStudentList}" oncomplete="PF('dlgStudentSelectWV').hide();" />
 			</div>
+			</p:outputPanel>
 			</h:form>
 	</p:dialog>
 </f:view>

@@ -5,36 +5,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
-	<article style="width:100%;padding-top:25px;padding-bottom:25px;">
+	<article style="width:100%;padding-top:25px;">
 		<div style="text-align:center;padding-bottom:20px">
-			<p:commandButton value="Seleccionar Estudiante" action="#{sedUserBean.goSelectStudent}" oncomplete="PF('dlgStudentSelectWV').show();" process="@this"/>
+			<p:commandButton value="Seleccionar Estudiante" action="#{sedUserBean.goSelectStudent}" oncomplete="PF('dlgStudentSelectWV').show();" 
+				process="@this" update=":dlgStdSelectForm:studentSelectOp"/>
 		</div>
-		<p:outputPanel id="studentRespListOp">
-		<p:outputPanel>
-		<div>
-			<p:dataTable id="stdResList" value="#{sedUserBean.studentResponsibleList}" var="sr" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
+		<div style="width:60%;margin:0 auto;">
+			<p>
+				Estudiante(s) seleccionados:
+			</p>
+			<p:dataTable id="stdResList" value="#{sedUserBean.studentResponsibleList}" var="stdRes" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
 				scrollable="true" scrollHeight="75">
 			
 				<p:column headerText="Nombres">
-					#{sr.name}	
+					#{stdRes.name}	
 				</p:column>
 
 				<p:column headerText="Apellidos">
-					#{sr.lastName}	
+					#{stdRes.lastName}	
 				</p:column>
 							
 				<p:column style="text-align:center" width="35">
-					<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}">
+					<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" update=":addSedUserForm:opChangeRole" 
+						process="@this :addSedUserForm:somSedRole">
 						<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
-						<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
+						<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{stdRes}" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</div>
-		</p:outputPanel>
-		</p:outputPanel>
 	</article>
-	
-		
 </f:view>
 </html>
