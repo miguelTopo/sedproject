@@ -9,25 +9,8 @@ public class PasswordController extends Controller {
 
 	private static final long serialVersionUID = -2401144292039751003L;
 
-	public boolean rightOldPass(Long idUser, String password) {
-		SedUserDAO dao = new SedUserDAO();
-		Transaction tx = null;
-		boolean success = false;
 
-		try {
-
-			tx = dao.getSession().beginTransaction();
-			success = dao.validateOldPassword(idUser, password);
-			tx.commit();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return success;
-	}
-
-	public boolean updateSedUserPassword(Long idSedUser, String password)
-			throws Exception {
+	public boolean updateSedUserPassword(Long idSedUser, String password) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		boolean success = false;
@@ -52,16 +35,15 @@ public class PasswordController extends Controller {
 
 	/**
 	 * @author MTorres
-	 * @throws Exception
 	 */
-	public boolean validateOldUserPassword(Long idSedUser, String md5OldPw)
-			throws Exception {
+	public boolean validateOldUserPassword(Long idSedUser, String md5OldPw) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();
 			return dao.validateOldUserPassword(idSedUser, md5OldPw);
 		} catch (Exception e) {
+			dao.getSession().cancelQuery();
 			if (tx != null && tx.isActive())
 				tx.rollback();
 			throw e;
@@ -73,8 +55,7 @@ public class PasswordController extends Controller {
 	}
 
 	/** @author MTorres */
-	public boolean updatePassword(Long idSedUser, String pwMD5,
-			String user) throws Exception{
+	public boolean updatePassword(Long idSedUser, String pwMD5, String user) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
