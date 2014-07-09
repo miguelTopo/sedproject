@@ -6,8 +6,8 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
 	<article style="width:100%;padding-top:25px;padding-bottom:25px;">
-		<div style="text-align:center">
-			<p:commandButton value="Seleccionar Estudiante" action="#{sedUserBean.goSelectStudent}" oncomplete="PF('dlgStudentSelectWV').show();" update=":addSedUserForm:dlgStudentSelect"/>
+		<div style="text-align:center;padding-bottom:20px">
+			<p:commandButton value="Seleccionar Estudiante" action="#{sedUserBean.goSelectStudent}" oncomplete="PF('dlgStudentSelectWV').show();" process="@this"/>
 		</div>
 		<p:outputPanel id="studentRespListOp">
 		<p:outputPanel>
@@ -24,8 +24,7 @@
 				</p:column>
 							
 				<p:column style="text-align:center" width="35">
-					<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
-						update=":addSedUserForm:responsibleStdTable">
+					<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}">
 						<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
 						<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
 					</p:commandLink>
@@ -35,5 +34,7 @@
 		</p:outputPanel>
 		</p:outputPanel>
 	</article>
+	
+		
 </f:view>
 </html>

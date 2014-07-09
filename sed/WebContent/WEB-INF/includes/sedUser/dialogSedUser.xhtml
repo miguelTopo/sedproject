@@ -5,8 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
-	<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" style="max-height:550px">
-			<table style="width: 700px; border-spacing: 7px;">
+
+<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" style="max-height:550px">
+	<h:form id="dlgStdSelectForm">
+	<table style="width: 700px; border-spacing: 7px;">
 				<tr>
 					<td style="width: 5%" />
 					<td style="width: 13%" />
@@ -29,7 +31,7 @@
 						<p:selectOneMenu id="somStdGrade" value="#{sedUserBean.student.idGrade}" style="width:98%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{sedUserBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
-							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":addSedUserForm:somStdCourse" process="@this :addSedUserForm:somSedRole" />
+							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":dlgStdSelectForm:somStdCourse" process="@this" />
 						
 						</p:selectOneMenu>
 					</td>
@@ -41,7 +43,7 @@
 							disabled="#{empty sedUserBean.student.idGrade or sedUserBean.student.idGrade eq 0}">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{sedUserBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
-							<p:ajax listener="#{sedUserBean.loadStudentByCourse}" update=":addSedUserForm:stdResponsibleTable" process="@this :addSedUserForm:somSedRole" />
+							<p:ajax listener="#{sedUserBean.loadStudentByCourse}" update=":dlgStdSelectForm:stdResponsibleTable" process="@this" />
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -60,7 +62,7 @@
 
 							<p:column style="text-align:center" width="35">
 								<p:commandLink title="#{bundle['page.core.labelSelect']}" action="#{sedUserBean.addStudent}" 
-									update=":addSedUserForm:responsibleStdOp">
+									update=":dlgStdSelectForm:responsibleStdOp">
 									<p:graphicImage value="../css/icon/select.png" width="20" height="20" />
 									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{s}" />
 								</p:commandLink>
@@ -92,7 +94,7 @@
 							
 							<p:column style="text-align:center" width="35">
 								<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
-									update=":addSedUserForm:responsibleStdOp">
+									update=":dlgStdSelectForm:responsibleStdOp">
 									<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
 									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
 								</p:commandLink>
@@ -104,11 +106,11 @@
 				</tr>
 			</table>
 			<div style="text-align:center;">
-				<p:commandButton value="#{bundle['page.core.labelSave']}" action="#{sedUserBean.validateStudentList}"/>
+				<p:commandButton value="#{bundle['page.core.labelSave']}" action="#{sedUserBean.validateStudentList}" update=":addSedUserForm:opChangeRole"/>
 				<p:spacer width="5"/>
-				<p:commandButton value="#{bundle['page.core.labelCancel']}" action="#{sedUserBean.cancelStudentList}" oncomplete="PF('dlgStudentSelectWV').hide();" 
-					update="addSedUserForm"/>
+				<p:commandButton value="#{bundle['page.core.labelCancel']}" action="#{sedUserBean.cancelStudentList}" oncomplete="PF('dlgStudentSelectWV').hide();" />
 			</div>
+			</h:form>
 	</p:dialog>
 </f:view>
 </html>
