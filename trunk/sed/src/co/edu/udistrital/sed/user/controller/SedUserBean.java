@@ -570,6 +570,7 @@ public class SedUserBean extends BackingBean {
 
 	public SedUser getSedUser() {
 		return sedUser;
+		
 	}
 
 	public void setSedUser(SedUser sedUser) {
