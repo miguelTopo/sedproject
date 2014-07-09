@@ -1,0 +1,17 @@
+#addUserSection article {
+	width: 370px;
+	display: inline-block;
+}
+
+table {
+	width: 100%;
+	border-spacing: 5px;
+}
+
+.ui-label-table {
+	width: 35%;
+}
+
+.ui-content-table {
+	width: 65%;
+}
