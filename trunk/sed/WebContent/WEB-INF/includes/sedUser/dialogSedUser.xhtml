@@ -29,7 +29,7 @@
 						Grado:
 					</td>
 					<td>
-						<p:selectOneMenu id="somStdGrade" value="#{sedUserBean.student.idGrade}" style="width:98%">
+						<p:selectOneMenu id="somStdGrade" value="#{sedUserBean.sedUser.idStudentGrade}" style="width:98%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{sedUserBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
 							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":dlgStdSelectForm:somStdCourse" process="@this" />
@@ -40,8 +40,8 @@
 						Curso:
 					</td>
 					<td>
-						<p:selectOneMenu id="somStdCourse" value="#{sedUserBean.student.idCourse}" style="width:98%"
-							disabled="#{empty sedUserBean.student.idGrade or sedUserBean.student.idGrade eq 0}">
+						<p:selectOneMenu id="somStdCourse" value="#{sedUserBean.sedUser.idStudentCourse}" style="width:98%"
+							disabled="#{sedUserBean.sedUser.idStudentGrade eq 0}">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 							<f:selectItems value="#{sedUserBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
 							<p:ajax listener="#{sedUserBean.loadStudentByCourse}" update=":dlgStdSelectForm:stdResponsibleTable" process="@this" />

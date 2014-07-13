@@ -145,32 +145,42 @@ function validateAddStudent() {
 	}
  }
  
- function validateAddSedUser(randomPassword){
-	 var form = "addSedUserForm";
+ function validateAddSedUser(randomPassword, idSedRole){
+	 var idForm = "addSedUserForm";
 	 
-	 valLastName = addTextValidation(form + ":txtSuLastName", true, true, 1, 60);
-	 valName = addTextValidation(form + ":txtSuName", true, true, 1, 60);
-	 valIdentification = addTextValidation(form + ":txtSuIdentification", true, true, 1, 20);
-	 valEmail = addTextValidation(form + ":txtSuEmail", true, true, 1, 200);
+	 valLastName = addTextValidation(idForm + ":txtSuLastName", true, true, 1, 60);
+	 valName = addTextValidation(idForm + ":txtSuName", true, true, 1, 60);
+	 valIdentification = addTextValidation(idForm + ":txtSuIdentification", true, true, 1, 20);
+	 valEmail = addTextValidation(idForm + ":txtSuEmail", true, true, 1, 200);
+	 valDateSedUser = addDateValidation(idForm + ":birthdayDate_input", true);
 	 
-	 selectIdType = addSelectValidation(form + ":somIdType_input", "valIdType_DIV");
-	 selectRole = addSelectValidation(form + ":somRole_input", "valRole_DIV");
+	 selectIdType = addSelectValidation(idForm + ":somIdType_input", "valIdType_DIV");
+	 selectRole = addSelectValidation(idForm + ":somSedRole_input", "valIdSedRole_DIV");
 	 
 	 valid = true;
 	 
 	 if(!randomPassword){
-		 valPass = addTextValidation(form + ":userPw", true, true, 6, 50);
-		 valPassRetry = addTextValidation(form + ":userPwRetry", true, true, 6, 50);
-		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail, valPass, valPassRetry ]);
+		 valPass = addTextValidation(idForm + ":userPw", true, true, 6, 50);
+		 valPassRetry = addTextValidation(idForm + ":userPwRetry", true, true, 6, 50);
+		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail, valDateSedUser, valPass, valPassRetry ]);
 	 }else
-		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail ]);
+		 valid = LiveValidation.massValidate([ valLastName, valName, valIdentification, valEmail, valDateSedUser]);
 	 
-	 if (valid && selectIdType && selectRole) {
+	 //Validacion especifica por usuario
+	 var validUserField = true;
+	 if(idSedRole == 3){
+		 selectGrade = addSelectValidation(idForm + ":somGrade_input", "valGrade_DIV");
+		 selectCourse = addSelectValidation(idForm + ":somCourse_input", "valCourse_DIV");
+		 validUserField = selectGrade && selectCourse; 
+	 }
+	 
+	 
+	 if (valid && selectIdType && selectRole && validUserField) {
 			PF('statusDialog').show();
 			PrimeFaces.ab({
-				formId : form,
+				formId : idForm,
 				partialSubmit : true,
-				source : form + ':btnAddSedUser',
+				source : idForm + ':btnAddSedUser',
 				process : '@all',
 				update :'addSedUserForm:addSedUserPanel',
 				oncomplete : function(xhr, status, args) {
@@ -206,3 +216,39 @@ function validateAddStudent() {
 		}	
  }
  
+ function validateUpdateSedUser(idSedRole){
+	 var idForm = "addSedUserForm";
+	 
+	 valLastName = addTextValidation(idForm + ":txtSuLastName", true, true, 1, 60);
+	 valName = addTextValidation(idForm + ":txtSuName", true, true, 1, 60);
+	 valIdentification = addTextValidation(idForm + ":txtSuIdentification", true, true, 1, 20);
+	 valEmail = addTextValidation(idForm + ":txtSuEmail", true, true, 1, 200);
+	 valDateSedUser = addDateValidation(idForm + ":birthdayDate_input", true);
+	 
+	 valid = LiveValidation.massValidate([valLastName, valName, valIdentification, valEmail, valDateSedUser]);
+	 
+	 selectIdType = addSelectValidation(idForm + ":somIdType_input", "valIdType_DIV");
+	 selectRole = addSelectValidation(idForm + ":somSedRole_input", "valIdSedRole_DIV");
+	 
+	 var validUserField = true;
+	 if(idSedRole == 3){
+		 selectGrade = addSelectValidation(idForm + ":somGrade_input", "valGrade_DIV");
+		 selectCourse = addSelectValidation(idForm + ":somCourse_input", "valCourse_DIV");
+		 validUserField = selectGrade && selectCourse; 
+	 }
+	 
+	 if (valid && selectIdType && selectIdType && validUserField) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnUpdateSedUser',
+				process : '@all',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}	
+	 
+ }

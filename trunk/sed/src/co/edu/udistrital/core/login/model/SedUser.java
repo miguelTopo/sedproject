@@ -2,6 +2,7 @@ package co.edu.udistrital.core.login.model;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,11 +29,17 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 	private String lastName;
 	private String identification;
 	private String email;
+	private String birthday;
 
 	// Transient
 	private Long idSedRole;
+	private Long idStudentGrade;
+	private Long idStudentCourse;
 	private String nameSedRole;
 	private String nameIdentificationType;
+	private String studentGradeName;
+	private String studentCourseName;
+	private Date birthdayDate;
 
 	public SedUser() {
 
@@ -164,6 +171,15 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	@Column(name = "birthday", nullable = false)
+	public String getBirthday() {
+		return birthday;
+	}
+	
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}	
 
 	// ////////----------Transient----------//////////
 
@@ -194,4 +210,49 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 		this.nameIdentificationType = nameIdentificationType;
 	}
 
+	@Transient
+	public Long getIdStudentGrade() {
+		return idStudentGrade;
+	}
+
+	public void setIdStudentGrade(Long idStudentGrade) {
+		this.idStudentGrade = idStudentGrade;
+	}
+
+	@Transient
+	public Long getIdStudentCourse() {
+		return idStudentCourse;
+	}
+
+	public void setIdStudentCourse(Long idStudentCourse) {
+		this.idStudentCourse = idStudentCourse;
+	}
+
+	@Transient
+	public Date getBirthdayDate() {
+		return birthdayDate;
+	}
+
+	public void setBirthdayDate(Date birthdayDate) {
+		this.birthdayDate = birthdayDate;
+	}
+
+	@Transient
+	public String getStudentGradeName() {
+		return studentGradeName;
+	}
+
+	public void setStudentGradeName(String studentGradeName) {
+		this.studentGradeName = studentGradeName;
+	}
+
+	@Transient
+	public String getStudentCourseName() {
+		return studentCourseName;
+	}
+
+	public void setStudentCourseName(String studentCourseName) {
+		this.studentCourseName = studentCourseName;
+	}
+		
 }

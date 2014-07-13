@@ -9,6 +9,7 @@ import org.hibernate.transform.Transformers;
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.connection.HibernateDAO;
+import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.sed.model.Student;
 
 public class StudentDAO extends HibernateDAO {
@@ -227,4 +228,41 @@ public class StudentDAO extends HibernateDAO {
 		}
 	}
 
+	/** @author MTorres 12/7/2014 18:13:59 */
+	public Student loadStudentGradeCourse(Long idSedUser) throws Exception{
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT c.id AS idCourse, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" g.id AS idGrade, ");
+			hql.append(" g.name  AS gradeName ");
+			hql.append(" FROM Course c, ");
+			hql.append(" StudentCourse sc, ");
+			hql.append(" Grade g, ");
+			hql.append(" Student s ");
+			hql.append(" WHERE c.id = sc.idCourse ");
+			hql.append(" AND c.idGrade = g.id ");
+			hql.append(" AND s.id = sc.idStudent ");
+			hql.append(" AND s.idSedUser = :idSedUser ");
+			hql.append(" AND sc.idPeriod = :period ");
+			hql.append(" AND c.state = :state ");
+			hql.append(" AND g.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setParameter("period", Long.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+			qo.setMaxResults(1);
+			
+			return (Student) qo.uniqueResult();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
 }

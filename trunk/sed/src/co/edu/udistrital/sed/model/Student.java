@@ -24,7 +24,7 @@ public class Student extends AParameter implements Serializable {
 	private String lastName;
 	private Long idIdentificationType;
 	private Long idSedUser;
-	private String birthday;
+	private Long idSedUserResponsible;
 
 	//Transient
 	private String courseName;
@@ -152,15 +152,6 @@ public class Student extends AParameter implements Serializable {
 		this.idIdentificationType = idIdentificationType;
 	}
 
-	@Column(name = "birthday", nullable = false, length = 15)
-	public String getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
-
 	@Column(name = "idSedUser", nullable = false)
 	public Long getIdSedUser() {
 		return idSedUser;
@@ -168,6 +159,14 @@ public class Student extends AParameter implements Serializable {
 
 	public void setIdSedUser(Long idSedUser) {
 		this.idSedUser = idSedUser;
+	}
+	@Column(name = "idSedUserResponsible", nullable = false)
+	public Long getIdSedUserResponsible() {
+		return idSedUserResponsible;
+	}
+
+	public void setIdSedUserResponsible(Long idSedUserResponsible) {
+		this.idSedUserResponsible = idSedUserResponsible;
 	}
 
 	@Transient

@@ -7,7 +7,9 @@
 <f:view>
 		<style type="text/css">
 			section article{
-			width: 370px;
+			width: 388px;
+			padding-left: 35px;
+			padding-right: 35px;
 			display: inline-block;
 			}
 			table{
@@ -31,15 +33,14 @@
 						<h:outputText value="#{bundle['page.seduser.labelGuideEditSedUser']}" rendered="#{sedUserBean.showEdit}" />
 					</p>
 				</div>
-				<section>
-					<article style="width:100%;">
-					<div class="ui-subtitle-sed">
+				<div class="ui-subtitle-sed">
 						<h4 style="color: white;">
 							#{bundle['page.seduser.labelPersonalData']}
 						</h4>
-					</div>
-					
-					</article>
+				</div>
+				<br/>
+				<br/>
+				<section>
 					<article>
 						<table>
 							<tr>
@@ -132,7 +133,34 @@
 							</tr>
 						</table>
 					</article>
-					<article style="padding-left: 176px;">
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+									<strong>
+										Fecha de nacimiento
+									</strong>
+								</td>
+								<td class="ui-content-table">
+									<p:calendar id="birthdayDate" value="#{sedUserBean.sedUser.birthdayDate}" pattern="yyyy/MM/dd" 
+										styleClass="ui-seduser-calendar" locale="es" navigator="true"/>
+								</td>
+							</tr>
+						</table>
+					</article>
+			</section>
+			<br/>
+			<br/>
+				
+				<div class="ui-subtitle-sed">
+					<h4 style="color: white;">
+						#{bundle['page.seduser.labelUserData']}
+					</h4>
+				</div>
+				<br/>
+				<br/>
+				<section>
+					<article>
 						<table>
 							<tr>
 								<td class="ui-label-table">
@@ -144,7 +172,10 @@
 									<p:selectOneMenu id="somSedRole" value="#{sedUserBean.sedUser.idSedRole}" style="width:98%">
 										<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
 										<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
-										<p:ajax process="@this" update=":addSedUserForm:opChangeRole" listener="#{sedUserBean.handleRoleChange}"/>
+										<p:ajax process="@this" update=":addSedUserForm:opChangeRole :addSedUserForm:btnAddSedUser" 
+											listener="#{sedUserBean.handleRoleChange}" disabled="#{sedUserBean.showEdit}"/>
+										<p:ajax process="@this" update=":addSedUserForm:opChangeRole :addSedUserForm:btnUpdateSedUser" 
+											listener="#{sedUserBean.handleRoleChange}" disabled="#{sedUserBean.showAdd}"/>	
 									</p:selectOneMenu>
 									<div id="valIdSedRole_DIV" class="ui-invalid-field"/>
 								</td>
@@ -160,36 +191,14 @@
 							<ui:include src="/WEB-INF/includes/sedUser/panelStudentResponsibleRole.xhtml" />
 						</p:outputPanel>
 					</p:outputPanel>
-					
-					<div class="ui-subtitle-sed">
-						<h4 style="color: white;">
-							#{bundle['page.seduser.labelUserData']}
-						</h4>
-					</div>
-					<div style="padding-top: 20px;">
-						<p>
-							<h:outputText value="#{bundle['page.seduser.pw.labelGuideAddSedUser']}" escape="false" rendered="#{sedUserBean.showAdd}" />
-							<h:outputText value="#{bundle['page.seduser.pw.labelGuideEditSedUser']}" escape="false" rendered="#{sedUserBean.showEdit}" />
-						</p>
-					</div>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.seduser.labelUserType']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:selectOneMenu id="somRole" value="#{sedUserBean.sedUser.idSedRole}" style="width:98%">
-										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
-										<f:selectItems value="#{sedUserBean.sedRoleList}" var="sr" itemLabel="#{sr.name}" itemValue="#{sr.id}" />
-									</p:selectOneMenu>
-									<div id="valRole_DIV" class="ui-invalid-field"/>
-								</td>
-							</tr>
-						</table>
-					</article>
+				</section>
+				<div style="padding-top: 20px;">
+					<p>
+						<h:outputText value="#{bundle['page.seduser.pw.labelGuideAddSedUser']}" escape="false" rendered="#{sedUserBean.showAdd}" />
+						<h:outputText value="#{bundle['page.seduser.pw.labelGuideEditSedUser']}" escape="false" rendered="#{sedUserBean.showEdit}" />
+					</p>
+				</div>
+				<section>
 					<article>
 						<table>
 							<tr>
@@ -218,7 +227,9 @@
 							</tr>
 						</table>
 					</article>
+		
 				</section>
+				
 				<br/>
 				<br/>
 				<section>
@@ -235,9 +246,12 @@
 				</section>
 
 			<div align="center">
-				<p:commandButton id="btnAddSedUser" value="#{bundle['page.seduser.labelAddUser']}" onclick="validateAddSedUser(#{sedUserBean.randomPassword});" 
+				<p:commandButton id="btnAddSedUser" value="#{bundle['page.seduser.labelAddUser']}" onclick="validateAddSedUser(#{sedUserBean.randomPassword}, #{sedUserBean.sedUser.idSedRole});" 
 					type="button" styleClass="ui-priority-primary" action="#{sedUserBean.saveSedUser}" rendered="#{sedUserBean.showAdd}" />
-				<p:commandButton value="Guardar Cambios" action="#{sedUserBean.updateSedUser}" rendered="#{sedUserBean.showEdit}"/>
+					
+				<p:commandButton id="btnUpdateSedUser" value="Guardar Cambios" action="#{sedUserBean.updateSedUser}" rendered="#{sedUserBean.showEdit}" 
+					onclick="validateUpdateSedUser(#{sedUserBean.sedUser.idSedRole})" type="button"/>
+				
 				<p:spacer width="5" />
 				<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" icon="ui-icon-arrow-1-w" />
 			</div>

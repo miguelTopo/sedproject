@@ -14,8 +14,8 @@
 						</strong>
 					</td>
 					<td class="ui-content-table">
-						<p:selectOneMenu id="somGrade" value="#{sedUserBean.student.idGrade}" style="width:98%">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+						<p:selectOneMenu id="somGrade" value="#{sedUserBean.sedUser.idStudentGrade}" style="width:98%">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" noSelectionOption="#{true}"/>
 							<f:selectItems value="#{sedUserBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
 							<p:ajax listener="#{sedUserBean.handleGradeChange}" update=":addSedUserForm:somCourse" process="@this"/>
 						</p:selectOneMenu>
@@ -24,7 +24,7 @@
 				</tr>
 			</table>
 		</article>
-		<article style="padding-left: 176px;">
+		<article>
 			<table>
 				<tr>
 					<td class="ui-label-table">
@@ -33,9 +33,9 @@
 						</strong>
 					</td>
 					<td class="ui-content-table">
-						<p:selectOneMenu id="somCourse" value="#{sedUserBean.student.idCourse}" style="width:98%" 
-							disabled="#{empty sedUserBean.student.idGrade or sedUserBean.student.idGrade eq 0}">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+						<p:selectOneMenu id="somCourse" value="#{sedUserBean.sedUser.idStudentCourse}" style="width:98%" 
+							disabled="#{empty sedUserBean.sedUser.idStudentGrade or sedUserBean.sedUser.idStudentGrade eq 0}">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" noSelectionOption="#{true}" />
 							<f:selectItems value="#{sedUserBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
 						</p:selectOneMenu>
 						<div id="valCourse_DIV" class="ui-invalid-field"/>
