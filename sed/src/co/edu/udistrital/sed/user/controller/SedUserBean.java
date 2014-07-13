@@ -10,6 +10,7 @@ import co.edu.udistrital.core.common.api.IEmailTemplate;
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
+import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.common.util.RandomPassword;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
@@ -47,6 +48,7 @@ public class SedUserBean extends BackingBean {
 	private List<SedUser> sedUserFilteredList;
 	private List<Course> courseTmpList;
 	private List<Student> studentResponsibleList;
+	private List<Long> idStudentResponsibleDropList;
 	private List<Student> studentList;
 
 	// User Object
@@ -60,7 +62,7 @@ public class SedUserBean extends BackingBean {
 	private SedUserController controller;
 
 	/** @author MTorres */
-	public SedUserBean() throws Exception{
+	public SedUserBean() throws Exception {
 		try {
 			this.controller = new SedUserController();
 			this.sedUserList = this.sedUserFilteredList = this.controller.loadSedUserList();
@@ -71,8 +73,10 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 18/06/2014 20:10:12 
-	 * @throws Exception */
+	/**
+	 * @author MTorres 18/06/2014 20:10:12
+	 * @throws Exception
+	 */
 	public void deleteSedUser() throws Exception {
 		try {
 			if (this.selectedSedUser != null) {
@@ -88,8 +92,10 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 22/06/2014 13:15:19 
-	 * @throws Exception */
+	/**
+	 * @author MTorres 22/06/2014 13:15:19
+	 * @throws Exception
+	 */
 	private void sendMailUpdateSedLogin(final SedUser su, final String password) throws Exception {
 		try {
 			EmailTemplate t =
@@ -112,8 +118,10 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 18/06/2014 22:17:20 
-	 * @throws Exception */
+	/**
+	 * @author MTorres 18/06/2014 22:17:20
+	 * @throws Exception
+	 */
 	private void threadUpdateSedLogin(String userPassword) throws Exception {
 		try {
 			final String password = userPassword;
@@ -140,6 +148,7 @@ public class SedUserBean extends BackingBean {
 				return;
 
 			this.sedUser.setEmail(this.sedUser.getEmail().trim().toLowerCase());
+			this.sedUser.setBirthday(ManageDate.formatDate(this.sedUser.getBirthdayDate(), ManageDate.YYYY_MM_DD));
 
 			boolean updSedLogin = false;
 			boolean updSedRoleUser = false;
@@ -159,7 +168,7 @@ public class SedUserBean extends BackingBean {
 				password = this.userPassword.trim();
 
 			if (this.controller.updateSedUser(this.sedUser, updSedLogin, updSedRoleUser, password, getUserSession() != null ? getUserSession()
-				.getIdentification() : "admin")) {
+				.getIdentification() : "admin", this.studentResponsibleList, this.idStudentResponsibleDropList)) {
 				addInfoMessage("Actualizar Usuario", "El Usuario se ha actualizado  correctamente.");
 
 				if (updSedLogin)
@@ -175,6 +184,8 @@ public class SedUserBean extends BackingBean {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	public void saveSedUser() {
 		try {
@@ -182,27 +193,29 @@ public class SedUserBean extends BackingBean {
 				return;
 
 			this.sedUser.setEmail(this.sedUser.getEmail().trim().toLowerCase());
+			this.sedUser.setBirthday(ManageDate.formatDate(this.sedUser.getBirthdayDate(), ManageDate.YYYY_MM_DD));
 
 			if (this.controller.saveSedUser(this.sedUser, this.userPassword, getUserSession() != null ? getUserSession().getIdentification()
-				: "admin")) {
+				: "admin", this.studentResponsibleList)) {
 				this.sedUserList.add(this.sedUser);
 				this.sedUserFilteredList = this.sedUserList;
-				threadSaveSedUser();
-
+				threadMailSaveSedUser();
 				cleanVar();
 				goBack();
-				addInfoMessage("Guardar Usuario", "El Usuario se guard� exitosamente.");
+				addInfoMessage("Guardar Usuario", "El Usuario se guardó exitosamente.");
 			}
 
 		} catch (Exception e) {
 			addFatalMessage("Guardar Usuario",
-				"Ocurri� un error inesperado y no fu� posible agregar el usuario. Por favor consulte al administrador del sistema.");
+				"Ocurrió un error inesperado y no fué posible agregar el usuario. Por favor consulte al administrador del sistema.");
 			e.printStackTrace();
 		}
 	}
 
-	/** @author MTorres 17/06/2014 23:31:01 
-	 * @throws Exception */
+	/**
+	 * @author MTorres 17/06/2014 23:31:01
+	 * @throws Exception
+	 */
 	private boolean validateEditPassword() throws Exception {
 		try {
 			if (!isRandomPassword() && this.userPassword.trim().isEmpty() && this.confirmPassword.trim().isEmpty())
@@ -219,8 +232,10 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	private boolean validatePassword() throws Exception {
 		try {
 			if (!isRandomPassword()) {
@@ -244,9 +259,11 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 17/06/2014 19:59:32 
-	 * @throws Exception */
-	private void threadSaveSedUser() throws Exception {
+	/**
+	 * @author MTorres 17/06/2014 19:59:32
+	 * @throws Exception
+	 */
+	private void threadMailSaveSedUser() throws Exception {
 		try {
 			final SedUser su = this.sedUser;
 			final String pw = this.userPassword;
@@ -270,8 +287,11 @@ public class SedUserBean extends BackingBean {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_SEDUSER_ACCOUNT);
 			SMTPEmail e = new SMTPEmail();
-			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(),
-				su.getName() + su.getLastName(), su.getIdentification(), userPassword), su.getEmail());
+			e.sendProcessMail(
+				null,
+				t.getSubject(),
+				MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), su.getName() + " " + su.getLastName(),
+					su.getIdentification(), userPassword), su.getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -327,8 +347,10 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	private boolean validateSedUser() throws Exception {
 		try {
 			if (this.sedUser == null) {
@@ -341,22 +363,25 @@ public class SedUserBean extends BackingBean {
 				addWarnMessage("Crear Usuario", "Por favor diligencie los nombres.");
 				return false;
 			} else if (this.sedUser.getIdIdentificationType() == null || this.sedUser.getIdIdentificationType().equals(0L)) {
-				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de identificaci�n.");
+				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de identificación.");
 				return false;
 			} else if (this.sedUser.getIdentification() == null || this.sedUser.getIdentification().trim().isEmpty()) {
-				addWarnMessage("Crear Usuario", "Por favor diligencie el n�mero de identificaci�n.");
+				addWarnMessage("Crear Usuario", "Por favor diligencie el número de identificación.");
 				return false;
 			} else if (this.sedUser.getEmail() == null || this.sedUser.getEmail().trim().isEmpty()) {
-				addWarnMessage("Crear Usuario", "Por favor diligencie el correo electr�nico.");
+				addWarnMessage("Crear Usuario", "Por favor diligencie el correo electrónico.");
 				return false;
 			} else if (!FieldValidator.isValidEmail(this.sedUser.getEmail().trim())) {
-				addWarnMessage("Crear Usuario", "El correo electr�nico ingresado no es v�lido.");
+				addWarnMessage("Crear Usuario", "El correo electrónico ingresado no es válido.");
+				return false;
+			} else if (this.sedUser.getBirthdayDate() == null) {
+				addWarnMessage("Crear Usuario", "Por favor indique la fecha de nacimiento.");
 				return false;
 			} else if (this.sedUser.getIdSedRole() == null || this.sedUser.getIdSedRole().equals(0L)) {
 				addWarnMessage("Crear Usuario", "Por favor seleccione el tipo de usuario.");
 				return false;
 			} else if (isExistIdentification()) {
-				addWarnMessage("Crear Usuario", "El n�mero de identificaci�n ya se encuentra registrado. Debe modificarlo para continuar.");
+				addWarnMessage("Crear Usuario", "El número de identificación ya se encuentra registrado. Debe modificarlo para continuar.");
 				return false;
 			} else if (isExistEmail()) {
 				addWarnMessage("Crear Usuario", "El correo seleccionado ya se encuentra registrado. Debe modificarlo para continuar.");
@@ -386,18 +411,26 @@ public class SedUserBean extends BackingBean {
 	public void loadStudentByCourse() {
 		try {
 			this.studentList = null;
-			if (this.student != null && this.student.getIdGrade() != null && !this.student.getIdGrade().equals(0L)
-				&& this.student.getIdCourse() != null && !this.student.getIdCourse().equals(0L))
-				this.studentList = this.controller.loadStudentList(this.student.getIdCourse());
+			if (this.sedUser != null && this.sedUser.getIdStudentGrade() != null && !this.sedUser.getIdStudentGrade().equals(0L)
+				&& this.sedUser.getIdStudentCourse() != null && !this.sedUser.getIdStudentCourse().equals(0L))
+				this.studentList = this.controller.loadStudentList(this.sedUser.getIdStudentCourse());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/** @author MTorres 12/7/2014 22:48:56 */
 	public void removeStudent() {
 		try {
 			if (this.studentSelected != null && this.studentResponsibleList != null) {
 				this.studentResponsibleList.remove(this.studentSelected);
+
+				if (isShowEdit()) {
+					if (this.idStudentResponsibleDropList == null)
+						this.idStudentResponsibleDropList = new ArrayList<Long>();
+					this.idStudentResponsibleDropList.add(this.studentSelected.getId());
+
+				}
 				this.studentSelected = new Student();
 			}
 		} catch (Exception e) {
@@ -435,9 +468,9 @@ public class SedUserBean extends BackingBean {
 	public void handleGradeChange() {
 		try {
 			this.courseTmpList = null;
-			if (this.student != null) {
-				if (this.student.getIdGrade() != null && !this.student.getIdGrade().equals(0L))
-					this.courseTmpList = loadCourseListByGrade(this.student.getIdGrade());
+			if (this.sedUser != null) {
+				if (this.sedUser.getIdStudentGrade() != null && !this.sedUser.getIdStudentGrade().equals(0L))
+					this.courseTmpList = loadCourseListByGrade(this.sedUser.getIdStudentGrade());
 			}
 
 		} catch (Exception e) {
@@ -498,12 +531,37 @@ public class SedUserBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres 12/7/2014 19:15:46 */
+	private void loadAdditionalData() throws Exception {
+		try {
+			if (isShowDetail()) {
+				if (this.selectedSedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE))
+					this.studentResponsibleList = this.controller.loadStudentResponsibleListByUser(this.selectedSedUser.getId());
+				else if (this.selectedSedUser.getIdSedRole().equals(ISedRole.STUDENT))
+					this.selectedSedUser = this.controller.loadStudentGradeCourse(this.selectedSedUser);
+			} else if (isShowEdit()) {
+
+				this.sedUser.setBirthdayDate(ManageDate.stringToDate(this.sedUser.getBirthday(), ManageDate.YYYY_MM_DD));
+
+				if (this.sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE))
+					this.studentResponsibleList = this.controller.loadStudentResponsibleListByUser(this.sedUser.getId());
+				else if (this.sedUser.getIdSedRole().equals(ISedRole.STUDENT))
+					this.sedUser = this.controller.loadStudentGradeCourse(this.sedUser);
+				
+				this.courseTmpList = loadCourseListByGrade(this.sedUser.getIdStudentGrade());
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	/** @author MTorres */
 	public void goDetailUser() {
 		try {
 			if (this.selectedSedUser != null) {
 				hideAll();
 				setShowDetail(true);
+				loadAdditionalData();
 				setPanelView("detailSedUser", "Detallar Usuario", "SedUserBean");
 			}
 		} catch (Exception e) {
@@ -516,6 +574,9 @@ public class SedUserBean extends BackingBean {
 		try {
 			hideAll();
 			this.sedUserList = this.sedUserFilteredList = this.controller.loadSedUserList();
+			this.studentResponsibleList = null;
+			this.studentResponsibleList = new ArrayList<Student>();
+			this.idStudentResponsibleDropList = null;
 			setShowList(true);
 			setPanelView("sedUserList", "Lista de Usuarios", "SedUserBean");
 		} catch (Exception e) {
@@ -532,6 +593,7 @@ public class SedUserBean extends BackingBean {
 			setExistEmail(false);
 			setExistIdentification(false);
 			setShowEdit(true);
+			loadAdditionalData();
 			setPanelView("addSedUser", "Editar Usuario", "SedUserBean");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -572,7 +634,7 @@ public class SedUserBean extends BackingBean {
 
 	public SedUser getSedUser() {
 		return sedUser;
-		
+
 	}
 
 	public void setSedUser(SedUser sedUser) {

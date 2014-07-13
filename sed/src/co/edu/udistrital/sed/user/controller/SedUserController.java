@@ -1,5 +1,7 @@
 package co.edu.udistrital.sed.user.controller;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -15,6 +17,7 @@ import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.core.login.model.SedUserDAO;
 import co.edu.udistrital.core.login.model.SedUserLogin;
 import co.edu.udistrital.sed.model.Student;
+import co.edu.udistrital.sed.model.StudentCourse;
 import co.edu.udistrital.sed.student.model.StudentDAO;
 
 public class SedUserController extends Controller {
@@ -55,19 +58,18 @@ public class SedUserController extends Controller {
 	}
 
 	/** @author MTorres */
-	public boolean saveSedUser(SedUser sedUser, String userPassword, String user) throws Exception {
+	public boolean saveSedUser(SedUser sedUser, String userPassword, String user, List<Student> studentResponsibleList) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
 
 			sedUser.initialize(true, user);
-			sedUser.setState(IState.ACTIVE);
 			tx = dao.getSession().beginTransaction();
 
 			dao.getSession().save(sedUser);
 
 			SedUserLogin sl = new SedUserLogin();
-			sl.setUserCreation("admin");
+			sl.setUserCreation(user);
 			sl.setState(IState.ACTIVE);
 			sl.setIdSedUser(sedUser.getId());
 			sl.setUserName(sedUser.getIdentification());
@@ -80,11 +82,12 @@ public class SedUserController extends Controller {
 			SedRoleUser sru = new SedRoleUser();
 			sru.setIdSedRole(sedUser.getIdSedRole());
 			sru.setIdSedUser(sedUser.getId());
-			sru.setUserCreation("admin");
+			sru.setUserCreation(user);
 			sru.setDateCreation(ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 			sru.setState(IState.ACTIVE);
 			dao.getSession().save(sru);
 
+			// Crear instancias necesarias para Estudiante
 			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT)) {
 				// Crear estudiante
 				Student s = new Student();
@@ -93,18 +96,29 @@ public class SedUserController extends Controller {
 				s.setIdentification(sedUser.getIdentification());
 				s.setIdIdentificationType(sedUser.getIdIdentificationType());
 				s.setIdSedUser(sedUser.getId());
-				s.initialize(true, user);
 
+				s.initialize(true, user);
 				dao.getSession().save(s);
 
+				Calendar c = Calendar.getInstance();
+				StudentCourse sc = new StudentCourse();
+				sc.setIdStudent(s.getId());
+				sc.setIdCourse(sedUser.getIdStudentCourse());
+				sc.setIdPeriod(Long.valueOf(c.get(Calendar.YEAR)));
+				dao.getSession().save(sc);
+
 			}
 
-			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
-				// Hacer un loop para actualizar el campo idResponsible de Student
-			}
+			// Crea instancias para Padre de Familia si posee estudiantes a su cargo
+			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE) && (studentResponsibleList != null && !studentResponsibleList.isEmpty())) {
+				List<Long> idStudentList = new ArrayList<Long>(studentResponsibleList.size());
 
+				for (Student s : studentResponsibleList) {
+					idStudentList.add(s.getId());
+				}
+				dao.updateResponsibleList(idStudentList, sedUser.getId(), user);
+			}
 			tx.commit();
-
 			return true;
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
@@ -118,8 +132,8 @@ public class SedUserController extends Controller {
 	}
 
 	/** @author MTorres 17/06/2014 23:59:50 */
-	public boolean updateSedUser(SedUser sedUser, boolean updSedLogin, boolean updSedRoleUser, String password, String user)
-		throws HibernateException, Exception {
+	public boolean updateSedUser(SedUser sedUser, boolean updSedLogin, boolean updSedRoleUser, String password, String user,
+		List<Student> studentResponsibleList, List<Long> idStudentResponsibleDropList) throws HibernateException, Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
@@ -133,6 +147,24 @@ public class SedUserController extends Controller {
 			if (updSedRoleUser)
 				dao.updateSedRoleUser(sedUser);
 
+			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
+				// Verificar si existen estudiantes por actualizar responsable
+				if (studentResponsibleList != null && !studentResponsibleList.isEmpty()) {
+					List<Long> idStudentList = new ArrayList<Long>(studentResponsibleList.size());
+					for (Student s : studentResponsibleList) {
+						idStudentList.add(s.getId());
+					}
+					dao.updateResponsibleList(idStudentList, sedUser.getId(), user);
+				}
+				// Verificar si se debe eliminar responsable
+				if (idStudentResponsibleDropList != null && !idStudentResponsibleDropList.isEmpty())
+					dao.deleteResponsibleList(idStudentResponsibleDropList, user);
+
+			}
+			else if(sedUser.getIdSedRole().equals(ISedRole.STUDENT)){
+				if(!dao.updateStudentCourse(sedUser))
+					return false;
+			}
 			tx.commit();
 			return true;
 		} catch (Exception e) {
@@ -183,4 +215,38 @@ public class SedUserController extends Controller {
 			tx = null;
 		}
 	}
+
+	/** @author MTorres 12/7/2014 18:04:54 * */
+	public List<Student> loadStudentResponsibleListByUser(Long idSedUser) throws Exception {
+		SedUserDAO dao = new SedUserDAO();
+		try {
+			return dao.loadStudentResponsibleListByUser(idSedUser);
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+	}
+
+	public SedUser loadStudentGradeCourse(SedUser sedUser) throws Exception {
+		StudentDAO dao = new StudentDAO();
+		try {
+			Student gradeCourse = dao.loadStudentGradeCourse(sedUser.getId());
+			sedUser.setStudentGradeName(gradeCourse.getGradeName());
+			sedUser.setIdStudentGrade(gradeCourse.getIdGrade());
+			sedUser.setStudentCourseName(gradeCourse.getCourseName());
+			sedUser.setIdStudentCourse(gradeCourse.getIdCourse());
+			return sedUser;
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+	}
+
+
 }

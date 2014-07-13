@@ -130,7 +130,7 @@ public class StudentBean extends BackingBean {
 
 			String password = RandomPassword.getPassword(7);
 			System.out.println("************************************LA CONTRASE�A ES: " + password + "****************************");
-			this.student.setBirthday(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
+//			this.student.setBirthday(ManageDate.formatDate(this.studentBirthday, ManageDate.YYYY_MM_DD));
 
 			if (this.controller.saveStudent(this.student, getUserSession() != null ? getUserSession().getIdentification() : "admin", password)) {
 				threadSaveStudent(password);

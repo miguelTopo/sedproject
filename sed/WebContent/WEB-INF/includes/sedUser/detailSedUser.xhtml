@@ -4,50 +4,200 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
+		<style type="text/css">
+			section article{
+			width: 388px;
+			padding-left: 35px;
+			padding-right: 35px;
+			display: inline-block;
+			}
+			table{
+				width:100%;
+				border-spacing: 5px;
+			}
+			.ui-label-table{
+				width:35%;
+			}
+			.ui-content-table{
+				width:65%;
+			}
+			
+		</style>
 	<h:form id="detailUserForm">
 		<p:panel id="detailPanel" header="Detallar Usuario">
-			<table style="width:100%;border-spacing:5px">
-				<tr>
-					<td width="7%" />
-					<td width="20%" />
-					<td width="20%" />
-					<td width="6%" />
-					<td width="20%" />
-					<td width="20%" />
-					<td width="7%" />
-				</tr>
-				<tr>
-					<td />
-					<td><strong>#{bundle['page.student.labelStudentIdentification']}:</strong>
-					</td>
-					<td>#{sedUserBean.selectedSedUser.identification}</td>
-					<td />
-					<td><strong>#{bundle['page.student.labelIdentificationType']}:</strong>
-					</td>
-					<td>#{sedUserBean.selectedSedUser.nameIdentificationType}</td>
-				</tr>
-				<tr>
-					<td />
-					<td><strong>#{bundle['page.student.labelStudentLastName']}:</strong>
-					</td>
-					<td>#{sedUserBean.selectedSedUser.lastName}</td>
-					<td />
-					<td><strong>#{bundle['page.student.labelStudentName']}:</strong>
-					</td>
-					<td>#{sedUserBean.selectedSedUser.name}</td>
-				</tr>
-				<tr>
-					<td />
-					<td><strong>#{bundle['page.student.labelStudentEmail']}:</strong>
-					</td>
-					<td>#{sedUserBean.selectedSedUser.email}</td>
-				</tr>
-			</table>
+				<br/>
+				<br/>
+				<section>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											#{bundle['page.student.labelStudentLastName']}:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.lastName}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											#{bundle['page.student.labelStudentName']}:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.name}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											#{bundle['page.student.labelIdentificationType']}:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.nameIdentificationType}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											#{bundle['page.student.labelStudentIdentification']}:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.identification}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											#{bundle['page.student.labelStudentEmail']}:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.email}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											Fecha de Nacimiento:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.birthday}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											Tipo de Usuario:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.nameSedRole}
+								</td>
+							</tr>
+						</table>
+					</article>
+					<article/>
+				</section>
+				<br/>
+				<br/>
+				<p:outputPanel rendered="#{sedUserBean.selectedSedUser.idSedRole eq 3}">
+					<div class="ui-subtitle-sed">
+						<h4>
+							Datos del Estudiante
+						</h4>
+					</div>
+					<br/>
+					<section>
+						<article>
+							<table>
+								<tr>
+									<td class="ui-label-table">
+										<strong>
+											Grado:
+										</strong>
+									</td>
+									<td class="ui-content-table">
+										#{sedUserBean.selectedSedUser.studentGradeName}
+									</td>
+								</tr>
+							</table>
+						</article>
+					<article>
+						<table>
+							<tr>
+								<td class="ui-label-table">
+										<strong>
+											Curso:
+										</strong>
+								</td>
+								<td class="ui-content-table">
+									#{sedUserBean.selectedSedUser.studentCourseName}
+								</td>
+							</tr>
+						</table>
+					</article>
+					</section>
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{sedUserBean.selectedSedUser.idSedRole eq 4}">
+					<div class="ui-subtitle-sed">
+						<h4>
+							Estudiantes a cargo del Padre de Familia
+						</h4>
+					</div>
+					<br/>
+					<div style="padding-top: 30px;width: 75%;margin: 0 auto;">
+						<p:dataTable value="#{sedUserBean.studentResponsibleList}" var="s" emptyMessage="Actualmente no hay estudiantes asociados">
+							<p:column headerText="Apellidos"> 
+								#{s.lastName}
+							</p:column>
+							<p:column headerText="Nombres"> 
+								#{s.name}
+							</p:column>
+							<p:column headerText="Curso" style="text-align:center"> 
+								#{s.courseName}
+							</p:column>
+						</p:dataTable>
+					</div>
+				</p:outputPanel>
+									
+				
+				<br/>
+			<div align="right">
+				<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" icon="ui-icon-arrow-1-w" />
+			</div>
 		</p:panel>
-		<br />
-		<div align="right">
-			<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" icon="ui-icon-arrow-1-w" />
-		</div>
+	
 	</h:form>
 </f:view>
 </html>
