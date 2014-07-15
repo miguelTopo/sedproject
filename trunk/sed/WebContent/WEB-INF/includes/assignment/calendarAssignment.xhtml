@@ -6,10 +6,14 @@
 <f:view>
 	<h:form id="calendarAssigmentForm">
 		<p:panel header="Carga Académica">
-			<p:schedule value="#{assigmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" view="agendaWeek" showHeader="false" >
+			<p:schedule value="#{assigmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
+				view="agendaWeek" showHeader="false" allDaySlot="false" initialDate="#{assigmentBean.initialDate}" >
 			
+				<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()"/>
+			 
 			</p:schedule>
 		</p:panel>
+		<ui:include src="/WEB-INF/includes/assignment/assignmentDialog.xhtml"/>
 	</h:form>
 </f:view>
 </html>
