@@ -563,4 +563,32 @@ public class SedUserDAO extends HibernateDAO {
 		}
 
 	}
+
+	/** @author MTorres 14/7/2014 23:28:48 */
+	public List<SedUser> loadSedUserByRole(Long idSedRole) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT su.id AS id, ");
+			hql.append(" su.name ||' '|| su.lastName AS sedUserFullName, ");
+			hql.append(" su.identification AS identification ");
+			hql.append(" FROM SedUser su, ");
+			hql.append(" SedRoleUser sru ");
+			hql.append(" WHERE su.id = sru.idSedUser ");
+			hql.append(" AND sru.idSedRole = :idSedRole "); 
+			hql.append(" AND su.state = :state ");
+			hql.append(" AND sru.state = :state ");
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
+			qo.setParameter("idSedRole", idSedRole);
+			qo.setParameter("state", IState.ACTIVE);
+			
+			return qo.list();
+		}
+		catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
 }

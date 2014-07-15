@@ -39,6 +39,7 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 	private String nameIdentificationType;
 	private String studentGradeName;
 	private String studentCourseName;
+	private String sedUserFullName;
 	private Date birthdayDate;
 
 	public SedUser() {
@@ -60,7 +61,7 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 	public SedUser clone() {
 		SedUser su = null;
 		try {
-			su = (SedUser) super.clone(); 
+			su = (SedUser) super.clone();
 		} catch (CloneNotSupportedException e) {
 			System.out.println("No se puede duplicar");
 		}
@@ -171,15 +172,15 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	@Column(name = "birthday", nullable = false)
 	public String getBirthday() {
 		return birthday;
 	}
-	
+
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
-	}	
+	}
 
 	// ////////----------Transient----------//////////
 
@@ -254,5 +255,15 @@ public class SedUser extends AParameter implements Serializable, Cloneable {
 	public void setStudentCourseName(String studentCourseName) {
 		this.studentCourseName = studentCourseName;
 	}
-		
+
+	@Transient
+	public String getSedUserFullName() {
+		return sedUserFullName;
+	}
+
+	public void setSedUserFullName(String sedUserFullName) {
+		this.sedUserFullName = sedUserFullName;
+	}
+
+
 }

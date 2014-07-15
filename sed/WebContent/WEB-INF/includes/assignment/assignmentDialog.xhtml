@@ -1,0 +1,63 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:view>
+	<style type="text/css">
+		section article{
+			width: 200px;
+			padding-left: 15px;
+			padding-right: 15px;
+			display: inline-block;
+			}
+			table{
+				width:100%;
+				border-spacing: 5px;
+			}
+			.ui-label-table{
+				width:35%;
+			}
+			.ui-content-table{
+				width:65%;
+			}
+	</style>
+	<!-- Dialog Assignment Select Date -->
+	<p:dialog id="dlgSelectDate" widgetVar="dlgSelectDateWV" header="Programar Docente" modal="true" resizable="false">
+		<section>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Hora inicial
+						</td>
+						<td>
+							<pe:timePicker value="#{assignmentBean.assigInitialDate}" intervalMinutes="30" locale="es"/>
+						</td>
+					</tr>
+				</table>
+			</article>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Hora final
+						</td>
+						<td>
+							<pe:timePicker value="#{assignmentBean.assigEndDate}" intervalMinutes="30" locale="es"/>
+						</td>						
+					</tr>
+				</table>
+			</article>
+		</section>
+		
+		<div style="text-align:center">
+			<p:commandButton value="Programar"></p:commandButton>
+			<p:spacer width="5"/>
+			<p:commandButton value="Cancelar" type="button" onclick="PF('dlgSelectDateWV').hide();"/>
+		</div>
+		
+	</p:dialog>
+</f:view>
+</html>
