@@ -2,16 +2,69 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+		
 <f:view>
+	<style type="text/css">
+		#calendarAssigmSection article{
+			width: 45%;
+			padding-left: 15px;
+			padding-right: 15px;
+			display: inline-block;
+			}
+			#calendarAssigmSection article table{
+				width:100%;
+				border-spacing: 5px;
+			}
+	</style>
 	<h:form id="calendarAssigmentForm">
 		<p:panel header="Carga Académica">
-			<p:schedule value="#{assigmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
-				view="agendaWeek" showHeader="false" allDaySlot="false" initialDate="#{assigmentBean.initialDate}" >
+			<div>
+				<p>
+					Por favor seleccione el criterio por el que desea buscar. Puede seleccionar docente o por curso.
+				</p>
+			</div>
+			<section id="calendarAssigmSection">
+				<article>
+					<table>
+						<tr>
+							<td style="width:50%">
+								Seleccione el criterio de filtro:			
+							</td>
+							<td style="width:50%">
+								<p:selectOneMenu value="#{assignmentBean.sheduleOption}" style="width:98%">
+									<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
+									<f:selectItem itemValue="1" itemLabel="Docente"/>
+									<f:selectItem itemValue="2" itemLabel="Curso"/>
+									<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp"/>
+								</p:selectOneMenu>
+							</td>						
+						</tr>
+					</table>
+				</article>
+			</section>
 			
-				<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()"/>
+			<p:outputPanel id="scheduleOptionOp">
+				
+					<p:outputPanel rendered="#{assignmentBean.sheduleOption eq 1}">
+						<ui:include src="/WEB-INF/includes/assignment/teacherOption.xhtml"/>
+					</p:outputPanel>
+				
+					<p:outputPanel rendered="#{assignmentBean.sheduleOption eq 2}">
+						<ui:include src="/WEB-INF/includes/assignment/courseOption.xhtml"/>
+					</p:outputPanel>
+				
+				</p:outputPanel>
+			
+			<div>
+				<p:schedule value="#{assigmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
+					view="agendaWeek" showHeader="false" allDaySlot="false" initialDate="#{assigmentBean.initialDate}" >
+			
+					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()"/>
 			 
-			</p:schedule>
+				</p:schedule>
+			</div>
 		</p:panel>
 		<ui:include src="/WEB-INF/includes/assignment/assignmentDialog.xhtml"/>
 	</h:form>

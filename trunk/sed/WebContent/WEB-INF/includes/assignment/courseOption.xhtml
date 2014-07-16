@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:view>
+	<style type="text/css">
+		#courseOpSection article{
+			width: 45%;
+			padding-left: 15px;
+			padding-right: 15px;
+			display: inline-block;
+			}
+		#courseOpSection article table{
+				width:100%;
+				border-spacing: 5px;
+			}
+	</style>
+	<section id="courseOpSection">
+		<article>
+			<table>
+				<tr>
+					<td style="width:50%">
+						Grado:
+					</td>
+					<td style="width:50%">
+						<p:selectOneMenu value="#{assignmentBean.idGrade}" style="width:98%">
+							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
+							<f:selectItems value="#{assignmentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+							<p:ajax listener="#{assignmentBean.handleGradeChange}" process="@this" update=":calendarAssigmentForm:somAssignCourse"/>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table>
+		</article>
+		<article>
+			<table>
+				<tr>
+					<td style="width:50%">
+						Curso:
+					</td>
+					<td style="width:50%">
+						<p:selectOneMenu id="somAssignCourse" disabled="#{assignmentBean.idGrade eq null or assignmentBean.idGrade eq 0}" style="width:98%">
+							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
+							<f:selectItems value="#{assignmentBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table>				
+		</article>
+	</section>
+</f:view>
+</html>

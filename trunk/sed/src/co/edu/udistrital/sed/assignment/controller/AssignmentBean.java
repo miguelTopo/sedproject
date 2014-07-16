@@ -15,6 +15,7 @@ import org.primefaces.model.ScheduleModel;
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
+import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Subject;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -35,6 +36,9 @@ public class AssignmentBean extends BackingBean {
 	// Basic Java Object
 	private Date assigInitialDate;
 	private Date assigEndDate;
+	private Long sheduleOption;
+	private Long idGrade;
+	private Long idCourse;
 
 	// API Object
 	private ScheduleModel model;
@@ -43,7 +47,8 @@ public class AssignmentBean extends BackingBean {
 	// User List
 	private List<SedUser> teacherList;
 	private List<Subject> subjectList;
-	
+	private List<Course> courseTmpList;
+
 	private AssignmentController controller;
 
 	public AssignmentBean() throws Exception {
@@ -55,8 +60,8 @@ public class AssignmentBean extends BackingBean {
 			throw e;
 		}
 	}
-	
-	private void loadAssignmentView(){
+
+	private void loadAssignmentView() {
 		try {
 			this.controller = new AssignmentController();
 			this.teacherList = this.controller.loadSedUserByRole(ISedRole.TEACHER);
@@ -75,6 +80,17 @@ public class AssignmentBean extends BackingBean {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void handleGradeChange() {
+		try {
+			this.courseTmpList = null;
+			if (this.idGrade != null && !this.idGrade.equals(0L))
+				this.courseTmpList = loadCourseListByGrade(this.idGrade);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public boolean getValidateSedUserRole() throws Exception {
@@ -116,5 +132,52 @@ public class AssignmentBean extends BackingBean {
 		this.assigEndDate = assigEndDate;
 	}
 
+	public Long getSheduleOption() {
+		return sheduleOption;
+	}
+
+	public void setSheduleOption(Long sheduleOption) {
+		this.sheduleOption = sheduleOption;
+	}
+
+	public List<SedUser> getTeacherList() {
+		return teacherList;
+	}
+
+	public void setTeacherList(List<SedUser> teacherList) {
+		this.teacherList = teacherList;
+	}
+
+	public List<Subject> getSubjectList() {
+		return subjectList;
+	}
+
+	public void setSubjectList(List<Subject> subjectList) {
+		this.subjectList = subjectList;
+	}
+
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
+
+	public Long getIdCourse() {
+		return idCourse;
+	}
+
+	public void setIdCourse(Long idCourse) {
+		this.idCourse = idCourse;
+	}
+
+	public List<Course> getCourseTmpList() {
+		return courseTmpList;
+	}
+
+	public void setCourseTmpList(List<Course> courseTmpList) {
+		this.courseTmpList = courseTmpList;
+	}
 
 }

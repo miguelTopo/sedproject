@@ -25,6 +25,7 @@
   <mapping class="co.edu.udistrital.sed.model.School"/>
   <mapping class="co.edu.udistrital.sed.model.StudentCourse"/>
   <mapping class="co.edu.udistrital.sed.model.WorkDay"/>
+  <mapping class="co.edu.udistrital.sed.model.Assignment"/>
   <mapping class="co.edu.udistrital.core.login.model.SedRole"/>
   <mapping class="co.edu.udistrital.core.login.model.SedRoleUser"/>
   <mapping class="co.edu.udistrital.core.login.model.SedUser"/>
