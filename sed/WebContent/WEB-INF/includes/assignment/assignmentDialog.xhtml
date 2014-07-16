@@ -6,13 +6,13 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
 	<style type="text/css">
-		section article{
+		#selectDateSection article{
 			width: 200px;
 			padding-left: 15px;
 			padding-right: 15px;
 			display: inline-block;
 			}
-			table{
+			#selectDateSection article table{
 				width:100%;
 				border-spacing: 5px;
 			}
@@ -25,7 +25,7 @@
 	</style>
 	<!-- Dialog Assignment Select Date -->
 	<p:dialog id="dlgSelectDate" widgetVar="dlgSelectDateWV" header="Programar Docente" modal="true" resizable="false">
-		<section>
+		<section id="selectDateSection">
 			<article>
 				<table>
 					<tr>

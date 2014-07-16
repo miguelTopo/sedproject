@@ -578,6 +578,7 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" AND sru.idSedRole = :idSedRole "); 
 			hql.append(" AND su.state = :state ");
 			hql.append(" AND sru.state = :state ");
+			hql.append(" ORDER BY su.name ");
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
 			qo.setParameter("idSedRole", idSedRole);
 			qo.setParameter("state", IState.ACTIVE);
