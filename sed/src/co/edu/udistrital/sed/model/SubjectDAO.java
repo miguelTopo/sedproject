@@ -48,6 +48,4 @@ public class SubjectDAO extends HibernateDAO {
 			qo = null;
 		}
 	}
-
-
 }

@@ -1,10 +1,13 @@
 package co.edu.udistrital.sed.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -12,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Assignment")
-public class Assignment {
+public class Assignment implements Serializable{
 
 	private Long id;
 	private Long idSedUser;
@@ -20,12 +23,15 @@ public class Assignment {
 	private Long idCourse;
 	private Long idSubject;
 	private Long idDay;
+	private Long state;
 	private String startHour;
 	private String endHour;
 	private String userCreation;
 	private String dateCreation;
 	private String userChange;
 	private String dateChange;
+	
+	private Long idGrade;
 
 	public Assignment() {
 		try {
@@ -145,5 +151,24 @@ public class Assignment {
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
 	}
+	
+	@Column(name = "state", nullable = false)
+	public Long getState() {
+		return state;
+	}
+
+	public void setState(Long state) {
+		this.state = state;
+	}
+
+	@Transient
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
+	
 
 }

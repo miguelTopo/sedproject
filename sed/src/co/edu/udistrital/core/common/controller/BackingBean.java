@@ -284,7 +284,7 @@ public abstract class BackingBean implements Serializable {
 		try {
 			List<Subject> subjectGradeList = new ArrayList<Subject>();
 
-			for (Subject s : getSubjectList()) {
+			for (Subject s : BeanList.getSubjectList()) {
 				if (s.getIdGrade().equals(idGrade))
 					subjectGradeList.add(s);
 			}
