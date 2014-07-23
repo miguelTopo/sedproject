@@ -58,15 +58,21 @@
 				</p:outputPanel>
 			
 			<div>
-				<p:schedule value="#{assigmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
-					view="agendaWeek" showHeader="false" allDaySlot="false" initialDate="#{assigmentBean.initialDate}" >
+				<p:schedule id="assignmentSchedule" value="#{assignmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
+					view="agendaWeek" showHeader="false" allDaySlot="false" widgetVar="assignmentScheduleWV" timeZone="America/Bogota">
 			
-					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()"/>
+					
+					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>
+            		<p:ajax event="eventSelect" listener="#{assignmentBean.onEventSelect}"/>
+            		<p:ajax event="eventMove" listener="#{assignmentBean.onEventMove}"/>
+            		<p:ajax event="eventResize" listener="#{assignmentBean.onEventResize}"/> 
+			 
 			 
 				</p:schedule>
 			</div>
 		</p:panel>
-		<ui:include src="/WEB-INF/includes/assignment/assignmentDialog.xhtml"/>
 	</h:form>
+	
+	<ui:include src="/WEB-INF/includes/assignment/assignmentDialog.xhtml"/>
 </f:view>
 </html>

@@ -28,7 +28,7 @@
 						<p:selectOneMenu value="#{assignmentBean.idGrade}" style="width:98%">
 							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 							<f:selectItems value="#{assignmentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
-							<p:ajax listener="#{assignmentBean.handleGradeChange}" process="@this" update=":calendarAssigmentForm:somAssignCourse"/>
+							<p:ajax listener="#{assignmentBean.handleGradeChange(false)}" process="@this" update=":calendarAssigmentForm:somAssignCourse"/>
 						</p:selectOneMenu>
 					</td>
 				</tr>
