@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.assignment.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Transaction;
@@ -61,5 +62,38 @@ public class AssignmentController extends Controller {
 			dao = null;
 			tx = null;
 		}
+	}
+
+	/** @author MTorres 23/7/2014 23:01:13 */
+	public List<Assignment> loadAssignmentListByPeriod(Long idPeriod) throws Exception {
+		AssignmentDAO dao = new AssignmentDAO();
+		try {
+			return dao.loadAssignmentListByPeriod(idPeriod);
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+	}
+
+	/** @author MTorres 25/7/2014 23:02:51 */
+	public boolean validSpaceAvailability(Long idCourse, Long idDay, Date startDate, Date endDate) throws Exception {
+		AssignmentDAO dao = new AssignmentDAO();
+		Transaction tx = null;
+		try {
+			return dao.validSpaceAvailability(idCourse, idDay, startDate, endDate);
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			if (tx != null && tx.isActive())
+				tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+
 	}
 }

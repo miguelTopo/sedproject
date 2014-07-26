@@ -44,14 +44,12 @@ public class ManageDate {
 		try {
 			Calendar c = Calendar.getInstance();
 			if (format.equals(ManageDate.YYYY_MM_DD)) {
-				// System.out.println(stringDate.substring(0, 4));
-				// System.out.println(stringDate.substring(5, 7));
-				// System.out.println(stringDate.substring(8, 10));
-				// System.out.println(Integer.parseInt(stringDate.substring(5, 7)));
-
 				c.set(Calendar.YEAR, Integer.parseInt(stringDate.substring(0, 4)));
 				c.set(Calendar.MONTH, Integer.parseInt(stringDate.substring(5, 7)) - 1);
 				c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(stringDate.substring(8, 10)));
+			} else if (format.equals(ManageDate.HH_MM_SS)) {
+				c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(stringDate.substring(0, 2)));
+				c.set(Calendar.MINUTE, Integer.parseInt(stringDate.substring(3, 5)));
 			}
 			return c.getTime();
 		} catch (Exception e) {

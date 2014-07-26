@@ -59,7 +59,7 @@
 			
 			<div>
 				<p:schedule id="assignmentSchedule" value="#{assignmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
-					view="agendaWeek" showHeader="false" allDaySlot="false" widgetVar="assignmentScheduleWV" timeZone="America/Bogota">
+					view="agendaWeek" showHeader="false" allDaySlot="false" widgetVar="assignmentScheduleWV" timeZone="America/Bogota" tooltip="true">
 			
 					
 					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>

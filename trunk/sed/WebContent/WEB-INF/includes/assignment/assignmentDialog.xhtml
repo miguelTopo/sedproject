@@ -132,7 +132,8 @@
 		</section>
 		
 		<div style="text-align:center;padding-top: 30px;">
-			<p:commandButton value="Programar" action="#{assignmentBean.saveTeacherAssignment}"/>
+			<p:commandButton value="Programar" action="#{assignmentBean.saveTeacherAssignment}" 
+				oncomplete="PF('assignmentScheduleWV').update();"/>
 			<p:spacer width="5"/>
 			<p:commandButton value="Cancelar" type="button" onclick="PF('dlgSelectDateWV').hide();"/>
 		</div>

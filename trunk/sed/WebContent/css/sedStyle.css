@@ -74,3 +74,76 @@ body,td,th {
 .ui-seduser-calendar input{
 	width: 95%;	
 }
+.ui-subject-red{
+	border: 1px solid #E57191;
+	background-color: #EFA5BA;
+	color:black;
+}
+.ui-subject-green{
+	border: 1px solid #63E490;
+	background-color: #B2ECC6;
+	color:black;
+}
+.ui-subject-yellow{
+	border: 1px solid #EBF048;
+	background-color: #F0F2B4;
+	color:black;
+}
+.ui-subject-lightblue{
+	border: 1px solid #6195E9;
+	background-color: #A3C1F0;
+	color:black;
+}
+.ui-subject-orange{
+	border: 1px solid #F09748;
+	background-color: #F7BB88;
+	color:black;
+}
+.ui-subject-aqua{
+	border: 1px solid #67BDE1;
+	background-color: #AFE1F7;
+	color:black;
+}
+.ui-subject-lightgreen{
+	border: 1px solid #83D63A;
+	background-color: #C7F59F;
+	color:black;
+}
+.ui-subject-gray{
+	border: 1px solid #6F6E6A;
+	background-color: #C7C7C4;
+	color:black;
+}
+.ui-subject-blue{
+	border: 1px solid #1A42C3;
+	background-color: #6587F5;
+	color:black;
+}
+.ui-subject-oceanblue{
+	border: 1px solid #0F6DA4;
+	background-color: #66C3F8;
+	color:black;
+}
+.ui-subject-black{
+	border: 1px solid #000000;
+	background-color: #313436;
+	color:white;
+}
+.ui-subject-white{
+	border: 1px solid #6D7072;
+	background-color: #E8EFF3;
+	color:black;
+}
+.ui-subject-purple{
+	border: 1px solid #A541E3;
+	background-color: #BF88E2;
+	color:black;	
+}
+.fc-event-title{
+	font-size: 13px;
+	color: #4D4646;
+}
+.fc-event-time{
+	font-size: 20px !important;
+	color: #4D4646 !important;
+}

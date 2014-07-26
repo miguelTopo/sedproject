@@ -29,6 +29,7 @@ import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.Subject;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
+import com.sun.faces.facelets.tag.jstl.core.SetHandler;
 
 @ManagedBean
 @ViewScoped
@@ -42,7 +43,7 @@ public class AssignmentBean extends BackingBean {
 
 	// Primivites
 	private boolean showAssigment;
-	private boolean validAssign;
+	private boolean validAssign = true;
 
 	// Basic Java Object
 	private Date assignStartDate;
@@ -62,6 +63,7 @@ public class AssignmentBean extends BackingBean {
 	private List<Subject> subjectList;
 	private List<Course> courseTmpList;
 	private List<Grade> gradeTmpList;
+	private List<Assignment> assignmentList;
 
 	// User Object
 	private Assignment assignment;
@@ -83,27 +85,65 @@ public class AssignmentBean extends BackingBean {
 	@PostConstruct
 	public void init() {
 		try {
-			Calendar sc = new GregorianCalendar();
-			Calendar ec = new GregorianCalendar();
-
-			sc.set(Calendar.HOUR_OF_DAY, 9);
-			sc.set(Calendar.MINUTE, 30);
-
-
-
 			this.model = new DefaultScheduleModel();
-//			Date date1 = new Date();
-//			Date date2 = new Date();
-//			date1.setHours(7);
-//			date1.setMinutes(0);
-//			date2.setHours(9);
-//			date2.setMinutes(0);
-//			this.model.addEvent(new DefaultScheduleEvent("Evento verficador", date1, date2));
+			loadScheduleData();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void loadScheduleData() {
+		try {
+			Calendar today = new GregorianCalendar();
+			this.assignmentList = this.controller.loadAssignmentListByPeriod(Long.valueOf(today.get(Calendar.YEAR)));
+			for (Assignment a : this.assignmentList) {
+
+				Calendar cStartHour = new GregorianCalendar();
+				Date startHour = ManageDate.stringToDate(a.getStartHour(), ManageDate.HH_MM_SS);
+				Calendar auxCal = new GregorianCalendar();
+				auxCal.setTime(startHour);
+
+				cStartHour.set(Calendar.DAY_OF_WEEK, Integer.parseInt(a.getIdDay().toString()));
+				cStartHour.set(Calendar.HOUR_OF_DAY, auxCal.get(Calendar.HOUR_OF_DAY));
+				cStartHour.set(Calendar.MINUTE, auxCal.get(Calendar.MINUTE));
+				cStartHour.set(Calendar.SECOND, 0);
+
+				System.out.println(cStartHour.getTime());
+
+				Calendar cEndHour = new GregorianCalendar();
+				Date endHour = ManageDate.stringToDate(a.getEndHour(), ManageDate.HH_MM_SS);
+				auxCal = new GregorianCalendar();
+				auxCal.setTime(endHour);
+
+				cEndHour.set(Calendar.DAY_OF_WEEK, Integer.parseInt(a.getIdDay().toString()));
+				cEndHour.set(Calendar.HOUR_OF_DAY, auxCal.get(Calendar.HOUR_OF_DAY));
+				cEndHour.set(Calendar.MINUTE, auxCal.get(Calendar.MINUTE));
+				cEndHour.set(Calendar.SECOND, 0);
+
+				System.out.println(cEndHour.getTime());
+
+
+
+				this.model.addEvent(new DefaultScheduleEvent(a.getTeacherFullName() + " " + a.getSubjectName() + " " + a.getCourseName(), cStartHour
+					.getTime(), cEndHour.getTime(), a.getSubjectStyleClass()));
+
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	private boolean validSpaceAvailability() throws Exception {
+		try {
+			return this.controller.validSpaceAvailability(this.assignment.getIdCourse(),Long.valueOf(this.startDate.get(Calendar.DAY_OF_WEEK)), this.assignStartDate, this.assignEndDate);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres 25/7/2014 21:07:01 */
 	private boolean validSaveTeacherAssignment() throws Exception {
 		try {
 			if (this.assignment == null) {
@@ -151,6 +191,7 @@ public class AssignmentBean extends BackingBean {
 			if (this.controller.saveTeacherAssignment(this.assignment)) {
 				this.model.addEvent(new DefaultScheduleEvent(this.assignment.getIdSedUser() + "" + this.assignment.getIdSubject(), this.startDate
 					.getTime(), this.endDate.getTime()));
+
 				clearSelectDateDialog();
 				getRequestContext().execute("PF('dlgSelectDateWV').hide();");
 				getRequestContext().update(":calendarAssigmentForm:assignmentSchedule");
