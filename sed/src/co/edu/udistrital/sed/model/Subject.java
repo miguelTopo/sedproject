@@ -24,7 +24,8 @@ public class Subject extends AParameter implements Serializable {
 	private Long idKnowledgeArea;
 	private Long idGrade;
 	private Long orderSheet;
-	
+	private String styleClass;
+
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -120,4 +121,14 @@ public class Subject extends AParameter implements Serializable {
 	public void setOrderSheet(Long orderSheet) {
 		this.orderSheet = orderSheet;
 	}
+
+	@Column(name = "styleClass", nullable = false, length = 40)
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
+
 }

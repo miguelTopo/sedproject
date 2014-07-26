@@ -15,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Assignment")
-public class Assignment implements Serializable{
+public class Assignment implements Serializable {
 
 	private Long id;
 	private Long idSedUser;
@@ -30,8 +30,14 @@ public class Assignment implements Serializable{
 	private String dateCreation;
 	private String userChange;
 	private String dateChange;
-	
+
+	// Transient
 	private Long idGrade;
+	private Long idTeacher;
+	private String teacherFullName;
+	private String subjectName;
+	private String courseName;
+	private String subjectStyleClass;
 
 	public Assignment() {
 		try {
@@ -151,7 +157,7 @@ public class Assignment implements Serializable{
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
 	}
-	
+
 	@Column(name = "state", nullable = false)
 	public Long getState() {
 		return state;
@@ -169,6 +175,50 @@ public class Assignment implements Serializable{
 	public void setIdGrade(Long idGrade) {
 		this.idGrade = idGrade;
 	}
-	
 
+	@Transient
+	public Long getIdTeacher() {
+		return idTeacher;
+	}
+
+	public void setIdTeacher(Long idTeacher) {
+		this.idTeacher = idTeacher;
+	}
+
+	@Transient
+	public String getTeacherFullName() {
+		return teacherFullName;
+	}
+
+	public void setTeacherFullName(String teacherFullName) {
+		this.teacherFullName = teacherFullName;
+	}
+
+	@Transient
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	@Transient
+	public String getSubjectStyleClass() {
+		return subjectStyleClass;
+	}
+
+	public void setSubjectStyleClass(String subjectStyleClass) {
+		this.subjectStyleClass = subjectStyleClass;
+	}
+
+	@Transient
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+	
 }
