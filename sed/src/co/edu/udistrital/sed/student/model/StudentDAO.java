@@ -74,7 +74,6 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" s.dateCreation AS dateCreation, ");
 			hql.append(" s.state AS state, ");
 			hql.append(" s.idIdentificationType AS idIdentificationType, ");
-			hql.append(" s.birthday AS birthday, ");
 			hql.append(" su.email AS email, ");
 			hql.append(" sc.idCourse AS idCourse, ");
 			hql.append(" c.idGrade AS idGrade, ");
@@ -164,12 +163,15 @@ public class StudentDAO extends HibernateDAO {
 		try {
 			hql.append(" SELECT s.id AS id, ");
 			hql.append(" s.identification AS identification, ");
+			hql.append(" s.name AS name, ");
+			hql.append(" s.lastName AS lastName, ");
 			hql.append(" sc.id AS idStudentCourse ");
 			hql.append(" FROM Student s, StudentCourse sc ");
 			hql.append(" WHERE s.id = sc.idStudent ");
-			hql.append(" AND sc.idCourse IN:idCourseList ");
+			hql.append(" AND sc.idCourse IN(:idCourseList) ");
 			hql.append(" AND sc.idPeriod = :year ");
 			hql.append(" AND s.state = :state ");
+			hql.append(" ORDER BY sc.id, s.lastName ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
 			Calendar c = Calendar.getInstance();
@@ -229,7 +231,7 @@ public class StudentDAO extends HibernateDAO {
 	}
 
 	/** @author MTorres 12/7/2014 18:13:59 */
-	public Student loadStudentGradeCourse(Long idSedUser) throws Exception{
+	public Student loadStudentGradeCourse(Long idSedUser) throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -254,11 +256,45 @@ public class StudentDAO extends HibernateDAO {
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setParameter("period", Long.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 			qo.setMaxResults(1);
-			
+
 			return (Student) qo.uniqueResult();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	/** @author MTorres 7/8/2014 22:15:27 */
+	public List<Student> loadStudentResponsibleList(Long idSedUser) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT s.id AS id, ");
+			hql.append(" s.name AS name, ");
+			hql.append(" s.lastName AS lastName, ");
+			hql.append(" s.name ||' '|| s.lastName AS studentFullName, ");
+			hql.append(" sc.id AS idStudentCourse, ");
+			hql.append(" su.id AS idSedUser ");
+			hql.append(" FROM Student s, ");
+			hql.append(" StudentCourse sc, ");
+			hql.append(" SedUser su ");
+			hql.append(" WHERE sc.idStudent = s.id ");
+			hql.append(" AND s.idSedUser = su.id ");
+			hql.append(" AND s.idSedUserResponsible = :idSedUser ");
+			hql.append(" AND sc.idPeriod = :idPeriod ");
+			hql.append(" AND s.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("idPeriod", Long.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+			qo.setParameter("state", IState.ACTIVE);
+
+			return qo.list();
+		} catch (Exception e) {
 			throw e;
 		} finally {
 			hql = null;

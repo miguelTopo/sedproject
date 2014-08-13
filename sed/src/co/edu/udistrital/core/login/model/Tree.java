@@ -35,7 +35,7 @@ public class Tree extends AParameter implements Serializable {
 	private String iconClass;
 
 	// User Transient List
-	private transient List<Tree> leafTreeList;
+	private List<Tree> leafTreeList;
 
 
 

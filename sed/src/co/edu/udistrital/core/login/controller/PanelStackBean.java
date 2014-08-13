@@ -12,6 +12,11 @@ public class PanelStackBean implements Serializable {
 	private String selectedPanel;
 	private String selectedTitle;
 
+	public void clear() {
+		selectedPanel = "";
+		selectedTitle = "";
+	}
+
 	public void setSelectedPanelAndTitle(String selectedPanel, String title) {
 		setSelectedPanel(selectedPanel);
 		setSelectedTitle(title);

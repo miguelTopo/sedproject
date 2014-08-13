@@ -6,29 +6,17 @@
 <f:view>
 	<h:form id="headerForm">
 		<div id="sedHeader" align="center">
-			<table style="width:100%">
-				<tr>
-					<td style="width:60%"/>
-					<td style="width:20%"/>
-					<td style="width:10%"/>
-					<td style="width:10%"/>
-				</tr>
-				<tr>
-					<td/>
-					<td style="text-align:center;color: #2E6E9E">
-						#{loginBean.userSession.name} #{loginBean.userSession.lastName} 
-					</td>
-					<td style="text-align:center; color: #2E6E9E">
-						#{loginBean.userSession.sedRoleName}
-					</td>
-					<td style="text-align:center;">
-						<p:commandButton value="Cerrar Sesión" onstart="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();" 
-							action="#{loginBean.logout()}"/>
-					</td>
-				</tr>
-			</table>
+			<div style="float:left;">
+				#{loginBean.userSession.sedRoleName}
+			</div>
+			<div style="float: right;width: 30%;padding-top: 0.5%;">
+				<p:menuButton value="#{loginBean.userSession.name} #{loginBean.userSession.lastName}" iconPos="right">
+					<p:menuitem value="Cambiar Contraseña" url="/portal/clave" icon="ui-icon-locked"/>
+					<p:menuitem value="Cerrar Sesión" action="#{loginBean.logout}" onstart="PF('statusDialog').show();" 
+						oncomplete="PF('statusDialog').hide();" icon="ui-icon-power"/>
+				</p:menuButton>
+			</div>			
 		</div>
-
 	</h:form>
 </f:view>
 </html>

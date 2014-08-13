@@ -25,7 +25,7 @@
 						Grado:
 					</td>
 					<td style="width:50%">
-						<p:selectOneMenu value="#{assignmentBean.idGrade}" style="width:98%">
+						<p:selectOneMenu value="#{assignmentBean.assignmentFilter.idGrade}" style="width:98%">
 							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 							<f:selectItems value="#{assignmentBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
 							<p:ajax listener="#{assignmentBean.handleGradeChange(false)}" process="@this" update=":calendarAssigmentForm:somAssignCourse"/>
@@ -41,9 +41,11 @@
 						Curso:
 					</td>
 					<td style="width:50%">
-						<p:selectOneMenu id="somAssignCourse" disabled="#{assignmentBean.idGrade eq null or assignmentBean.idGrade eq 0}" style="width:98%">
+						<p:selectOneMenu id="somAssignCourse" value="#{assignmentBean.assignmentFilter.idCourse}" style="width:98%"
+							disabled="#{assignmentBean.assignmentFilter.idGrade eq null or assignmentBean.assignmentFilter.idGrade eq 0}">
 							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 							<f:selectItems value="#{assignmentBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
+							<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('assignmentScheduleWV').update();"/>
 						</p:selectOneMenu>
 					</td>
 				</tr>

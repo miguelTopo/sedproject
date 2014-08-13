@@ -15,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Assignment")
-public class Assignment implements Serializable {
+public class Assignment implements Serializable, Cloneable {
 
 	private Long id;
 	private Long idSedUser;
@@ -44,6 +44,16 @@ public class Assignment implements Serializable {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	/** @author MTorres 29/7/2014 22:01:11 */
+	public Assignment clone() {
+		try {
+			return (Assignment) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			throw new RuntimeException();
 		}
 	}
 
@@ -220,5 +230,5 @@ public class Assignment implements Serializable {
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-	
+
 }

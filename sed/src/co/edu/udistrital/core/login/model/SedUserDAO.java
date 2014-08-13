@@ -342,6 +342,24 @@ public class SedUserDAO extends HibernateDAO {
 			qo.setParameter("idSedUser", sedUser.getId());
 			affectedRow += qo.executeUpdate();
 
+
+			hql = null;
+			qo = null;
+			hql = new StringBuilder();
+			hql.append(" UPDATE SedUserLogin sul ");
+			hql.append(" SET sul.state = :inactiveState, ");
+			hql.append(" sul.userChange = :userChange, ");
+			hql.append(" sul.dateChange = :dateChange ");
+			hql.append(" WHERE sul.idSedUser = :idSedUser ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("inactiveState", IState.INACTIVE);
+			qo.setParameter("userChange", user);
+			qo.setParameter("dateChange", ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
+			qo.setParameter("idSedUser", sedUser.getId());
+
+			affectedRow += qo.executeUpdate();
+
 			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT)) {
 				hql = null;
 				qo = null;
@@ -575,17 +593,49 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" FROM SedUser su, ");
 			hql.append(" SedRoleUser sru ");
 			hql.append(" WHERE su.id = sru.idSedUser ");
-			hql.append(" AND sru.idSedRole = :idSedRole "); 
+			hql.append(" AND sru.idSedRole = :idSedRole ");
 			hql.append(" AND su.state = :state ");
 			hql.append(" AND sru.state = :state ");
 			hql.append(" ORDER BY su.name ");
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
 			qo.setParameter("idSedRole", idSedRole);
 			qo.setParameter("state", IState.ACTIVE);
-			
+
 			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
 		}
-		catch (Exception e) {
+	}
+
+	/** @author MTorres 9/8/2014 18:43:42 */
+	public SedUser loadSedUserById(Long idSedUser) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT su.id AS id, ");
+			hql.append(" su.name AS name, ");
+			hql.append(" su.lastName AS lastName, ");
+			hql.append(" su.birthday AS birthday, ");
+			hql.append(" su.identification AS identification, ");
+			hql.append(" su.email AS email, ");
+			hql.append(" su.idIdentificationType AS idIdentificationType, ");
+			hql.append(" it.name AS nameIdentificationType ");
+			hql.append(" FROM SedUser su, ");
+			hql.append(" IdentificationType it ");
+			hql.append(" WHERE it.id = su.idIdentificationType ");
+			hql.append(" AND su.id = :idSedUser ");
+			hql.append(" AND su.state = :state ");
+			hql.append(" AND it.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setMaxResults(1);
+			return (SedUser) qo.uniqueResult();
+		} catch (Exception e) {
 			throw e;
 		} finally {
 			hql = null;

@@ -48,4 +48,33 @@ public class SubjectDAO extends HibernateDAO {
 			qo = null;
 		}
 	}
+
+	/** @author MTorres 31/7/2014 23:13:25 */
+	public List<Subject> loadSubjectListByTeacherCourse(Long idSedUser, Long idCourse) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT s.id AS id, ");
+			hql.append(" s.name AS name ");
+			hql.append(" FROM Subject s, ");
+			hql.append(" Assignment a ");
+			hql.append(" WHERE a.idSubject = s.id ");
+			hql.append(" AND a.idSedUser = :idSedUser ");
+			hql.append(" AND a.idCourse = :idCourse ");
+			hql.append(" AND a.state = :state ");
+			hql.append(" AND s.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Subject.class));
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("idCourse", idCourse);
+			qo.setParameter("state", IState.ACTIVE);
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
 }

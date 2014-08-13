@@ -20,6 +20,8 @@ import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.GradeDAO;
 import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.IdentificationTypeDAO;
+import co.edu.udistrital.sed.model.KnowledgeArea;
+import co.edu.udistrital.sed.model.KnowledgeAreaDAO;
 import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.QualificationTypeDAO;
 import co.edu.udistrital.sed.model.Subject;
@@ -155,8 +157,8 @@ public class ControllerList extends Controller {
 		}
 	}
 
-	/**@author MTorres 7/06/2014*/
-	public List<EmailTemplate> loadEmailTemplateList() throws Exception{
+	/** @author MTorres 7/06/2014 */
+	public List<EmailTemplate> loadEmailTemplateList() throws Exception {
 		EmailTemplateDAO dao = new EmailTemplateDAO();
 		Transaction tx = null;
 		try {
@@ -173,7 +175,7 @@ public class ControllerList extends Controller {
 		}
 	}
 
-	/**@author MTorres 7/06/2014*/
+	/** @author MTorres 7/06/2014 */
 	public List<QualificationType> loadQualificationTypeList() throws Exception {
 		QualificationTypeDAO dao = null;
 		Transaction tx = null;
@@ -190,6 +192,21 @@ public class ControllerList extends Controller {
 			dao.getSession().close();
 			dao = null;
 			tx = null;
+		}
+
+	}
+
+	/** @author MTorres 10/08/2014 4:53:02 p. m. */
+	public List<KnowledgeArea> loadKnowledgeAreaList() throws Exception {
+		KnowledgeAreaDAO dao = new KnowledgeAreaDAO();
+		try {
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
 		}
 
 	}

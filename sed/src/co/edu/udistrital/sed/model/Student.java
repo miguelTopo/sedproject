@@ -19,25 +19,27 @@ import co.edu.udistrital.core.common.model.AParameter;
 @Table(name = "student")
 public class Student extends AParameter implements Serializable {
 
-	
+
 	private String identification;
 	private String lastName;
 	private Long idIdentificationType;
 	private Long idSedUser;
 	private Long idSedUserResponsible;
 
-	//Transient
+	// Transient
 	private String courseName;
 	private String gradeName;
 	private String identificationTypeName;
 	private String email;
+	private String studentFullName;
 	private Long idGrade;
 	private Long idCourse;
 	private Long idStudentCourse;
 
 
-	private transient List<Integer> invalidColumn;
-	private transient List<Qualification> qualificationList;
+	private List<Integer> invalidColumn;
+	private List<Qualification> qualificationList;
+	private List<KnowledgeArea> knowledgeAreaList;
 
 	public Student() {
 		try {
@@ -160,6 +162,7 @@ public class Student extends AParameter implements Serializable {
 	public void setIdSedUser(Long idSedUser) {
 		this.idSedUser = idSedUser;
 	}
+
 	@Column(name = "idSedUserResponsible", nullable = false)
 	public Long getIdSedUserResponsible() {
 		return idSedUserResponsible;
@@ -200,8 +203,6 @@ public class Student extends AParameter implements Serializable {
 
 	@Transient
 	public List<Qualification> getQualificationList() {
-		if (this.qualificationList == null)
-			this.qualificationList = new ArrayList<Qualification>();
 		return this.qualificationList;
 	}
 
@@ -252,5 +253,23 @@ public class Student extends AParameter implements Serializable {
 
 	public void setIdentificationTypeName(String identificationTypeName) {
 		this.identificationTypeName = identificationTypeName;
+	}
+
+	@Transient
+	public String getStudentFullName() {
+		return studentFullName;
+	}
+
+	public void setStudentFullName(String studentFullName) {
+		this.studentFullName = studentFullName;
+	}
+
+	@Transient
+	public List<KnowledgeArea> getKnowledgeAreaList() {
+		return knowledgeAreaList;
+	}
+
+	public void setKnowledgeAreaList(List<KnowledgeArea> knowledgeAreaList) {
+		this.knowledgeAreaList = knowledgeAreaList;
 	}
 }

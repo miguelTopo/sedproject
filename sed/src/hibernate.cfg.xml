@@ -17,6 +17,7 @@
   <mapping class="co.edu.udistrital.sed.model.Grade"/>
   <mapping class="co.edu.udistrital.sed.model.KnowledgeArea"/>
   <mapping class="co.edu.udistrital.sed.model.Qualification"/>
+  <mapping class="co.edu.udistrital.sed.model.QualificationHistory"/>
   <mapping class="co.edu.udistrital.sed.model.Student"/>
   <mapping class="co.edu.udistrital.sed.model.Subject"/>
   <mapping class="co.edu.udistrital.sed.model.Period"/>
