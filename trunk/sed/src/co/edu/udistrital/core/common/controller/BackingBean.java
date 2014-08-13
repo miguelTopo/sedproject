@@ -1,4 +1,5 @@
 package co.edu.udistrital.core.common.controller;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,10 @@ import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
+import co.edu.udistrital.sed.model.KnowledgeArea;
 import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Subject;
+import co.edu.udistrital.session.common.SedSession;
 import co.edu.udistrital.session.common.User;
 
 public abstract class BackingBean implements Serializable {
@@ -64,18 +67,19 @@ public abstract class BackingBean implements Serializable {
 
 	public static void redirectToLogin() throws Exception {
 		try {
-			String requestUrl = PrettyContext.getCurrentInstance().getRequestURL().toURL();
-			if (requestUrl != null && !requestUrl.trim().isEmpty() && !requestUrl.endsWith("login")) {
-				// redirect to login
-				redirect("/portal/login");
-//				getSession(false).setAttribute("requestPath", requestUrl);
-			}
+			// String requestUrl = PrettyContext.getCurrentInstance().getRequestURL().toURL();
+			// if (requestUrl != null && !requestUrl.trim().isEmpty() &&
+			// !requestUrl.endsWith("login")) {
+			// // redirect to login
+			redirect("/portal/login");
+			// getSession(false).setAttribute("requestPath", requestUrl);
+			// }
 
 		} catch (Exception e) {
 			throw e;
 		}
 	}
-	
+
 	public boolean getValidateExpiredSession() throws Exception {
 		try {
 			String idSession = ManageCookie.getCookieByName("JSESSIONID");
@@ -152,8 +156,10 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public static FacesContext getFacesContext() throws Exception {
 		try {
 			return FacesContext.getCurrentInstance();
@@ -182,8 +188,10 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public static RequestContext getRequestContext() throws Exception {
 		try {
 			return RequestContext.getCurrentInstance();
@@ -208,6 +216,45 @@ public abstract class BackingBean implements Serializable {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
+	public void logout() throws Exception {
+		try {
+			getSession(false).setMaxInactiveInterval(20 * 60);
+			SedSession.deleteLoginSessionId(getUserSession().getIdSession(), null);
+			System.out.println("INFO: ZM-session close for user with id " + getUserSession().getId());
+			ManageCookie.removeCookieByName("uID");
+			ManageCookie.removeCookieByName("locate");
+			getSession(false).setAttribute("user", null);
+			// redirectToLogin();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			removeAttributeListSession();
+			initializedGeneral = false;
+			validateLogin = false;
+			uniqueLogin = false;
+			setUserSession(null);
+		}
+		redirect("/portal/login");
+	}
+
+	private void removeAttributeListSession() throws Exception {
+		try {
+			HttpSession session = getSession(false);
+			session.removeAttribute("user");
+			ManageCookie.addCookie("presence", null, 0, "user", true);
+			session = null;
+			getPanelStackBean().clear();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -240,8 +287,10 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public PanelStackBean getPanelStackBean() throws Exception {
 		try {
 			if (panelStackBean == null) {
@@ -263,8 +312,10 @@ public abstract class BackingBean implements Serializable {
 	}
 
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public List<Course> loadCourseListByGrade(Long idGrade) throws Exception {
 		try {
 			List<Course> courseList = new ArrayList<Course>();
@@ -278,8 +329,25 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/** @author MTorres 11/08/2014 11:04:54 p. m. */
+	protected QualificationType loadQualificationTypeById(Long idQualiticationType) throws Exception {
+		try {
+			if (idQualiticationType != null && !idQualiticationType.equals(0L)) {
+				for (QualificationType qt : getQualificationTypeList()) {
+					if (qt.getId().equals(idQualiticationType))
+						return qt;
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public List<Subject> loadSubjectListByGrade(Long idGrade) throws Exception {
 		try {
 			List<Subject> subjectGradeList = new ArrayList<Subject>();
@@ -295,8 +363,40 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/** @author MTorres 28/7/2014 23:18:35 */
+	public Course loadCourseById(Long idCourse) throws Exception {
+		try {
+			if (idCourse == null || idCourse.equals(0L))
+				return null;
+			for (Course c : getCourseList()) {
+				if (c.getId().equals(idCourse))
+					return c;
+			}
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres 28/7/2014 23:16:29 */
+	public Subject loadSubjectById(Long idSubject) throws Exception {
+		try {
+			if (idSubject == null || idSubject.equals(0L))
+				return null;
+			for (Subject s : getSubjectList()) {
+				if (s.getId().equals(idSubject))
+					return s;
+			}
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public static String getProperty(String key) throws Exception {
 		try {
 			return BeanList.getProperties().getProperty(key);
@@ -305,8 +405,10 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public static String getMessage(String key) throws Exception {
 		try {
 			return BeanList.getProperties().getWebMessage(key);
@@ -315,8 +417,10 @@ public abstract class BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	public List<Tree> loadTreeListByRole(Long idRole) throws Exception {
 		try {
 			List<Tree> treeRoleList = new ArrayList<Tree>();
@@ -414,6 +518,14 @@ public abstract class BackingBean implements Serializable {
 	public List<SedRole> getSedRoleList() throws Exception {
 		try {
 			return BeanList.getSedRoleList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<KnowledgeArea> getKnowledgeAreaList() throws Exception {
+		try {
+			return BeanList.getKnowledgeAreaList();
 		} catch (Exception e) {
 			throw e;
 		}

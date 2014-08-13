@@ -251,8 +251,8 @@
 					
 				<p:commandButton id="btnUpdateSedUser" value="Guardar Cambios" action="#{sedUserBean.updateSedUser}" rendered="#{sedUserBean.showEdit}" 
 					onclick="validateUpdateSedUser(#{sedUserBean.sedUser.idSedRole})" type="button"/>
-				
-				<p:spacer width="5" />
+			</div>
+			<div style="text-align: right;">
 				<p:commandButton value="#{bundle['page.core.labelGoBack']}" action="#{sedUserBean.goBack}" icon="ui-icon-arrow-1-w" />
 			</div>
 			</div>

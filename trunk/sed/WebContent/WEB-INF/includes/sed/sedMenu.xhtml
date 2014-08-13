@@ -10,11 +10,9 @@
 			<p:fieldset legend="#{rootTree.name}" toggleable="true"
 				toggleSpeed="500">
 				<div align="center">
-					<p:dataGrid var="leafTree"
-						columns="#{fn:length(rootTree.leafTreeList)}"
-						value="#{rootTree.leafTreeList}">
-
-						<div align="center" style="width: 150px; height: 150px;">
+					<p:dataGrid var="leafTree" columns="#{fn:length(rootTree.leafTreeList)}" value="#{rootTree.leafTreeList}"
+						style="border-style:none !important;">
+						<div style="width: 150px; height: 150px;text-align: center;margin:0 auto;">
 							<a href="/sed#{leafTree.urlPattern}"> <p:panel
 									header="#{leafTree.name}">
 									<p:graphicImage value="../css/icon/#{leafTree.icon}" width="70"

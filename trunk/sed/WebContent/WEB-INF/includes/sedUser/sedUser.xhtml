@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
-	<p:outputPanel>
+	<p:outputPanel rendered="#{sedUserBean.validateSedUserRole}">
 		<p:outputPanel rendered="#{sedUserBean.showList}">
 			<ui:include src="/WEB-INF/includes/sedUser/sedUserList.xhtml" />
 		</p:outputPanel>

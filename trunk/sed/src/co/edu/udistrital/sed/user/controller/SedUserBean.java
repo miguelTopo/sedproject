@@ -184,9 +184,8 @@ public class SedUserBean extends BackingBean {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
+	/** @author MTorres 7/8/2014 13:40:34 */
 	public void saveSedUser() {
 		try {
 			if (!validateSedUser())
@@ -317,12 +316,25 @@ public class SedUserBean extends BackingBean {
 	public void validateIdentification() {
 		try {
 			setExistIdentification(false);
-			if (this.sedUser != null) {
-				if (this.sedUser.getIdentification() != null && !this.sedUser.getIdentification().trim().isEmpty()) {
-					setExistIdentification(this.controller.validateExistField(SedUser.class.getSimpleName(), "identification",
-						this.sedUser.getIdentification()));
+
+			if (isShowAdd()) {
+				if (this.sedUser != null) {
+					if (this.sedUser.getIdentification() != null && !this.sedUser.getIdentification().trim().isEmpty()) {
+						setExistIdentification(this.controller.validateExistField(SedUser.class.getSimpleName(), "identification",
+							this.sedUser.getIdentification()));
+					}
+				}
+			} else {
+				if (this.sedUser != null && this.sedUserCopy != null) {
+					if (this.sedUser.getIdentification() != null && !this.sedUser.getIdentification().trim().isEmpty()
+						&& !this.sedUser.getIdentification().trim().equals(this.sedUserCopy.getIdentification().trim())) {
+						setExistIdentification(this.controller.validateExistField(SedUser.class.getSimpleName(), "identification",
+							this.sedUser.getIdentification()));
+					}
 				}
 			}
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -547,7 +559,7 @@ public class SedUserBean extends BackingBean {
 					this.studentResponsibleList = this.controller.loadStudentResponsibleListByUser(this.sedUser.getId());
 				else if (this.sedUser.getIdSedRole().equals(ISedRole.STUDENT))
 					this.sedUser = this.controller.loadStudentGradeCourse(this.sedUser);
-				
+
 				this.courseTmpList = loadCourseListByGrade(this.sedUser.getIdStudentGrade());
 			}
 		} catch (Exception e) {

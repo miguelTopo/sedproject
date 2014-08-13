@@ -2,100 +2,88 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
-	<h:form id="addReportForm">
-		<p:panel header="#{bundle['page.report.labelHeadAdd']}">
-			<table style="width:100%">
-				<tr>
-					<td style="width:5%"/>
-					<td style="width:15%"/>
-					<td style="width:20%"/>
-					<td style="width:25%"/>
-					<td style="width:30%"/>
-					<td style="width:5%"/>
-				</tr>
-				<tr>
-					<td />
-					<td colspan="4">
-						#{bundle['page.report.labelUploadFileGuide']}
-							<p:commandLink action="#{reportBean.showDownloadFilePanel}" update=":addReportForm:opPanelFile">
-								<h:outputText value="#{bundle['page.core.labelHere']}" />
-							</p:commandLink>
-						#{bundle['page.report.labelUploadEndFileGuide']}
-					</td>
-					<td />
-				</tr>
-				<tr>
-					<td />
-					<td colspan="4">
-						<p:outputPanel id="opPanelFile">
-							<p:outputPanel rendered="#{reportBean.showDownloadFile}">
-								<ui:include src="/WEB-INF/includes/report/panelFile.xhtml" />
-							</p:outputPanel>
-						</p:outputPanel>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<p:spacer height="30" />
-					</td>
-				</tr>
-				<tr>
-					<td />
-					<td colspan="4">
-						#{bundle['page.core.labelDataObligatory']}
-					</td>
-					<td />
-				</tr>
-				<tr>
-					<td />
-					<td align="center">
-						#{bundle['page.sed.labelGrade']}:
-					</td>
-					<td>
-						<p:selectOneMenu value="#{reportBean.idSelectedGrade}" style="width:98%;">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
-							<f:selectItems value="#{reportBean.gradeList}" var="g"
-								itemLabel="#{g.name}" itemValue="#{g.id}" />
-							<p:ajax global="false" update=":addReportForm:fileUploadOp" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<p:spacer height="20" />
-					</td>
-				</tr>
-				<tr>
-					<td />
-					<td colspan="2">
-						<p:outputPanel id="fileUploadOp">
-							<p:outputPanel rendered="#{!empty reportBean.idSelectedGrade and reportBean.idSelectedGrade ne 0}">
-								<p:fileUpload mode="advanced" dragDropSupport="false" multiple="false" sizeLimit="1000000000" fileLimit="1"
-									invalidSizeMessage="#{bundle['page.core.file.labelMaxSize']}" 
-									invalidFileMessage="#{bundle['page.core.file.labelNotAllowed']}"
-									fileLimitMessage="#{bundle['page.core.file.labelMaxNumber']}"
-									errorMessageDelay="#{bundle['page.core.file.labelErrorDelay']}"
-									sizeExceedMessage="#{bundle['page.core.file.labelOutsize']}"
-									fileUploadListener="#{reportBean.handleFileUpload}"
-									cancelLabel="#{bundle['page.core.labelCancel']}" deletelabel="#{bundle['page.core.labelDelete']}"
-									uploadLabel="#{bundle['page.core.file.labelUpload']}" label="#{bundle['page.core.labelSelect']}"
-									onstart="PF('statusDialog').show();" update=":addReportForm:opFileError"
-									oncomplete="PF('statusDialog').hide();"
-									allowTypes="/(\.|\/)(xls?x)$/" />
-							</p:outputPanel>
-						</p:outputPanel>
-					</td>
-				</tr>
-			</table>
-			<p:outputPanel id="opFileError">
-				<p:outputPanel rendered="#{reportBean.fileError}">
-					<div style="text-align:center;">
-						<p:commandButton value="Descargar archivo de errores" action="#{reportBean.downloadErrorFile}" styleClass="ui-priority-primary"/>
-					</div>
-				</p:outputPanel>
-			</p:outputPanel>
+	<h:form id="sedReportForm">
+		<p:panel id="sedReportPanel" header="Reporte SED">
+			<section>
+				<article>
+					<table style="width:100%;">
+						<tr>
+							<td style="width:20%"/>
+							<td>
+								Seleccione el Grado:
+							</td>
+							<td>
+								<p:selectOneMenu value="#{reportBean.idGrade}">
+									<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
+									<f:selectItems value="#{reportBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+								</p:selectOneMenu>								
+							</td>
+							<td>
+								<p:commandButton value="Ver Notas" action="#{reportBean.loadReportQualificationList}" update=":sedReportForm:reportTable"/>
+							</td>
+							<td style="width:20%"/>
+						</tr>
+					</table>
+				</article>
+			</section>
+			<div>
+				<p:scrollPanel mode="native" style="width:100%;border-style:none;">
+				<p:dataTable id="reportTable" value="#{reportBean.studentList}" var="s" style="width:#{fn:length(reportBean.knowledgeAreaGradeList)*800}px;">
+						
+						<p:columnGroup type="header">
+            				<p:row>
+                				<p:column rowspan="4" headerText="Apellidos" style="width:200px;" />
+                				<p:column rowspan="4" headerText="Nombres" style="width:200px;" />
+                				<p:column rowspan="4" headerText="Identificación" style="width:100px;" />
+            				</p:row>
+            				<p:row>
+            					<c:forEach begin="0" end="#{fn:length(reportBean.knowledgeAreaGradeList)-1}" var="k">
+            						<p:column colspan="#{fn:length(reportBean.knowledgeAreaGradeList.get(k).subjectList)*fn:length(reportBean.qualificationTypeList)}" 
+            							headerText="#{reportBean.knowledgeAreaGradeList.get(k).name}" style="width:125px;"/>	
+            					</c:forEach>
+            				</p:row>
+            				<p:row>
+            					<c:forEach begin="0" end="#{fn:length(reportBean.knowledgeAreaGradeList)-1}" var="ksb">
+            						<c:forEach begin="0" end="#{fn:length(reportBean.knowledgeAreaGradeList.get(ksb).subjectList)-1}" var="sb">
+            							<p:column headerText="#{reportBean.knowledgeAreaGradeList.get(ksb).subjectList.get(sb).name}" 
+            								colspan="#{fn:length(reportBean.qualificationTypeList)}" style="width:120px"/>
+            						</c:forEach>
+            					</c:forEach>
+            				</p:row>
+            				<p:row>
+            					<c:forEach begin="0" end="#{fn:length(reportBean.knowledgeAreaGradeList)-1}" var="kq">
+            						<c:forEach begin="0" end="#{fn:length(reportBean.knowledgeAreaGradeList.get(kq).subjectList)-1}" var="sq">
+            							<c:forEach begin="0" end="#{fn:length(reportBean.qualificationTypeList)-1}" var="qt">
+            								<p:column headerText="#{reportBean.qualificationTypeList.get(qt).name}"/>
+            							</c:forEach>
+            						</c:forEach>
+            					</c:forEach>
+            				</p:row>
+        				</p:columnGroup>
+										
+						<p:column>
+							<h:outputText value="#{s.lastName}"/>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{s.name}"/>
+						</p:column>
+						<p:column style="text-align:center;">
+							<h:outputText value="#{s.identification}"/>
+						</p:column>
+						
+						<c:forEach begin="0" end="#{fn:length(s.qualificationList)-1}" var="q">
+							<p:column headerText="#{s.qualificationList.get(q).qualificationTypeName}">
+								<h:outputText value="#{s.qualificationList.get(q).value}"/>
+							</p:column>
+						</c:forEach>
+						
+				</p:dataTable>
+				</p:scrollPanel>
+			</div>
 		</p:panel>
 	</h:form>
 </f:view>

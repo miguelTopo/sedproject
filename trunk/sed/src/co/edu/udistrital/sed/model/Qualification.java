@@ -24,11 +24,27 @@ public class Qualification extends ASEDModel implements Serializable {
 	private Double value;
 
 	// Transient
-	private transient Long idStudent;
-	private transient Long idKnowledgeArea;
-	private transient String studentName;
-	private transient String subjectName;
-	private transient String knowledgeAreaName;
+	private Long idStudent;
+	private Long idKnowledgeArea;
+	private Long idPeriod;
+	private String studentName;
+	private String studentLastName;
+	private String studentIdentification;
+	private String subjectName;
+	private String knowledgeAreaName;
+	private String qualificationTypeName;
+
+	public Qualification() {
+		try {
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Qualification(Double value) {
+		this.value = value;
+	}
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -167,4 +183,40 @@ public class Qualification extends ASEDModel implements Serializable {
 		this.knowledgeAreaName = knowledgeAreaName;
 	}
 
+	@Transient
+	public String getStudentIdentification() {
+		return studentIdentification;
+	}
+
+	public void setStudentIdentification(String studentIdentification) {
+		this.studentIdentification = studentIdentification;
+	}
+
+	@Transient
+	public String getStudentLastName() {
+		return studentLastName;
+	}
+
+	public void setStudentLastName(String studentLastName) {
+		this.studentLastName = studentLastName;
+	}
+
+	@Transient
+	public String getQualificationTypeName() {
+		return qualificationTypeName;
+	}
+
+	public void setQualificationTypeName(String qualificationTypeName) {
+		this.qualificationTypeName = qualificationTypeName;
+	}
+
+	@Transient
+	public Long getIdPeriod() {
+		return idPeriod;
+	}
+
+	public void setIdPeriod(Long idPeriod) {
+		this.idPeriod = idPeriod;
+	}
+	
 }

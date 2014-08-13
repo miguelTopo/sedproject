@@ -20,34 +20,50 @@
 	</style>
 	<h:form id="calendarAssigmentForm">
 		<p:panel header="Carga Académica">
+			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole ne 1}">
+				<div>
+					<p>
+						Para consultar los horarios por favor seleccione el criterio de búsqueda y llene el formulario respectivo. 
+					</p>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq 1}">
 			<div>
 				<p>
-					Por favor seleccione el criterio por el que desea buscar. Puede seleccionar docente o por curso.
+					Mediante el siguiente modulo podrá almacenar la asignación académica de cada uno de los cursos. Para facilitar el proceso de inscripción puede realizar filtros por docente o por curso.
+				</p>
+				<p>
+					Si desea agregar una nueva asignación por favor de clic en el botón Agregar Asignación o de clic en alguna parte vacia del calendario.
 				</p>
 			</div>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq 1}">
+				<div style="text-align: right;padding-top: 25px;padding-bottom: 25px;">
+					<p:commandButton value="Agregar Asignación" action="#{assignmentBean.goAddAssignment}" oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>
+				</div>
+			</p:outputPanel>
 			<section id="calendarAssigmSection">
 				<article>
 					<table>
 						<tr>
 							<td style="width:50%">
-								Seleccione el criterio de filtro:			
+								Seleccione el criterio de búsqueda:			
 							</td>
 							<td style="width:50%">
 								<p:selectOneMenu value="#{assignmentBean.sheduleOption}" style="width:98%">
 									<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 									<f:selectItem itemValue="1" itemLabel="Docente"/>
 									<f:selectItem itemValue="2" itemLabel="Curso"/>
-									<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp"/>
+									<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp" listener="#{assignmentBean.cleanFilterParameter}"/>
 								</p:selectOneMenu>
 							</td>						
 						</tr>
 					</table>
 				</article>
 			</section>
-			
 			<p:outputPanel id="scheduleOptionOp">
-				
 					<p:outputPanel rendered="#{assignmentBean.sheduleOption eq 1}">
+				
 						<ui:include src="/WEB-INF/includes/assignment/teacherOption.xhtml"/>
 					</p:outputPanel>
 				
@@ -56,21 +72,28 @@
 					</p:outputPanel>
 				
 				</p:outputPanel>
-			
+				
 			<div>
-				<p:schedule id="assignmentSchedule" value="#{assignmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2" 
-					view="agendaWeek" showHeader="false" allDaySlot="false" widgetVar="assignmentScheduleWV" timeZone="America/Bogota" tooltip="true">
+				<p:schedule id="assignmentSchedule" value="#{assignmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2"
+					view="agendaWeek" showHeader="false" allDaySlot="false" widgetVar="assignmentScheduleWV" timeZone="America/Bogota" tooltip="true" 
+					draggable="#{assignmentBean.userSession.idSedRole eq 1}" resizable="#{assignmentBean.userSession.idSedRole eq 1}">
 			
-					
-					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>
-            		<p:ajax event="eventSelect" listener="#{assignmentBean.onEventSelect}"/>
-            		<p:ajax event="eventMove" listener="#{assignmentBean.onEventMove}"/>
-            		<p:ajax event="eventResize" listener="#{assignmentBean.onEventResize}"/> 
-			 
+					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()" 
+						update=":selectDateForm" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/>
+						
+            		<p:ajax event="eventSelect" listener="#{assignmentBean.onEventSelect}" oncomplete="PF('dlgSelectDateWV').show()" 
+            			update=":selectDateForm" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/>
+            			
+            		<p:ajax event="eventMove" listener="#{assignmentBean.onEventMove}" 
+            			oncomplete="PF('assignmentScheduleWV').update();addWarnResize();" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/>
+            			
+            		<p:ajax event="eventResize" listener="#{assignmentBean.onEventResize}" 
+            			oncomplete="PF('assignmentScheduleWV').update();addWarnResize();" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/> 
 			 
 				</p:schedule>
 			</div>
 		</p:panel>
+		<p:remoteCommand name="addWarnResize" action="#{assignmentBean.loadEventResizeWarn}" />
 	</h:form>
 	
 	<ui:include src="/WEB-INF/includes/assignment/assignmentDialog.xhtml"/>

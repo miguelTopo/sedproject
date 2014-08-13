@@ -10,12 +10,11 @@
 			filteredValue="#{studentQualificationBean.studentQualificationFilterList}">
 		
 			<p:column headerText="#{bundle['page.sed.labelKnowledgeArea']}" sortBy="#{q.knowledgeAreaName}" filterBy="#{q.knowledgeAreaName}" filterMatchMode="contains"
-				filterStyleClass="ui-table-filter" style="width:360px">
+				filterStyleClass="ui-table-filter">
 				<h:outputText value="#{q.knowledgeAreaName}"/>
 			</p:column>
 			
-			<p:column headerText="#{bundle['page.sed.labelSubject']}" sortBy="#{q.subjectName}" filterBy="#{q.subjectName}" filterMatchMode="contains" filterStyleClass="ui-table-filter"
-				style="width:150px">
+			<p:column headerText="#{bundle['page.sed.labelSubject']}" sortBy="#{q.subjectName}" filterBy="#{q.subjectName}" filterMatchMode="contains" filterStyleClass="ui-table-filter">
 				<h:outputText value="#{q.subjectName}"/>
 			</p:column>
 			
@@ -28,12 +27,14 @@
 			</c:forEach>
 			
 		</p:dataTable>
-		<div style="text-align:center; padding-top: 20px;">
-			<p:commandLink title="#{bundle['page.sq.labelDownloadQualification']}" ajax="false">
-				<p:graphicImage value="../css/icon/excel.png" height="40" width="40"/>
-				<p:dataExporter target="stdQualificationTable" type="xls" fileName="Mis notas" 
-					postProcessor="#{studentQualificationBean.handleDataExporter}"/>
-			</p:commandLink>
-		</div>
+		<p:outputLabel rendered="#{!empty studentQualificationBean.studentQualificationList}">
+			<div style="text-align:center; padding-top: 20px;">
+				<p:commandLink title="#{bundle['page.sq.labelDownloadQualification']}" ajax="false">
+					<p:graphicImage value="../css/icon/excel.png" height="40" width="40"/>
+					<p:dataExporter target="stdQualificationTable" type="xls" fileName="Mis notas" 
+						postProcessor="#{studentQualificationBean.handleDataExporter}"/>
+				</p:commandLink>
+			</div>
+		</p:outputLabel>
 </f:view>
 </html>

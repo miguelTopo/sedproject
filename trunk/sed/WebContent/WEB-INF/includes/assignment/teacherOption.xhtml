@@ -14,10 +14,11 @@
 						Docente:
 					</td>
 					<td style="width:78%">
-						<p:selectOneMenu filter="#{fn:length(assignmentBean.teacherList)>10 ? true : false}" filterMatchMode="startsWith" 
+						<p:selectOneMenu value="#{assignmentBean.assignmentFilter.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? true : false}" filterMatchMode="startsWith" 
 							style="width:98%">
 							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 							<f:selectItems value="#{assignmentBean.teacherList}" var="t" itemLabel="#{t.sedUserFullName}" itemValue="#{t.id}"/>
+							<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('assignmentScheduleWV').update();"/>
 						</p:selectOneMenu>
 					</td>		
 				</tr>

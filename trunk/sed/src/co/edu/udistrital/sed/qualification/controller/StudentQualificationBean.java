@@ -14,14 +14,13 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.ocpsoft.pretty.faces.annotation.URLMapping;
-
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
-import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.sed.model.Qualification;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.model.StudentQualification;
+
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
 @ViewScoped
@@ -31,25 +30,56 @@ public class StudentQualificationBean extends BackingBean {
 	// Primitives
 	private int activeIndex;
 
+	private Long idStudent;
+
 	// User List
 	List<StudentQualification> studentQualificationList;
 	List<StudentQualification> studentQualificationFilterList;
+	List<Student> studentResponsibleList;
 
 	// User Object
 	private Student student;
+	private Student studentSelected;
 	// Controller Object
 	private StudentQualificationController controller;
 
 	public StudentQualificationBean() throws Exception {
 		try {
+			this.controller = new StudentQualificationController();
 			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT)) {
-				this.controller = new StudentQualificationController();
 				this.student = this.controller.loadStudent(getUserSession().getId());
 				this.activeIndex = 0;
+				this.idStudent = this.student.getId();
 				handleTabChange();
+			} else if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
+				this.studentResponsibleList = this.controller.loadStudentResponsibleList(getUserSession().getIdSedUser());
+				for (Student s : this.studentResponsibleList)
+					System.out.println(s.getName() + " " + s.getLastName() + " " + s.getId());
 			}
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+
+	/** @author MTorres 7/8/2014 22:31:47 */
+	public void loadQualificationList() {
+		try {
+			this.student = null;
+			if (this.idStudent != null) {
+				Long idSedUser = null;
+				for (Student s : this.studentResponsibleList) {
+					if (s.getId().equals(this.idStudent)) {
+						idSedUser = s.getIdSedUser();
+						break;
+					}
+
+				}
+				this.student = this.controller.loadStudent(idSedUser);
+				handleTabChange();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -57,19 +87,23 @@ public class StudentQualificationBean extends BackingBean {
 	public void handleTabChange() {
 		try {
 			List<Qualification> qualificationStudentList = null;
+			this.studentQualificationList = null;
+			this.studentQualificationFilterList = null;
 			switch (this.activeIndex) {
 				case 0:
 					Calendar c = Calendar.getInstance();
-					qualificationStudentList = this.controller.loadQualificationListByStudent(getUserSession().getIdStudent(), c.get(Calendar.YEAR));
-
+					qualificationStudentList = this.controller.loadQualificationListByStudent(this.idStudent, c.get(Calendar.YEAR));
 				break;
 				case 1:
-					qualificationStudentList = this.controller.loadQualificationListByStudent(getUserSession().getIdStudent(), -1);
+					qualificationStudentList = this.controller.loadQualificationHistoricalList(this.idStudent);
 				break;
 				default:
 				break;
 			}
-			orderQualificationList(qualificationStudentList);
+			if (qualificationStudentList != null && !qualificationStudentList.isEmpty())
+				orderQualificationList(qualificationStudentList);
+			else
+				addInfoMessage("Calificaciones", "El estudiante aún no tiene notas registradas.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,11 +121,16 @@ public class StudentQualificationBean extends BackingBean {
 				List<Qualification> qualificationStdList = new ArrayList<Qualification>(getQualificationTypeList().size());
 				this.studentQualificationList = new ArrayList<StudentQualification>();
 
+				Long idPeriod = 0L;
+
 				for (Qualification q : qualificationList) {
 
 					Qualification qs = new Qualification();
 					qs.setValue(q.getValue());
 					qs.setIdQualificationType(q.getIdQualificationType());
+					idPeriod = q.getIdPeriod() != null && !q.getIdPeriod().equals(0L) ? q.getIdPeriod() : Long.valueOf(Calendar.getInstance()
+						.get(Calendar.YEAR));
+					qs.setIdPeriod(idPeriod);
 
 
 					if (idSubject.equals(0L)) {
@@ -101,7 +140,7 @@ public class StudentQualificationBean extends BackingBean {
 					if (idSubject.equals(q.getIdSubject())) {
 						qualificationStdList.add(qs);
 					} else if (!idSubject.equals(q.getIdSubject())) {
-						this.studentQualificationList.add(new StudentQualification(kaName, subjectName, qualificationStdList));
+						this.studentQualificationList.add(new StudentQualification(kaName, subjectName, qualificationStdList, qs.getIdPeriod()));
 						idSubject = q.getIdSubject();
 						qualificationStdList = null;
 						qualificationStdList = new ArrayList<Qualification>(getQualificationTypeList().size());
@@ -122,7 +161,7 @@ public class StudentQualificationBean extends BackingBean {
 				}
 
 				if (qualificationStdList != null && !qualificationStdList.isEmpty())
-					this.studentQualificationList.add(new StudentQualification(kaName, subjectName, qualificationStdList));
+					this.studentQualificationList.add(new StudentQualification(kaName, subjectName, qualificationStdList, idPeriod));
 
 				for (StudentQualification sq : this.studentQualificationList) {
 					int countMissing = 0;
@@ -181,8 +220,15 @@ public class StudentQualificationBean extends BackingBean {
 
 	}
 
+	/** @author MTorres 9/8/2014 12:12:39 */
 	public boolean getValidateSedUserRole() throws Exception {
-		return true;
+		if (getUserSession() != null) {
+			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT) || getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE))
+				return true;
+			else
+				return false;
+		}
+		return false;
 	}
 
 	public int getActiveIndex() {
@@ -215,6 +261,30 @@ public class StudentQualificationBean extends BackingBean {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+
+	public List<Student> getStudentResponsibleList() {
+		return studentResponsibleList;
+	}
+
+	public void setStudentResponsibleList(List<Student> studentResponsibleList) {
+		this.studentResponsibleList = studentResponsibleList;
+	}
+
+	public Student getStudentSelected() {
+		return studentSelected;
+	}
+
+	public void setStudentSelected(Student studentSelected) {
+		this.studentSelected = studentSelected;
+	}
+
+	public Long getIdStudent() {
+		return idStudent;
+	}
+
+	public void setIdStudent(Long idStudent) {
+		this.idStudent = idStudent;
 	}
 
 }

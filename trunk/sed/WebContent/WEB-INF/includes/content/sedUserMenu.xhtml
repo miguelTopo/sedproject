@@ -7,28 +7,17 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
 	<div style="width:100%">
-		<p:accordionPanel multiple="true">
+		<p:panelMenu>
 			<c:forEach begin="0" end="#{fn:length(loginBean.treeList)-1}" var="i">
-				<p:tab title="#{loginBean.treeList.get(i).name}">
+				<p:submenu label="#{loginBean.treeList.get(i).name}">
 					<c:forEach begin="0" end="#{fn:length(loginBean.treeList.get(i).leafTreeList)-1}" var="j">
-							<table>
-								<tr>
-									<td>
-										<a href="/sed#{loginBean.treeList.get(i).leafTreeList.get(j).urlPattern}">
-											<span class="#{loginBean.treeList.get(i).leafTreeList.get(j).iconClass}"/>											
-										</a>
-									</td>
-									<td>
-										<a href="/sed#{loginBean.treeList.get(i).leafTreeList.get(j).urlPattern}">
-											#{loginBean.treeList.get(i).leafTreeList.get(j).name}
-										</a>			
-									</td>
-								</tr>
-							</table>
+						<p:menuitem value="#{loginBean.treeList.get(i).leafTreeList.get(j).name}"
+							url="#{loginBean.treeList.get(i).leafTreeList.get(j).urlPattern}" icon="#{loginBean.treeList.get(i).leafTreeList.get(j).iconClass}">
+						</p:menuitem>
 					</c:forEach>
-				</p:tab>
-		</c:forEach>
-		</p:accordionPanel>
+				</p:submenu>
+			</c:forEach>
+		</p:panelMenu>
 	</div>
 </f:view>
 </html>

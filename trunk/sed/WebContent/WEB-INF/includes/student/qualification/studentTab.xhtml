@@ -2,10 +2,46 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
 
 	<p:panel header="Calificaciones">
+	
+	<p:outputPanel rendered="#{studentQualificationBean.userSession.idSedRole eq 4}">
+		<h:form id="responsibleStdForm">
+			<table>
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:20%"/>
+					<td style="width:50%"/>
+					<td style="width:20%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						Seleccione el estudiante:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{studentQualificationBean.idStudent}" style="width:98%">
+								<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
+								<f:selectItems value="#{studentQualificationBean.studentResponsibleList}" var="s" 
+									itemLabel="#{s.studentFullName}" itemValue="#{s.id}"/>
+							</p:selectOneMenu>
+					</td>
+					<td>
+						<p:commandButton value="Buscar" action="#{studentQualificationBean.loadQualificationList}" 
+								update=":studentQualificationOp"/>
+					</td>
+				</tr>
+			</table>
+		</h:form>
+	</p:outputPanel>
+	
+	
+	<p:outputPanel id="studentQualificationOp">
+	<p:outputPanel rendered="#{studentQualificationBean.student ne null and studentQualificationBean.qualificationTypeList ne null}">
 	<table style="width:100%;border-spacing:5px">
 		<tr>
 			<td style="width:5%"/>
@@ -84,6 +120,8 @@
 			</h:form>
 		</p:tab>
 	</p:tabView>
+	</p:outputPanel>
+	</p:outputPanel>
 	</p:panel>
 </f:view>
 </html>

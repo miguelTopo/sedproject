@@ -9,7 +9,7 @@ import java.util.TimeZone;
 public class ManageDate {
 
 	public static final String YYYY_MM_DD = "yyyy/MM/dd";
-	public static final String HH_MM_SS = "hh:mm:ss";
+	public static final String HH_MM_SS_24 = "HH:mm:ss";
 
 	public ManageDate() {
 
@@ -47,7 +47,7 @@ public class ManageDate {
 				c.set(Calendar.YEAR, Integer.parseInt(stringDate.substring(0, 4)));
 				c.set(Calendar.MONTH, Integer.parseInt(stringDate.substring(5, 7)) - 1);
 				c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(stringDate.substring(8, 10)));
-			} else if (format.equals(ManageDate.HH_MM_SS)) {
+			} else if (format.equals(ManageDate.HH_MM_SS_24)) {
 				c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(stringDate.substring(0, 2)));
 				c.set(Calendar.MINUTE, Integer.parseInt(stringDate.substring(3, 5)));
 			}

@@ -60,7 +60,7 @@ public class SedSession {
 	public static void deleteLoginSessionId(String idSession, String idUser) throws Exception {
 		try {
 			int index = -1;
-			if (idSession != null || idUser != null) {
+			if ((idSession != null || idUser != null) && listUserSession != null) {
 				for (int i = 0; i < listUserSession.size(); i++) {
 					User u = listUserSession.get(i);
 					if (u.getId().toString().equals(idUser) || u.getIdSession().equals(idSession)) {
@@ -70,7 +70,7 @@ public class SedSession {
 				}
 			}
 
-			if (index != -1 && index > -1)
+			if (index != -1 && index > -1 && listUserSession != null)
 				listUserSession.remove(index);
 
 		} catch (Exception e) {

@@ -49,7 +49,7 @@ public class AssignmentController extends Controller {
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();
-			dao.getSession().save(assignment);
+			dao.getSession().saveOrUpdate(assignment);
 			tx.commit();
 			return true;
 		} catch (Exception e) {
@@ -79,11 +79,58 @@ public class AssignmentController extends Controller {
 	}
 
 	/** @author MTorres 25/7/2014 23:02:51 */
-	public boolean validSpaceAvailability(Long idCourse, Long idDay, Date startDate, Date endDate) throws Exception {
+	public boolean validAvailability(Long idAssignment, Long idCourse, Long idDay, Date startDate, Date endDate, Long idSedUser) throws Exception {
+		AssignmentDAO dao = new AssignmentDAO();
+		try {
+			return dao.validAvailability(idAssignment, idCourse, idDay, startDate, endDate, idSedUser);
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+
+	}
+
+	/** @author MTorres 28/7/2014 23:49:28 */
+	public List<Assignment> loadAssignmentListByTeacher(Long idSedUser) throws Exception {
+		AssignmentDAO dao = new AssignmentDAO();
+		try {
+			return dao.loadAssignmentListByTeacher(idSedUser);
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+	}
+
+	/** @author MTorres 28/7/2014 23:59:26 */
+	public List<Assignment> loadAssignmentListByCourse(Long idCourse) throws Exception {
+		AssignmentDAO dao = new AssignmentDAO();
+		try {
+			return dao.loadAssignmentListByCourse(idCourse);
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+	}
+
+	/** @author MTorres 30/7/2014 23:23:06 */
+	public boolean deleteTeacherAssignment(Long idAssignment, String user) throws Exception{
 		AssignmentDAO dao = new AssignmentDAO();
 		Transaction tx = null;
+		boolean success = false;
 		try {
-			return dao.validSpaceAvailability(idCourse, idDay, startDate, endDate);
+			tx = dao.getSession().beginTransaction();
+			success = dao.deleteTeacherAssignment(idAssignment, user);
+			tx.commit();
+			return success;
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			if (tx != null && tx.isActive())
@@ -94,6 +141,6 @@ public class AssignmentController extends Controller {
 			dao = null;
 			tx = null;
 		}
-
 	}
+
 }

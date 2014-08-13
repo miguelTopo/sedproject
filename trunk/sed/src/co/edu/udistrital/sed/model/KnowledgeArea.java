@@ -1,12 +1,14 @@
 package co.edu.udistrital.sed.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,6 +22,17 @@ public class KnowledgeArea extends AParameter implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6012879919694289323L;
+
+	// Transient
+	private List<Subject> subjectList;
+
+	public KnowledgeArea() {
+		try {
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -87,6 +100,15 @@ public class KnowledgeArea extends AParameter implements Serializable {
 
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
+	}
+
+	@Transient
+	public List<Subject> getSubjectList() {
+		return subjectList;
+	}
+
+	public void setSubjectList(List<Subject> subjectList) {
+		this.subjectList = subjectList;
 	}
 
 }

@@ -40,7 +40,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	// User
 	private LoginController controller;
 
-	public LoginBean() throws Exception{
+	public LoginBean() throws Exception {
 		try {
 			this.controller = new LoginController();
 			if (getUserSession() == null) {
@@ -75,35 +75,38 @@ public class LoginBean extends BackingBean implements Serializable {
 					getUserSession().setIdSession(sessionId);
 					userSessionList = SedSession.getLoginUser(getUserSession().getId().toString());
 					getSession(false).setAttribute("user", getUserSession());
-
+					this.userName = null;
+					this.userPassword = null;
 					redirect("/portal/menu");
 				} else {
-					addWarnMessage("Ingresar", "Los datos de usuario y contrase�a no coinciden, por favor verifique e intente nuevamente.");
+					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
 					return;
 				}
 			} else
 				redirect("/portal/menu");
-
+			this.userName = null;
+			this.userPassword = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			setUserSession(null);
 		}
 	}
-	
-	/**@author MTorres*/
-	public void logout(){
+
+	public void sedUserLogout() {
 		try {
-			ManageCookie.removeCookieByName("uID");
-			ManageCookie.removeCookieByName("locate");
-			getSession(false).setAttribute("user", null);
-			redirectToLogin();
+			this.treeList = null;
+			this.userName = null;
+			this.userPassword = null;
+			logout();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**@author MTorres
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	private void addUserCookieList() throws Exception {
 		try {
 			ManageCookie.addCookie("uID", getUserSession().getId().toString(), 30, "user", true);
@@ -114,8 +117,10 @@ public class LoginBean extends BackingBean implements Serializable {
 		}
 	}
 
-	/** @author MTorres 
-	 * @throws Exception */
+	/**
+	 * @author MTorres
+	 * @throws Exception
+	 */
 	private boolean validateLoginData() throws Exception {
 		try {
 			if (this.userName == null || this.userName.trim().isEmpty()) {
