@@ -10,6 +10,7 @@ import org.hibernate.engine.spi.LoadQueryInfluencers;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
+import co.edu.udistrital.sed.api.IQualificationType;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.KnowledgeArea;
 import co.edu.udistrital.sed.model.Qualification;
@@ -17,6 +18,7 @@ import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Student;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.sed.report.api.IReport;
+import co.edu.udistrital.sed.util.QualificationUtil;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
@@ -59,12 +61,7 @@ public class ReportBean extends BackingBean implements IReport {
 				}
 				for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
 					for (Subject s : this.subjectGradeList) {
-
-						System.out.println("id area conocimiento:" + ka.getId());
-						System.out.println("id area conocimiento en subject:" + s.getIdKnowledgeArea());
 						if (s.getIdKnowledgeArea().equals(ka.getId())) {
-
-
 
 							if (ka.getSubjectList() == null)
 								ka.setSubjectList(new ArrayList<Subject>());
@@ -117,66 +114,36 @@ public class ReportBean extends BackingBean implements IReport {
 
 			// Cargar calificaciones de estudiantes en cursos
 			List<Qualification> qualificationList = this.controller.loadQualificationList(idStudentCourseList);
-			buildStudentQualificationList(qualificationList);
-			buildReport();
+
+			buildReport(qualificationList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/** @author MTorres 10/08/2014 4:41:07 p. m. */
-	private void buildStudentQualificationList(List<Qualification> qualificationList) throws Exception {
+	/**@author MTorres*/
+	public void handleReportDataExporter(Object o) {
 		try {
-			// Recorrido de estudiantes vs calificaciones para asignar las calificaciones
-			// pertinentes
-			for (Student s : this.studentList) {
-				s.setQualificationList(null);
 
-				List<Long> idQtStudentList = new ArrayList<Long>(getQualificationTypeList().size());
-
-				for (Qualification q : qualificationList) {
-					if (s.getIdStudentCourse().equals(q.getIdStudentCourse())) {
-						if (s.getQualificationList() == null)
-							s.setQualificationList(new ArrayList<Qualification>(getQualificationTypeList().size()));
-
-						s.getQualificationList().add(q);
-						idQtStudentList.add(q.getIdQualificationType());
-					}
-
-					if (s.getIdStudentCourse() > q.getIdStudentCourse())
-						break;
-				}
-
-				// Verificar si tiene tipo de calificacion, si no agregarla
-				for (QualificationType qt : getQualificationTypeList()) {
-					if (!idQtStudentList.contains(qt.getId())) {
-						if (s.getQualificationList() == null)
-							s.setQualificationList(new ArrayList<Qualification>(getQualificationTypeList().size()));
-
-						Qualification sq = new Qualification(0.0);
-						sq.setIdQualificationType(qt.getId());
-						sq.setQualificationTypeName(loadQualificationTypeById(qt.getId()).getName());
-						s.getQualificationList().add(sq);
-					}
-				}
-
-			}
-			System.out.println("Finalizando construccion de notas insertadas.");
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		}
 	}
+
 
 	/** @author MTorres 11/08/2014 10:54:56 p. m. */
-	private List<Qualification> buildTotalQualificationList() throws Exception {
+	private List<Qualification> buildTotalQualificationList(Subject subject, Student student) throws Exception {
 		try {
 			List<Qualification> qList = new ArrayList<Qualification>(getQualificationTypeList().size());
 			for (QualificationType qt : getQualificationTypeList()) {
 				Qualification q = new Qualification(0.0);
 				q.setIdQualificationType(qt.getId());
 				q.setQualificationTypeName(loadQualificationTypeById(qt.getId()).getName());
+				q.setIdKnowledgeArea(subject.getIdKnowledgeArea());
+				q.setIdStudentCourse(student.getIdStudentCourse());
+				q.setIdStudent(student.getId());
+				q.setIdSubject(subject.getId());
 				qList.add(q);
 			}
 			return qList;
@@ -186,28 +153,128 @@ public class ReportBean extends BackingBean implements IReport {
 	}
 
 	/** @author MTorres 11/08/2014 10:43:33 p. m. */
-	private void buildReport() throws Exception {
+	private void buildReport(List<Qualification> qualificationList) throws Exception {
 		try {
 			for (Student s : this.studentList) {
+				s.setQualificationList(null);
+				for (Qualification q : qualificationList) {
 
-				// Verificar las materias para los cuales el estudiante tiene calificaciones
-				List<Long> idPresenceSubjectList = new ArrayList<Long>();
-
-				for (Qualification q : s.getQualificationList()) {
-					if (!idPresenceSubjectList.contains(q.getIdSubject()))
-						idPresenceSubjectList.add(q.getIdSubject());
-				}
-
-				// Cargar notas faltantes del estudiante a 0
-				for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
-					for (Subject sj : ka.getSubjectList()) {
-						if (!idPresenceSubjectList.contains(sj.getId())) {
-							s.setQualificationList(buildTotalQualificationList());
-						}
-					}
+					if (s.getIdStudentCourse().equals(q.getIdStudentCourse())) {
+						s.getQualificationTmpList().add(q);
+					} else if (q.getIdStudentCourse().intValue() > s.getIdStudentCourse().intValue())
+						break;
 				}
 			}
-			System.out.println("finalizando la construccion");
+
+			List<Long> idQualificationTypeList = null;
+			Long idSubject = 0L;
+
+			// Aca se verifica las notas y tipos de notas que tiene cada estudiante.
+
+			for (Student s : this.studentList) {
+				idQualificationTypeList = null;
+				idQualificationTypeList = new ArrayList<Long>(getQualificationTypeList().size());
+
+				int count = 0;
+
+				for (Qualification q : s.getQualificationTmpList()) {
+					count++;
+
+					if (!idSubject.equals(0L) && (q.getIdSubject().intValue() > idSubject.intValue())) {
+						QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
+						s.getQualificationUtilList().add(qu);
+						s.getIdSubjectList().add(idSubject);
+						idQualificationTypeList = new ArrayList<Long>(getQualificationTypeList().size());
+					}
+
+					idSubject = q.getIdSubject();
+
+					if (q.getIdStudentCourse().equals(s.getIdStudentCourse()))
+						idQualificationTypeList.add(q.getIdQualificationType());
+
+					if (count == s.getQualificationTmpList().size() && idQualificationTypeList != null && !idQualificationTypeList.isEmpty()) {
+						QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
+						s.getQualificationUtilList().add(qu);
+						s.getIdSubjectList().add(idSubject);
+					}
+
+
+
+				}
+			}
+
+			// Agregar Calificaciones pendientes y calificaciones presentes.
+
+			for (Subject sb : this.subjectGradeList) {
+
+				for (Student s : this.studentList) {
+
+					if (s.getIdSubjectList().contains(sb.getId())) {
+
+						for (QualificationUtil qu : s.getQualificationUtilList()) {
+
+							if (sb.getId().equals(qu.getIdSubject())) {
+
+								for (QualificationType qt : getQualificationTypeList()) {
+
+									// Validando cual es la calificacion final
+									if (qt.getId().equals(IQualificationType.CF))
+										s.getQualificationList().add(validateFinalQualification(s.getQualificationList(), sb, s));
+
+									else if (!qu.getIdQualficationTypeList().contains(qt.getId())) {
+										Qualification qualification = new Qualification();
+										qualification.setValue(0D);
+										qualification.setIdSubject(sb.getId());
+										qualification.setIdStudentCourse(s.getIdStudentCourse());
+										qualification.setIdStudent(s.getId());
+										qualification.setIdKnowledgeArea(sb.getIdKnowledgeArea());
+										qualification.setIdQualificationType(qt.getId());
+										s.getQualificationList().add(qualification);
+									} else {
+
+										for (Qualification q : s.getQualificationTmpList()) {
+											if (q.getIdQualificationType().equals(qt.getId()) && q.getIdSubject().equals(sb.getId())) {
+												s.getQualificationList().add(q);
+												break;
+											}
+
+										}
+									}
+
+								}
+
+							}
+						}
+
+					} else
+						s.getQualificationList().addAll(buildTotalQualificationList(sb, s));
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/** @author */
+	private Qualification validateFinalQualification(List<Qualification> qualificationList, Subject sb, Student s) throws Exception {
+		try {
+			Qualification qualification = new Qualification();
+			qualification.setValue(0D);
+			qualification.setIdSubject(sb.getId());
+			qualification.setIdStudentCourse(s.getIdStudentCourse());
+			qualification.setIdStudent(s.getId());
+			qualification.setIdKnowledgeArea(sb.getIdKnowledgeArea());
+			qualification.setIdQualificationType(IQualificationType.CF);
+
+			for (Qualification q : qualificationList) {
+				if (q.getIdSubject().intValue() > sb.getId().intValue())
+					break;
+				if (q.getValue() != null && !q.getValue().equals(0D) && q.getIdSubject().equals(sb.getId()))
+					qualification.setValue(q.getValue());
+			}
+			return qualification;
 		} catch (Exception e) {
 			throw e;
 		}

@@ -165,9 +165,14 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" s.identification AS identification, ");
 			hql.append(" s.name AS name, ");
 			hql.append(" s.lastName AS lastName, ");
-			hql.append(" sc.id AS idStudentCourse ");
-			hql.append(" FROM Student s, StudentCourse sc ");
+			hql.append(" sc.id AS idStudentCourse, ");
+			hql.append(" c.id AS idCourse, ");
+			hql.append(" c.name AS courseName ");
+			hql.append(" FROM Student s,  ");
+			hql.append(" StudentCourse sc, ");
+			hql.append(" Course c ");
 			hql.append(" WHERE s.id = sc.idStudent ");
+			hql.append(" AND sc.idCourse = c.id ");
 			hql.append(" AND sc.idCourse IN(:idCourseList) ");
 			hql.append(" AND sc.idPeriod = :year ");
 			hql.append(" AND s.state = :state ");
