@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
 import co.edu.udistrital.core.common.model.AParameter;
+import co.edu.udistrital.sed.util.QualificationUtil;
 
 @Entity
 @Table(name = "student")
@@ -38,8 +39,11 @@ public class Student extends AParameter implements Serializable {
 
 
 	private List<Integer> invalidColumn;
+	private List<Long> idSubjectList;
 	private List<Qualification> qualificationList;
+	private List<Qualification> qualificationTmpList;
 	private List<KnowledgeArea> knowledgeAreaList;
+	private List<QualificationUtil> qualificationUtilList;
 
 	public Student() {
 		try {
@@ -203,6 +207,8 @@ public class Student extends AParameter implements Serializable {
 
 	@Transient
 	public List<Qualification> getQualificationList() {
+		if (this.qualificationList == null)
+			this.qualificationList = new ArrayList<Qualification>();
 		return this.qualificationList;
 	}
 
@@ -272,4 +278,40 @@ public class Student extends AParameter implements Serializable {
 	public void setKnowledgeAreaList(List<KnowledgeArea> knowledgeAreaList) {
 		this.knowledgeAreaList = knowledgeAreaList;
 	}
+
+	@Transient
+	public List<QualificationUtil> getQualificationUtilList() {
+		if (qualificationUtilList == null)
+			qualificationUtilList = new ArrayList<QualificationUtil>();
+		return qualificationUtilList;
+	}
+
+	public void setQualificationUtilList(List<QualificationUtil> qualificationUtilList) {
+		this.qualificationUtilList = qualificationUtilList;
+	}
+
+	@Transient
+	public List<Long> getIdSubjectList() {
+		if (idSubjectList == null)
+			idSubjectList = new ArrayList<Long>();
+		return idSubjectList;
+	}
+
+	public void setIdSubjectList(List<Long> idSubjectList) {
+		this.idSubjectList = idSubjectList;
+	}
+
+	@Transient
+	public List<Qualification> getQualificationTmpList() {
+		if (qualificationTmpList == null)
+			qualificationTmpList = new ArrayList<Qualification>();
+		return qualificationTmpList;
+	}
+
+
+
+	public void setQualificationTmpList(List<Qualification> qualificationTmpList) {
+		this.qualificationTmpList = qualificationTmpList;
+	}
+
 }

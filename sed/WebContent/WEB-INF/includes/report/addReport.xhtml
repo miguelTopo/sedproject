@@ -23,19 +23,24 @@
 								</p:selectOneMenu>								
 							</td>
 							<td>
-								<p:commandButton value="Ver Notas" action="#{reportBean.loadReportQualificationList}" update=":sedReportForm:reportTable"/>
+								<p:commandButton value="Ver Notas" action="#{reportBean.loadReportQualificationList}" update=":sedReportForm:reportStudentOp" 
+									onstart="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();"/>
 							</td>
 							<td style="width:20%"/>
 						</tr>
 					</table>
 				</article>
 			</section>
-			<div>
+			
+			<p:outputPanel id="reportStudentOp">
+				<p:outputPanel rendered="#{!empty reportBean.studentList}">
+				<div>
 				<p:scrollPanel mode="native" style="width:100%;border-style:none;">
 				<p:dataTable id="reportTable" value="#{reportBean.studentList}" var="s" style="width:#{fn:length(reportBean.knowledgeAreaGradeList)*800}px;">
 						
 						<p:columnGroup type="header">
             				<p:row>
+            					<p:column rowspan="4" headerText="Curso" style="width:50px;text-align:center;" />
                 				<p:column rowspan="4" headerText="Apellidos" style="width:200px;" />
                 				<p:column rowspan="4" headerText="Nombres" style="width:200px;" />
                 				<p:column rowspan="4" headerText="Identificación" style="width:100px;" />
@@ -64,7 +69,10 @@
             					</c:forEach>
             				</p:row>
         				</p:columnGroup>
-										
+						
+						<p:column>
+							<h:outputText value="#{s.courseName}"/>
+						</p:column>
 						<p:column>
 							<h:outputText value="#{s.lastName}"/>
 						</p:column>
@@ -75,15 +83,26 @@
 							<h:outputText value="#{s.identification}"/>
 						</p:column>
 						
-						<c:forEach begin="0" end="#{fn:length(s.qualificationList)-1}" var="q">
-							<p:column headerText="#{s.qualificationList.get(q).qualificationTypeName}">
-								<h:outputText value="#{s.qualificationList.get(q).value}"/>
+						<c:forEach begin="0" end="#{(fn:length(reportBean.subjectList))*4-1}" var="q">
+							<p:column style="text-align:center">
+								<h:outputText value="#{s.qualificationList.get(q).value}">
+									<f:convertNumber currencySymbol="" groupingUsed="#{true}" maxFractionDigits="0" type="currency" locale="es_CO"/>
+								</h:outputText>	
 							</p:column>
 						</c:forEach>
 						
 				</p:dataTable>
 				</p:scrollPanel>
 			</div>
+			<div style="text-align:center;padding-top: 20px;">
+				<p:commandLink title="#{bundle['page.sq.labelDownloadQualification']}" ajax="false">
+					<p:graphicImage value="../css/icon/excel.png" height="40" width="40"/>
+					<p:dataExporter target="reportTable" type="xls" fileName="ReporteGeneral" 
+						postProcessor="#{reportBean.handleReportDataExporter}"/>
+				</p:commandLink>
+			</div>
+			</p:outputPanel>
+			</p:outputPanel>
 		</p:panel>
 	</h:form>
 </f:view>

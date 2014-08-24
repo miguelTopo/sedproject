@@ -14,7 +14,7 @@ public class SubjectDAO extends HibernateDAO {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
-			hql.append(" FROM Subject s WHERE s.state > 0 ORDER BY s.orderSheet ");
+			hql.append(" FROM Subject s WHERE s.state > 0 ORDER BY s.id ");
 			qo = getSession().createQuery(hql.toString());
 			return qo.list();
 		} catch (Exception e) {
