@@ -1,12 +1,31 @@
 package co.edu.udistrital.sed.report.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.model.NilPICFAndBinData;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.util.IOUtils;
 import org.hibernate.engine.spi.LoadQueryInfluencers;
+import org.primefaces.context.ApplicationContext;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
@@ -37,6 +56,8 @@ public class ReportBean extends BackingBean implements IReport {
 
 	// Controller
 	private ReportController controller;
+
+	private Workbook wb;
 
 	/** @author MTorres 10/08/2014 3:52:21 p. m. */
 	public ReportBean() throws Exception {
@@ -122,15 +143,172 @@ public class ReportBean extends BackingBean implements IReport {
 		}
 	}
 
-	/**@author MTorres*/
+	public static void main(String[] args) {
+		File f = new File("/home/torres/workspace/sed/WebContent/css/images/logoSed.png");
+		if (f.exists()) {
+			System.out.println("esto al parcer existe");
+		} else {
+			System.out.println("no guey");
+		}
+	}
+
+	/** @author MTorres */
+	private Sheet buildHeaderReport(String sheetName) throws Exception {
+		try {
+			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+
+			Sheet sheet = this.wb.createSheet(sheetName);
+			// rowFrom, rowTo, colFrom, colTo
+			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 1));
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 26));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 2, 26));
+
+			sheet.addMergedRegion(new CellRangeAddress(2, 2, 3, 12));
+			sheet.addMergedRegion(new CellRangeAddress(2, 2, 14, 25));
+			sheet.addMergedRegion(new CellRangeAddress(2, 2, 27, 34));
+
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 3, 12));
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 14, 25));
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 27, 34));
+
+			Row titleRow = sheet.createRow((short) 0);
+			Cell cell = titleRow.createCell(2);
+			cell.setCellValue("SECRETARIA DE EDUCACIÓN DISTRITAL");
+
+			Row schoolRow = sheet.createRow((short) 1);
+			cell = schoolRow.createCell(2);
+			cell.setCellValue("COLEGIO LICEO FEMENINO MERCEDES NARIÑO");
+
+			Row data1 = sheet.createRow((short) 2);
+			cell = data1.createCell(2);
+			cell.setCellValue("SEDE");
+
+			cell = data1.createCell(13);
+			cell.setCellValue("JORNADA");
+
+			cell = data1.createCell(26);
+			cell.setCellValue("GRUPO");
+
+			Row data2 = sheet.createRow((short) 3);
+			cell = data2.createCell(2);
+			cell.setCellValue("GRUPO");
+
+			cell = data2.createCell(13);
+			cell.setCellValue("PERIODO");
+
+			cell = data2.createCell(26);
+			cell.setCellValue("DIRECTOR DE GRUPO");
+
+
+			// Paint Image header
+			InputStream inputStream = new FileInputStream(context.getRealPath("/") + "css/images/bogotaShield.png");
+
+			byte[] bytes = IOUtils.toByteArray(inputStream);
+			int pictureIdx = this.wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+			inputStream.close();
+
+			CreationHelper helper = this.wb.getCreationHelper();
+
+			Drawing drawing = sheet.createDrawingPatriarch();
+
+			ClientAnchor anchor = helper.createClientAnchor();
+			anchor.setCol1(1);
+			anchor.setRow1(2);
+
+			Picture picture = drawing.createPicture(anchor, pictureIdx);
+			picture.resize();
+
+			return sheet;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/** @author MTorres */
 	public void handleReportDataExporter(Object o) {
 		try {
+			this.wb = (Workbook) o;
+			if (this.wb != null) {
+				Long idCourse = 0L;
+				List<String> sheetNameList = new ArrayList<String>();
 
+				// int index=
+				Sheet gradeSheet;
+				for (Student s : this.studentList) {
+
+					if (idCourse == null || idCourse.equals(0L)) {
+						idCourse = s.getIdCourse();
+					}
+
+					// Verificar que no exista la hoja en el documento, puesto que genera error
+					if (!sheetNameList.contains(s.getCourseName())) {
+						sheetNameList.add(s.getCourseName());
+						gradeSheet = buildHeaderReport(s.getCourseName());
+						gradeSheet = buildHeaderTable(gradeSheet, s.getQualificationUtilList());
+					}
+
+
+
+				}
+
+
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private Sheet buildHeaderTable(Sheet sheet, List<QualificationUtil> qualificationUtilList) throws Exception {
+		try {
+			Row rowHeader = sheet.createRow((short) 6);
+			Row rowSubject = sheet.createRow((short) 7);
+			Row rowQualificationType = sheet.createRow((short) 8);
+
+			Cell cell = rowHeader.createCell(0);
+			cell.setCellValue("No.");
+
+			cell = rowHeader.createCell(1);
+			cell.setCellValue("Identificación");
+
+			cell = rowHeader.createCell(13);
+			cell.setCellValue("Estudiante");
+
+			cell = rowHeader.createCell(26);
+			cell.setCellValue("Puesto");
+
+			int indexHeader = 26;
+			int indexSubject = 26;
+			int indexQt = 27;
+			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
+				cell = rowHeader.createCell(indexHeader + 1);
+				cell.setCellValue(ka.getName());
+				// rowFrom, rowTo, colFrom, colTo
+				int finalIndex = (indexHeader + (getQualificationTypeList().size() * ka.getSubjectList().size()));
+				sheet.addMergedRegion(new CellRangeAddress(rowHeader.getRowNum(), rowHeader.getRowNum(), indexHeader + 1, finalIndex));
+				indexHeader = finalIndex;
+
+				for (Subject s : ka.getSubjectList()) {
+					cell = rowSubject.createCell(indexSubject + 1);
+					cell.setCellValue(s.getName());
+					int finalSubIndex = indexSubject + getQualificationTypeList().size();
+					sheet.addMergedRegion(new CellRangeAddress(rowSubject.getRowNum(), rowSubject.getRowNum(), indexSubject + 1, finalSubIndex));
+					indexSubject = finalSubIndex;
+
+					for (QualificationType qt : getQualificationTypeList()) {
+						cell = rowQualificationType.createCell(indexQt);
+						cell.setCellValue(qt.getName());
+						indexQt++;
+					}
+				}
+			}
+			return sheet;
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
 
 	/** @author MTorres 11/08/2014 10:54:56 p. m. */
 	private List<Qualification> buildTotalQualificationList(Subject subject, Student student) throws Exception {
