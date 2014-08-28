@@ -12,11 +12,16 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hwpf.model.NilPICFAndBinData;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -156,7 +161,6 @@ public class ReportBean extends BackingBean implements IReport {
 	private Sheet buildHeaderReport(String sheetName) throws Exception {
 		try {
 			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-
 			Sheet sheet = this.wb.createSheet(sheetName);
 			// rowFrom, rowTo, colFrom, colTo
 			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 1));
@@ -171,34 +175,80 @@ public class ReportBean extends BackingBean implements IReport {
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 14, 25));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 27, 34));
 
+
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 1, 12));
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 13, 25));
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 26, 26));
+
+			// /////Title Style
+			Font title = this.wb.createFont();
+			title.setFontHeightInPoints((short) 20);
+			title.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+			CellStyle titleStyle = this.wb.createCellStyle();
+			titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
+			titleStyle.setFont(title);
+
+			// /////Subtitle Style
+			Font subtitle = this.wb.createFont();
+			subtitle.setFontHeightInPoints((short) 15);
+			title.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+			CellStyle subtitleStyle = this.wb.createCellStyle();
+			subtitleStyle.setAlignment(CellStyle.ALIGN_CENTER);
+			subtitleStyle.setFont(subtitle);
+
+			// /////Info Style
+
+			Font info = this.wb.createFont();
+			info.setFontHeightInPoints((short) 10);
+
+			CellStyle infoStyle = this.wb.createCellStyle();
+			infoStyle.setAlignment(CellStyle.ALIGN_CENTER);
+			infoStyle.setFont(info);
+			infoStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.index);
+			infoStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			// ////////////////////////
+
+
 			Row titleRow = sheet.createRow((short) 0);
+			titleRow.setHeightInPoints(23);
 			Cell cell = titleRow.createCell(2);
 			cell.setCellValue("SECRETARIA DE EDUCACIÓN DISTRITAL");
+			cell.setCellStyle(titleStyle);
 
 			Row schoolRow = sheet.createRow((short) 1);
+			schoolRow.setHeightInPoints(18);
 			cell = schoolRow.createCell(2);
 			cell.setCellValue("COLEGIO LICEO FEMENINO MERCEDES NARIÑO");
+			cell.setCellStyle(subtitleStyle);
 
 			Row data1 = sheet.createRow((short) 2);
 			cell = data1.createCell(2);
 			cell.setCellValue("SEDE");
+			cell.setCellStyle(infoStyle);
 
 			cell = data1.createCell(13);
 			cell.setCellValue("JORNADA");
+			cell.setCellStyle(infoStyle);
 
 			cell = data1.createCell(26);
 			cell.setCellValue("GRUPO");
+			cell.setCellStyle(infoStyle);
 
 			Row data2 = sheet.createRow((short) 3);
 			cell = data2.createCell(2);
 			cell.setCellValue("GRUPO");
+			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(13);
 			cell.setCellValue("PERIODO");
+			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(26);
 			cell.setCellValue("DIRECTOR DE GRUPO");
-
+			cell.setCellStyle(infoStyle);
 
 			// Paint Image header
 			InputStream inputStream = new FileInputStream(context.getRealPath("/") + "css/images/bogotaShield.png");
@@ -233,8 +283,8 @@ public class ReportBean extends BackingBean implements IReport {
 				Long idCourse = 0L;
 				List<String> sheetNameList = new ArrayList<String>();
 
-				// int index=
-				Sheet gradeSheet;
+				Sheet gradeSheet = null;
+				int studentSheetIndex = 9;
 				for (Student s : this.studentList) {
 
 					if (idCourse == null || idCourse.equals(0L)) {
@@ -247,16 +297,49 @@ public class ReportBean extends BackingBean implements IReport {
 						gradeSheet = buildHeaderReport(s.getCourseName());
 						gradeSheet = buildHeaderTable(gradeSheet, s.getQualificationUtilList());
 					}
-
-
-
+					gradeSheet = buildStudentDataRow(gradeSheet, s, studentSheetIndex);
+					studentSheetIndex++;
 				}
 
-
-
+				wb.removeSheetAt(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	/** @author MTorres */
+	private Sheet buildStudentDataRow(Sheet sheet, Student s, int index) throws Exception {
+		try {
+			Row studentRow = sheet.createRow(index);
+			Cell cell = studentRow.createCell(0);
+			cell.setCellValue("No");
+
+			cell = studentRow.createCell(1);
+			cell.setCellValue(s.getIdentification());
+
+			cell = studentRow.createCell(13);
+			cell.setCellValue(s.getLastName() + " " + s.getName());
+
+			cell = studentRow.createCell(26);
+			cell.setCellValue("Puesto");
+			// rowFrom, rowTo, colFrom, colTo
+			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 12));
+			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 13, 25));
+
+
+			int indexQ = 27;
+
+			for (Qualification q : s.getQualificationList()) {
+				cell = studentRow.createCell(indexQ);
+				cell.setCellValue(q.getValue());
+				indexQ++;
+			}
+			// crear area de columnas 1, 12; 13, 25
+			return sheet;
+
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
@@ -265,17 +348,34 @@ public class ReportBean extends BackingBean implements IReport {
 			Row rowHeader = sheet.createRow((short) 6);
 			Row rowSubject = sheet.createRow((short) 7);
 			Row rowQualificationType = sheet.createRow((short) 8);
+			
+			//CellStyle
+			Font f = this.wb.createFont();
+			f.setBoldweight((short)2);
+			CellStyle headerInfoStyle = this.wb.createCellStyle();
+			headerInfoStyle.setAlignment(CellStyle.ALIGN_CENTER);
+			headerInfoStyle.setBorderBottom((short)1);
+			headerInfoStyle.setBorderLeft((short)1);
+			headerInfoStyle.setBorderRight((short)1);
+			headerInfoStyle.setBorderTop((short)1);
+			headerInfoStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.index);
+			headerInfoStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+//			headerInfoStyle.setFont(arg0);
 
 			Cell cell = rowHeader.createCell(0);
+			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("No.");
 
 			cell = rowHeader.createCell(1);
+			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("Identificación");
 
 			cell = rowHeader.createCell(13);
+			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("Estudiante");
 
 			cell = rowHeader.createCell(26);
+			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("Puesto");
 
 			int indexHeader = 26;
@@ -284,6 +384,7 @@ public class ReportBean extends BackingBean implements IReport {
 			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
 				cell = rowHeader.createCell(indexHeader + 1);
 				cell.setCellValue(ka.getName());
+				cell.setCellStyle(headerInfoStyle);
 				// rowFrom, rowTo, colFrom, colTo
 				int finalIndex = (indexHeader + (getQualificationTypeList().size() * ka.getSubjectList().size()));
 				sheet.addMergedRegion(new CellRangeAddress(rowHeader.getRowNum(), rowHeader.getRowNum(), indexHeader + 1, finalIndex));
@@ -291,6 +392,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 				for (Subject s : ka.getSubjectList()) {
 					cell = rowSubject.createCell(indexSubject + 1);
+					cell.setCellStyle(headerInfoStyle);
 					cell.setCellValue(s.getName());
 					int finalSubIndex = indexSubject + getQualificationTypeList().size();
 					sheet.addMergedRegion(new CellRangeAddress(rowSubject.getRowNum(), rowSubject.getRowNum(), indexSubject + 1, finalSubIndex));
@@ -298,6 +400,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 					for (QualificationType qt : getQualificationTypeList()) {
 						cell = rowQualificationType.createCell(indexQt);
+						cell.setCellStyle(headerInfoStyle);
 						cell.setCellValue(qt.getName());
 						indexQt++;
 					}
