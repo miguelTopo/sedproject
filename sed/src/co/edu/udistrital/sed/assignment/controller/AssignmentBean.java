@@ -669,10 +669,10 @@ public class AssignmentBean extends BackingBean {
 	public boolean getValidateSedUserRole() throws Exception {
 		try {
 			if (getUserSession() != null) {
-				if (getUserSession().getIdSedRoleUser().equals(ISedRole.ADMINISTRATOR)
-					|| getUserSession().getIdSedRoleUser().equals(ISedRole.STUDENT)
-					|| getUserSession().getIdSedRoleUser().equals(ISedRole.STUDENT_RESPONSIBLE)
-					|| getUserSession().getIdSedRoleUser().equals(ISedRole.TEACHER))
+				if (getUserSession().getIdSedRole().equals(ISedRole.ADMINISTRATOR)
+					|| getUserSession().getIdSedRole().equals(ISedRole.STUDENT)
+					|| getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)
+					|| getUserSession().getIdSedRole().equals(ISedRole.TEACHER))
 					return true;
 				else
 					return false;

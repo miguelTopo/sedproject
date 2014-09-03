@@ -29,9 +29,6 @@ public class LoginBean extends BackingBean implements Serializable {
 	 */
 	private static final long serialVersionUID = -7559214049695375492L;
 
-	private boolean validLogin;
-
-
 	// Simple Java Data Object
 	private String userName;
 	private String userPassword;
@@ -46,7 +43,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	public LoginBean() throws Exception {
 		try {
 			this.controller = new LoginController();
-			validLogin = false;
+			this.validLogin = false;
 			if (getUserSession() == null) {
 				redirect("/portal/login");
 			}
@@ -66,18 +63,18 @@ public class LoginBean extends BackingBean implements Serializable {
 			String idSession = getSession(false).getId();
 			setUserSession(this.controller.validateSedUser(this.userName, this.userPassword));
 
-
 			if (getUserSession() != null) {
+				System.out.println("INGRESO CON USUARIO " + getUserSession().getName() + " ROL " + getUserSession().getIdSedRole());
 				addUserCookieList();
 				this.validLogin = true;
-				
+
 				this.treeList = loadTreeListByRole(getUserSession().getIdSedRole());
 				getUserSession().setIdSession(idSession);
 
 				this.userName = null;
 				this.userPassword = null;
 
-				addInfoMessage("Bienvenid@", this.userName);
+				addInfoMessage("Bienvenid@", getUserSession().getName() + " " + getUserSession().getLastName());
 			} else {
 				this.validLogin = false;
 				addWarnMessage("Iniciar Sesión", "Las Credenciales usadas son inválidas.");
@@ -86,15 +83,13 @@ public class LoginBean extends BackingBean implements Serializable {
 			getRequestContext().addCallbackParam("isLogin", this.validLogin);
 			if (validLogin)
 				getRequestContext().addCallbackParam("view", "menu");
-
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			setUserSession(null);
 		}
 	}
 
+	/** @author MTorres 2/9/2014 20:21:48 */
 	public void sedUserLogout() {
 		try {
 			this.treeList = null;
