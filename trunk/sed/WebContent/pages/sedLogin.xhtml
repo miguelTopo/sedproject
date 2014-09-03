@@ -8,9 +8,19 @@
 <f:view>
 	<h:head>
 		<link rel="stylesheet" type="text/css" href="../css/sedStyle.css" />
-		<f:loadBundle
-			basename="co.edu.udistrital.core.common.util.resource.webMessages"
-			var="bundle" />
+		<f:loadBundle basename="co.edu.udistrital.core.common.util.resource.webMessages" var="bundle" />
+		
+		<script type="text/javascript">
+		  //<![CDATA[
+		  function loginUserValidate(xhr, status, args) {
+	    		if (!args.validationFailed && args.isLogin) {
+	      		setTimeout(function() {
+	        	window.location = args.view;
+	      	}, 500);
+	    	}
+	  		}
+		//]]>
+		</script>
 	</h:head>
 	<h:body>
 		<h:form id="loginForm">
@@ -25,8 +35,7 @@
 			<div id="sedHeader" align="center">
 				<table>
 					<tr>
-						<td><p:graphicImage value="../css/images/bogotaShield.png"
-								height="85" width="70" /></td>
+						<td><p:graphicImage value="../css/images/bogotaShield.png" height="85" width="70" /></td>
 						<td><p:graphicImage value="../css/images/logoSed.png" /></td>
 					</tr>
 				</table>
@@ -64,7 +73,7 @@
 
 						<div align="center">
 							<p:commandButton value="#{bundle['page.login.labelSignIn']}" styleClass="ui-priority-primary"
-								action="#{loginBean.validateSedUser}" update=":loginForm:growl" />
+								actionListener="#{loginBean.login}" update=":loginForm:growl" oncomplete="loginUserValidate(xhr, status, args)" />
 						</div>
 						<div style="padding:20px;">
 							<a href="recuperar">
@@ -75,6 +84,9 @@
 					</p:panel>
 				</div>
 			</div>
+			
+			
+			
 		</h:form>
 	</h:body>
 </f:view>

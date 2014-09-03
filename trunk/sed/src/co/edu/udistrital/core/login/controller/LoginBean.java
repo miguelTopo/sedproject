@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.context.RequestContext;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.controller.ManageCookie;
@@ -26,8 +29,8 @@ public class LoginBean extends BackingBean implements Serializable {
 	 */
 	private static final long serialVersionUID = -7559214049695375492L;
 
-	// Primitives
-	private boolean uniqueEnter;
+	private boolean validLogin;
+
 
 	// Simple Java Data Object
 	private String userName;
@@ -43,6 +46,7 @@ public class LoginBean extends BackingBean implements Serializable {
 	public LoginBean() throws Exception {
 		try {
 			this.controller = new LoginController();
+			validLogin = false;
 			if (getUserSession() == null) {
 				redirect("/portal/login");
 			}
@@ -52,40 +56,39 @@ public class LoginBean extends BackingBean implements Serializable {
 		}
 	}
 
-
 	/** @author MTorres */
-	public void validateSedUser() {
+	public void login(ActionEvent actionEvent) {
 		try {
+			this.treeList = null;
 			if (!validateLoginData())
 				return;
 
-			if (getUserSession() == null) {
-				String sessionId = getSession(false).getId();
-				setUserSession(this.controller.validateSedUser(this.userName, this.userPassword));
-				User u = getUserSession();
+			String idSession = getSession(false).getId();
+			setUserSession(this.controller.validateSedUser(this.userName, this.userPassword));
 
 
-				if (getUserSession() != null) {
-					System.out.println(u.getSedRoleName() + u.getIdSedRoleUser());
-					addUserCookieList();
-					this.treeList = null;
-					this.treeList = loadTreeListByRole(getUserSession().getIdSedRole());
+			if (getUserSession() != null) {
+				addUserCookieList();
+				this.validLogin = true;
+				
+				this.treeList = loadTreeListByRole(getUserSession().getIdSedRole());
+				getUserSession().setIdSession(idSession);
 
-					setUniqueEnter(true);
-					getUserSession().setIdSession(sessionId);
-					userSessionList = SedSession.getLoginUser(getUserSession().getId().toString());
-					getSession(false).setAttribute("user", getUserSession());
-					this.userName = null;
-					this.userPassword = null;
-					redirect("/portal/menu");
-				} else {
-					addWarnMessage("Ingresar", "Los datos de usuario y contraseña no coinciden, por favor verifique e intente nuevamente.");
-					return;
-				}
-			} else
-				redirect("/portal/menu");
-			this.userName = null;
-			this.userPassword = null;
+				this.userName = null;
+				this.userPassword = null;
+
+				addInfoMessage("Bienvenid@", this.userName);
+			} else {
+				this.validLogin = false;
+				addWarnMessage("Iniciar Sesión", "Las Credenciales usadas son inválidas.");
+			}
+			getSession(false).setAttribute("user", getUserSession());
+			getRequestContext().addCallbackParam("isLogin", this.validLogin);
+			if (validLogin)
+				getRequestContext().addCallbackParam("view", "menu");
+
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			setUserSession(null);
@@ -95,9 +98,10 @@ public class LoginBean extends BackingBean implements Serializable {
 	public void sedUserLogout() {
 		try {
 			this.treeList = null;
-			this.userName = null;
-			this.userPassword = null;
-			logout();
+			getSession(false).invalidate();
+			ManageCookie.removeCookieByName("uID");
+			ManageCookie.removeCookieByName("locate");
+			this.validLogin = false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -173,16 +177,6 @@ public class LoginBean extends BackingBean implements Serializable {
 		this.treeList = treeList;
 	}
 
-	public boolean isUniqueEnter() {
-		return uniqueEnter;
-	}
-
-
-	public void setUniqueEnter(boolean uniqueEnter) {
-		this.uniqueEnter = uniqueEnter;
-	}
-
-
 	public List<User> getUserSessionList() {
 		return userSessionList;
 	}
@@ -191,5 +185,16 @@ public class LoginBean extends BackingBean implements Serializable {
 	public void setUserSessionList(List<User> userSessionList) {
 		this.userSessionList = userSessionList;
 	}
+
+
+	public boolean isValidLogin() {
+		return validLogin;
+	}
+
+
+	public void setValidLogin(boolean validLogin) {
+		this.validLogin = validLogin;
+	}
+
 
 }
