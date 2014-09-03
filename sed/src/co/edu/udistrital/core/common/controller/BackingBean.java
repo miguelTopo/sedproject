@@ -51,17 +51,9 @@ public abstract class BackingBean implements Serializable {
 
 	public BackingBean() throws Exception {
 		try {
-			// if (!initializedGeneral && getResponse() != null)
-			// setInitializedGeneral(true);
-			//
-			if (!getValidateExpiredSession())
-				redirectToLogin();
-			// if (getUserSession() != null) {
-			// setValidateLogin(true);
-			// }
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			redirectToLogin();
 		}
 	}
 
@@ -429,26 +421,24 @@ public abstract class BackingBean implements Serializable {
 
 			// Verificar id de todos los Tree
 			for (TreeSedRole tsr : getTreeSedRoleList()) {
-				if (tsr.getIdSedRole().equals(idRole))
+				if (tsr.getIdSedRole().equals(idRole) && !idTreeList.contains(tsr.getIdTree()))
 					idTreeList.add(tsr.getIdTree());
 			}
 
-			List<Long> idTreeUsed = new ArrayList<Long>(idTreeList.size());
-			// Recorrer Tree en busca de los id que coincidan
+
 			for (Tree t : BeanList.getTreeList()) {
 
-				if (t.isRoot() && idTreeList.contains(t.getId())) {
+				if (t.isRoot()) {
+					Tree tree = new Tree();
+					t.setLeafTreeList(null);
+					tree = t.clone();
+					tree.setLeafTreeList(null);
 
-					for (Tree lt : BeanList.getTreeList()) {
-						// verificando que sea una hoja de la rama principal
-						if (!lt.getId().equals(t.getId()) && !lt.isRoot() && idTreeList.contains(lt.getId()) && !idTreeUsed.contains(lt.getId())
-							&& t.getId().equals(lt.getIdTreeRoot())) {
-							t.getLeafTreeList().add(lt);
-							idTreeUsed.add(lt.getId());
-						}
-
+					for (Tree leaf : BeanList.getTreeList()) {
+						if (!leaf.getId().equals(tree.getId()) && leaf.getIdTreeRoot() != null && leaf.getIdTreeRoot().equals(tree.getId()))
+							tree.getLeafTreeList().add(leaf);
 					}
-					treeRoleList.add(t);
+					treeRoleList.add(tree);
 				}
 			}
 			return treeRoleList;

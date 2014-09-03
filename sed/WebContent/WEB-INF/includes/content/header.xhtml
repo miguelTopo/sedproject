@@ -4,6 +4,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
+	<script type="text/javascript">
+  //<![CDATA[
+  function logout(xhr, status, args) {
+    setTimeout(function() {
+      	window.location = 'login';
+    	}, 500);
+  	}
+	//]]>
+	</script>
 	<h:form id="headerForm">
 		<div id="sedHeader" align="center">
 			<div style="float:left;">
@@ -12,8 +21,8 @@
 			<div style="float: right;width: 30%;padding-top: 0.5%;">
 				<p:menuButton value="#{loginBean.userSession.name} #{loginBean.userSession.lastName}" iconPos="right">
 					<p:menuitem value="Cambiar Contraseña" url="/portal/clave" icon="ui-icon-locked"/>
-					<p:menuitem value="Cerrar Sesión" action="#{loginBean.logout}" onstart="PF('statusDialog').show();" 
-						oncomplete="PF('statusDialog').hide();" icon="ui-icon-power"/>
+					<p:menuitem value="Cerrar Sesión" action="#{loginBean.sedUserLogout}" onstart="PF('statusDialog').show();" 
+						oncomplete="PF('statusDialog').hide();logout(xhr, status, args);" icon="ui-icon-power"/>
 				</p:menuButton>
 			</div>			
 		</div>
