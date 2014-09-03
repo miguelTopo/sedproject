@@ -17,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tree")
-public class Tree extends AParameter implements Serializable, Cloneable {
+public class Tree extends AParameter implements Serializable {
 
 	/**
 	 * 
@@ -38,16 +38,6 @@ public class Tree extends AParameter implements Serializable, Cloneable {
 	public Tree() {
 
 	}
-
-	public Tree clone() {
-		try {
-			return (Tree) super.clone();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id

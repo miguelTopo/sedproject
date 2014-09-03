@@ -37,10 +37,7 @@ public abstract class BackingBean implements Serializable {
 	private static final long serialVersionUID = -8403730495105725673L;
 
 	// Primitives
-	private boolean initializedGeneral = false;
-	private boolean cancelSession = false;
-	private boolean uniqueLogin = false;
-	private boolean validateLogin = false;
+	protected boolean validLogin;
 
 
 	// User Object
@@ -51,6 +48,15 @@ public abstract class BackingBean implements Serializable {
 
 	public BackingBean() throws Exception {
 		try {
+			if (getSession(false) != null) {
+				this.userSession = (User) getSession(false).getAttribute("user");
+				if (this.userSession != null) {
+					this.validLogin = true;
+				} else {
+					this.validLogin = false;
+				}
+			} else
+				this.validLogin = false;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,44 +74,6 @@ public abstract class BackingBean implements Serializable {
 			// }
 
 		} catch (Exception e) {
-			throw e;
-		}
-	}
-
-	public boolean getValidateExpiredSession() throws Exception {
-		try {
-			String idSession = ManageCookie.getCookieByName("JSESSIONID");
-
-			if (getSession(false) != null && idSession != null && !idSession.trim().isEmpty()) {
-				String currentSession = getSession(false).getId();
-				if (currentSession.startsWith(idSession)) {
-					User userA = (User) getSession(false).getAttribute("user");
-
-					if (userA == null)
-						return false;
-
-					if (userA != null) {
-						if (getUserSession() != null)
-							this.cancelSession = true;
-						// ///verificar por que esto estaba enviando null
-						setUserSession(userA);
-						setUniqueLogin(false);
-						return true;
-						// redirectToLogin();
-					}
-				}
-
-			} else {
-				if (getUserSession() != null)
-					setCancelSession(true);
-
-				setUserSession(null);
-				setUniqueLogin(false);
-				redirectToLogin();
-			}
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -208,45 +176,6 @@ public abstract class BackingBean implements Serializable {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * @author MTorres
-	 * @throws Exception
-	 */
-	public void logout() throws Exception {
-		try {
-			getSession(false).setMaxInactiveInterval(20 * 60);
-			SedSession.deleteLoginSessionId(getUserSession().getIdSession(), null);
-			System.out.println("INFO: ZM-session close for user with id " + getUserSession().getId());
-			ManageCookie.removeCookieByName("uID");
-			ManageCookie.removeCookieByName("locate");
-			getSession(false).setAttribute("user", null);
-			// redirectToLogin();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			removeAttributeListSession();
-			initializedGeneral = false;
-			validateLogin = false;
-			uniqueLogin = false;
-			setUserSession(null);
-		}
-		redirect("/portal/login");
-	}
-
-	private void removeAttributeListSession() throws Exception {
-		try {
-			HttpSession session = getSession(false);
-			session.removeAttribute("user");
-			ManageCookie.addCookie("presence", null, 0, "user", true);
-			session = null;
-			getPanelStackBean().clear();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
 		}
 	}
 
@@ -428,14 +357,14 @@ public abstract class BackingBean implements Serializable {
 
 			for (Tree t : BeanList.getTreeList()) {
 
-				if (t.isRoot()) {
+				if (t.isRoot() && idTreeList.contains(t.getId())) {
 					Tree tree = new Tree();
 					t.setLeafTreeList(null);
-					tree = t.clone();
-					tree.setLeafTreeList(null);
+					tree = t;
 
 					for (Tree leaf : BeanList.getTreeList()) {
-						if (!leaf.getId().equals(tree.getId()) && leaf.getIdTreeRoot() != null && leaf.getIdTreeRoot().equals(tree.getId()))
+						if (!leaf.getId().equals(tree.getId()) && leaf.getIdTreeRoot() != null && leaf.getIdTreeRoot().equals(tree.getId())
+							&& idTreeList.contains(leaf.getId()))
 							tree.getLeafTreeList().add(leaf);
 					}
 					treeRoleList.add(tree);
@@ -529,37 +458,12 @@ public abstract class BackingBean implements Serializable {
 		this.userSession = userSession;
 	}
 
-	public boolean isInitializedGeneral() {
-		return initializedGeneral;
+	public boolean isValidLogin() {
+		return validLogin;
 	}
 
-	public void setInitializedGeneral(boolean initializedGeneral) {
-		this.initializedGeneral = initializedGeneral;
+	public void setValidLogin(boolean validLogin) {
+		this.validLogin = validLogin;
 	}
-
-	public boolean isCancelSession() {
-		return cancelSession;
-	}
-
-	public void setCancelSession(boolean cancelSession) {
-		this.cancelSession = cancelSession;
-	}
-
-	public boolean isUniqueLogin() {
-		return uniqueLogin;
-	}
-
-	public void setUniqueLogin(boolean uniqueLogin) {
-		this.uniqueLogin = uniqueLogin;
-	}
-
-	public boolean isValidateLogin() {
-		return validateLogin;
-	}
-
-	public void setValidateLogin(boolean validateLogin) {
-		this.validateLogin = validateLogin;
-	}
-
 
 }
