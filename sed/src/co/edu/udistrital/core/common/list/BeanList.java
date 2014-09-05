@@ -16,6 +16,7 @@ import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.KnowledgeArea;
+import co.edu.udistrital.sed.model.Period;
 import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Subject;
 
@@ -41,6 +42,7 @@ public class BeanList implements Serializable {
 	private static List<IdentificationType> identificationTypeList;
 	private static List<SedRole> sedRoleList;
 	private static List<QualificationType> qualificationTypeList;
+	private static List<Period>periodList;
 
 	private static List<EmailTemplate> emailTemplateList;
 
@@ -63,6 +65,16 @@ public class BeanList implements Serializable {
 			loadEmailTemplateList();
 			loadQualificationTypeList();
 			loadKnowledgeAreaList();
+			loadPeriodList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void 	loadPeriodList(){
+		try {
+			if(periodList==null)
+				periodList = controller.loadPeriodList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -208,4 +220,9 @@ public class BeanList implements Serializable {
 	public static List<KnowledgeArea> getKnowledgeAreaList() {
 		return knowledgeAreaList;
 	}
+
+	public static List<Period> getPeriodList() {
+		return periodList;
+	}
+	
 }

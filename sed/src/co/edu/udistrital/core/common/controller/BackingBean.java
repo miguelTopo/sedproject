@@ -24,6 +24,7 @@ import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.KnowledgeArea;
+import co.edu.udistrital.sed.model.Period;
 import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Subject;
 import co.edu.udistrital.session.common.SedSession;
@@ -413,6 +414,13 @@ public abstract class BackingBean implements Serializable {
 	public List<Tree> getTreeList() throws Exception {
 		try {
 			return BeanList.getTreeList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	public List<Period> getPeriodList() throws Exception {
+		try {
+			return BeanList.getPeriodList();
 		} catch (Exception e) {
 			throw e;
 		}

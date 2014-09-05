@@ -33,6 +33,7 @@ public class Student extends AParameter implements Serializable {
 	private String identificationTypeName;
 	private String email;
 	private String studentFullName;
+	private String sedUserResponsibleFullName;
 	private Long idGrade;
 	private Long idCourse;
 	private Long idStudentCourse;
@@ -308,10 +309,16 @@ public class Student extends AParameter implements Serializable {
 		return qualificationTmpList;
 	}
 
-
-
 	public void setQualificationTmpList(List<Qualification> qualificationTmpList) {
 		this.qualificationTmpList = qualificationTmpList;
 	}
 
+	@Transient
+	public String getSedUserResponsibleFullName() {
+		return sedUserResponsibleFullName;
+	}
+
+	public void setSedUserResponsibleFullName(String sedUserResponsibleFullName) {
+		this.sedUserResponsibleFullName = sedUserResponsibleFullName;
+	}
 }

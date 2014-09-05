@@ -22,6 +22,8 @@ import co.edu.udistrital.sed.model.IdentificationType;
 import co.edu.udistrital.sed.model.IdentificationTypeDAO;
 import co.edu.udistrital.sed.model.KnowledgeArea;
 import co.edu.udistrital.sed.model.KnowledgeAreaDAO;
+import co.edu.udistrital.sed.model.Period;
+import co.edu.udistrital.sed.model.PeriodDAO;
 import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.QualificationTypeDAO;
 import co.edu.udistrital.sed.model.Subject;
@@ -199,6 +201,21 @@ public class ControllerList extends Controller {
 	/** @author MTorres 10/08/2014 4:53:02 p. m. */
 	public List<KnowledgeArea> loadKnowledgeAreaList() throws Exception {
 		KnowledgeAreaDAO dao = new KnowledgeAreaDAO();
+		try {
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+		}
+
+	}
+
+	/** @author MTorres 4/9/2014 22:57:44 */
+	public List<Period> loadPeriodList() throws Exception {
+		PeriodDAO dao = new PeriodDAO();
 		try {
 			return dao.findAll();
 		} catch (Exception e) {

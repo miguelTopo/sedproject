@@ -1,0 +1,63 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+<f:view>
+	<h:form>
+		<p:panel header="Seguimiento a Estudiantes">
+			<section>
+				<article>
+					<table>
+						<tr>
+							<td>
+								Periodo
+							</td>
+							<td>
+								<p:selectOneMenu value="#{tracingBean.idPeriod}">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{tracingBean.periodList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"/>
+								</p:selectOneMenu>
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td>
+								Grado
+							</td>
+							<td>
+								<p:selectOneMenu value="#{tracingBean.idGrade}">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{tracingBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+								</p:selectOneMenu>
+							</td>
+						</tr>
+					</table>
+				</article>
+				<article>
+					<table>
+						<tr>
+							<td>
+								Curso
+							</td>
+							<td>
+								<p:selectOneMenu value="#{tracingBean.idCourse}">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{tracingBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
+								</p:selectOneMenu>
+							</td>
+						</tr>
+					</table>
+				</article>
+			</section>
+			<div>
+				<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}"/>
+			</div>
+		</p:panel>
+	</h:form>
+</f:view>
+</html>
