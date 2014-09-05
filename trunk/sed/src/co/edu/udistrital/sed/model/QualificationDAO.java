@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.LongType;
+import org.hibernate.type.StringType;
 
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.connection.HibernateDAO;
@@ -169,6 +171,46 @@ public class QualificationDAO extends HibernateDAO {
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Qualification.class));
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setParameterList("idStudentCourseList", idStudentCourseList);
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	/** @author MTorres 5/9/2014 0:00:53 */
+	public List<Student> loadStudentList(Long idPeriod, Long idGrade, Long idCourse, List<Long> idCourseList) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" ");
+			hql.append(" SELECT su.name || ' ' || su.lastName AS sedUserResponsibleFullName, ");
+			hql.append(" s.name AS name, ");
+			hql.append(" s.lastName AS lastName, ");
+			hql.append(" s.identification AS identification, ");
+			hql.append(" s.idIdentificationType AS idIdentificationType, ");
+			hql.append(" s.idSedUserResponsible AS idSedUserResponsible, ");
+			hql.append(" it.name AS identificationTypeName ");
+			hql.append(" FROM Student s ");
+			hql.append(" LEFT JOIN SedUser su ");
+			hql.append(" ON s.idSedUserResponsible = su.id ");
+			hql.append(" INNER JOIN StudentCourse sc ");
+			hql.append(" ON sc.idStudent = s.id ");
+			hql.append(" INNER JOIN identificationType it ");
+			hql.append(" ON it.id = s.idIdentificationType ");
+			hql.append(" WHERE sc.idPeriod = :idPeriod ");
+			// AND sc.idCourse = 1
+			// --AND sc.idcourse IN()
+			qo =
+				getSession().createSQLQuery(hql.toString()).addScalar("sedUserResponsibleFullName", StringType.INSTANCE)
+					.addScalar("name", StringType.INSTANCE).addScalar("lastName", StringType.INSTANCE)
+					.addScalar("identification", StringType.INSTANCE).addScalar("idIdentificationType", LongType.INSTANCE)
+					.addScalar("idSedUserResponsible", LongType.INSTANCE).addScalar("identificationTypeName", StringType.INSTANCE)
+					.setResultTransformer(Transformers.aliasToBean(Student.class));
+			qo.setParameter("idPeriod", idPeriod);
 
 			return qo.list();
 		} catch (Exception e) {
