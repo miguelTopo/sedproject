@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+<f:view>
+	<h:form id="tracingStudentForm">
+		<section>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Apellidos:
+						</td>
+						<td>
+							#{tracingBean.studentSelected.lastName}
+						</td>
+					</tr>
+				</table>
+			</article>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Nombres:
+						</td>
+						<td>
+							#{tracingBean.studentSelected.name}
+						</td>
+					</tr>
+				</table>
+			</article>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Tipo de identificación:
+						</td>
+						<td>
+							#{tracingBean.studentSelected.identificationTypeName}
+						</td>
+					</tr>
+				</table>
+			</article>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Identificación:
+						</td>
+						<td>
+							#{tracingBean.studentSelected.identification}
+						</td>
+					</tr>
+				</table>
+			</article>
+			<article>
+				<table>
+					<tr>
+						<td>
+							Acudiente:
+						</td>
+						<td>
+							#{tracingBean.studentSelected.sedUserResponsibleFullName}
+						</td>
+					</tr>
+				</table>
+			</article>
+		</section>
+		<div>
+			<p:dataTable value="#{tracingBean.studentQualificationList}" filteredValue="#{tracingBean.studentQualificationFilterList}"
+				var="sq">
+				<p:column>
+					
+				</p:column>
+			</p:dataTable>
+		</div>
+	</h:form>
+</f:view>
+</html>

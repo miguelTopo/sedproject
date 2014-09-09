@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui">
 <f:view>
-	<h:form>
+	<h:form id="tracingForm">
 		<p:panel header="Seguimiento a Estudiantes">
 			<section>
 				<article>
@@ -55,8 +55,37 @@
 				</article>
 			</section>
 			<div>
-				<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}"/>
+				<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
+					update=":tracingForm:studentListOp"/>
 			</div>
+			<p:outputPanel id="studentListOp">
+				<p:outputPanel rendered="#{!empty tracingBean.studentList}">
+					<p:dataTable value="#{tracingBean.studentList}" var="s" filteredValue="#{tracingBean.studentFilteringList}">
+						
+						<p:column headerText="Curso" filterBy="#{s.courseName}" sortBy="#{s.courseName}" filterMatchMode="contains">
+							#{s.courseName}
+						</p:column>
+						<p:column headerText="Identificación" filterBy="#{s.identification}" sortBy="#{s.identification}" filterMatchMode="contains">
+							#{s.identification}
+						</p:column>
+						<p:column headerText="Apellidos" filterBy="#{s.lastName}" sortBy="#{s.lastName}" filterMatchMode="contains">
+							#{s.lastName}
+						</p:column>
+						<p:column headerText="Nombres" filterBy="#{s.name}" sortBy="#{s.name}" filterMatchMode="contains">
+							#{s.name}
+						</p:column>
+						<p:column headerText="Acudiente" filterBy="#{s.sedUserResponsibleFullName}" sortBy="#{s.sedUserResponsibleFullName}" filterMatchMode="contains">
+							#{!empty s.sedUserResponsibleFullName ? s.sedUserResponsibleFullName : 'No registra'}
+						</p:column>
+						<p:column style="width:25px">
+							<p:commandLink action="#{tracingBean.goStudentDetail}" update=":tracingWrap">
+								<p:graphicImage value="../css/icon/detail.png" width="20" height="20"/>
+								<f:setPropertyActionListener target="#{tracingBean.studentSelected}" value="#{s}"/>
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>		
+				</p:outputPanel>
+			</p:outputPanel>
 		</p:panel>
 	</h:form>
 </f:view>
