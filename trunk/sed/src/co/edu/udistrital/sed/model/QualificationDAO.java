@@ -193,7 +193,10 @@ public class QualificationDAO extends HibernateDAO {
 			hql.append(" s.identification AS identification, ");
 			hql.append(" s.idIdentificationType AS idIdentificationType, ");
 			hql.append(" s.idSedUserResponsible AS idSedUserResponsible, ");
-			hql.append(" it.name AS identificationTypeName ");
+			hql.append(" it.name AS identificationTypeName, ");
+			hql.append(" c.id AS idCourse, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" sc.id AS idStudentCourse ");
 			hql.append(" FROM Student s ");
 			hql.append(" LEFT JOIN SedUser su ");
 			hql.append(" ON s.idSedUserResponsible = su.id ");
@@ -201,6 +204,8 @@ public class QualificationDAO extends HibernateDAO {
 			hql.append(" ON sc.idStudent = s.id ");
 			hql.append(" INNER JOIN identificationType it ");
 			hql.append(" ON it.id = s.idIdentificationType ");
+			hql.append(" INNER JOIN Course c ");
+			hql.append(" ON c.id = sc.idCourse ");
 			hql.append(" WHERE sc.idPeriod = :idPeriod ");
 			// AND sc.idCourse = 1
 			// --AND sc.idcourse IN()
@@ -209,7 +214,8 @@ public class QualificationDAO extends HibernateDAO {
 					.addScalar("name", StringType.INSTANCE).addScalar("lastName", StringType.INSTANCE)
 					.addScalar("identification", StringType.INSTANCE).addScalar("idIdentificationType", LongType.INSTANCE)
 					.addScalar("idSedUserResponsible", LongType.INSTANCE).addScalar("identificationTypeName", StringType.INSTANCE)
-					.setResultTransformer(Transformers.aliasToBean(Student.class));
+					.addScalar("idCourse", LongType.INSTANCE).addScalar("courseName", StringType.INSTANCE)
+					.addScalar("idStudentCourse", LongType.INSTANCE).setResultTransformer(Transformers.aliasToBean(Student.class));
 			qo.setParameter("idPeriod", idPeriod);
 
 			return qo.list();

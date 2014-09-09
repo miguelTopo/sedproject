@@ -4,9 +4,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
-	<p:outputPanel rendered="#{tracingBean.validateSedUserRole}">
-		<p:outputPanel>
+	<p:outputPanel id="tracingWrap" rendered="#{tracingBean.validateSedUserRole}">
+		<p:outputPanel rendered="#{tracingBean.showStudentList}">
 			<ui:include src="/WEB-INF/includes/tracing/adminTracing.xhtml"/>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{tracingBean.showStudentDetail}">
+			<ui:include src="/WEB-INF/includes/tracing/tracingStudentDetail.xhtml"/>
 		</p:outputPanel>
 	</p:outputPanel>
 </f:view>
