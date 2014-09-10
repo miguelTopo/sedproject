@@ -16,11 +16,13 @@ public class QualificationUtil implements Serializable {
 	private static final long serialVersionUID = -4020453093835253475L;
 
 	private Long idSubject;
+	private String subjectName;
+	private String knowledgeAreaName;
 	private List<Long> idQualficationTypeList;
-	private List<Qualification>qualificationList;
+	private List<Qualification> qualificationList;
 
 	public QualificationUtil() {
-		
+
 	}
 
 	public QualificationUtil(Long idSubject, List<Long> idQualficationTypeList) {
@@ -52,11 +54,29 @@ public class QualificationUtil implements Serializable {
 	}
 
 	public List<Qualification> getQualificationList() {
+		if (qualificationList == null)
+			qualificationList = new ArrayList<Qualification>();
 		return qualificationList;
 	}
 
 	public void setQualificationList(List<Qualification> qualificationList) {
 		this.qualificationList = qualificationList;
 	}
-	
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	public String getKnowledgeAreaName() {
+		return knowledgeAreaName;
+	}
+
+	public void setKnowledgeAreaName(String knowledgeAreaName) {
+		this.knowledgeAreaName = knowledgeAreaName;
+	}
+
 }
