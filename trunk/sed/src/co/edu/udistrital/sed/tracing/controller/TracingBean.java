@@ -36,7 +36,7 @@ public class TracingBean extends BackingBean {
 	private List<Student> studentFilteringList;
 	private List<Qualification> studentQualificationList;
 	private List<Qualification> studentQualificationFilterList;
-	private List<QualificationUtil> totalQualificationList;
+	private List<QualificationUtil> qualificationUtilList;
 
 	// User Object
 	private Student studentSelected;
@@ -80,8 +80,6 @@ public class TracingBean extends BackingBean {
 			if ((this.idGrade != null && !this.idGrade.equals(0L)) && (this.idCourse == null || this.idCourse.equals(0L)))
 				idCourseList = loadCourseList();
 
-
-
 			this.studentList = this.controller.loadStudentList(this.idPeriod, this.idGrade, this.idCourse, idCourseList);
 			this.studentFilteringList = this.studentList;
 			if (this.studentList == null || this.studentList.isEmpty())
@@ -124,67 +122,68 @@ public class TracingBean extends BackingBean {
 	/** @author MTorres 8/9/2014 22:20:51 */
 	private void buildQualificationStudentList(List<Qualification> qualificationList) throws Exception {
 		try {
-			List<QualificationUtil> qualificationUtilList = new ArrayList<QualificationUtil>();
+			this.qualificationUtilList = new ArrayList<QualificationUtil>();
 			Long idSubject = qualificationList.get(0).getIdSubject();
+			String subjectName = null;
+			String knowledgeAreaName = null;
 
 			List<Long> idQualificationTypeList = new ArrayList<Long>();
-
-
 			for (Qualification q : qualificationList) {
+				
+				
 				if (!idSubject.equals(q.getIdSubject())) {
 					QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
-					qualificationUtilList.add(qu);
+					
+					qu.setSubjectName(subjectName);
+					qu.setKnowledgeAreaName(knowledgeAreaName);
+					this.qualificationUtilList.add(qu);
 
 					idQualificationTypeList = null;
 					idQualificationTypeList = new ArrayList<Long>();
 					idSubject = q.getIdSubject();
+					subjectName = q.getSubjectName();
+					knowledgeAreaName = q.getKnowledgeAreaName();
+					qu.setKnowledgeAreaName(knowledgeAreaName);
 					idQualificationTypeList.add(q.getIdQualificationType());
 				} else
 					idQualificationTypeList.add(q.getIdQualificationType());
+				
+				subjectName = q.getSubjectName();
+				knowledgeAreaName = q.getKnowledgeAreaName();
 			}
 
 			if (idQualificationTypeList != null && !idQualificationTypeList.isEmpty() && idSubject != null) {
 				QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
-				qualificationUtilList.add(qu);
+				qu.setSubjectName(subjectName);
+				qu.setKnowledgeAreaName(knowledgeAreaName);
+				this.qualificationUtilList.add(qu);
 				idQualificationTypeList = null;
 				idSubject = null;
 			}
 
+			for (QualificationUtil qu : this.qualificationUtilList) {
 
-			this.totalQualificationList = new ArrayList<QualificationUtil>();
+				for (QualificationType qt : getQualificationTypeList()) {
+					if (qu.getIdQualficationTypeList().contains(qt.getId())) {
 
-//			for (QualificationUtil qu : qualificationUtilList) {
-//				List<Qualification> qTmpList = new ArrayList<Qualification>(getQualificationTypeList().size());
-//				
-//				if(qTmpList!=null && !qTmpList.isEmpty()){
-//					QualificationUtil qtmpU=new QualificationUtil();
-//					qtmpU.setIdSubject(idSubject);
-//					totalQualificationList.add(new QualificationUtil(idSubject, idQualficationTypeList))
-//				} 
-//				
-//				for (QualificationType qt : getQualificationTypeList()) {
-//					if (qu.getIdQualficationTypeList().contains(qt.getId())) {
-//						for(Qualification q: qualificationList){
-//							if(q.getIdSubject().equals(qu.getIdSubject()) && q.getIdQualificationType().equals(qt.getId())){
-//								qTmpList.add(q);
-//							}
-//						}
-//					}else{
-//						Qualification qualification = new Qualification();
-//						qualification.setIdQualificationType(qt.getId());
-//						qualification.setValue(0D);
-//						qualification.setIdStudentCourse(this.studentSelected.getIdStudentCourse());
-//						qTmpList.add(qualification);
-//					}
-//				}
-//				
-//
-//				
-//			}
+						for (Qualification q : qualificationList) {
+							if (q.getIdSubject().equals(qu.getIdSubject()) && q.getIdQualificationType().equals(qt.getId())) {
+								qu.getQualificationList().add(q);
+								break;
+							}
+						}
 
+					} else {
+						Qualification qualification = new Qualification();
+						qualification.setValue(0D);
+						qualification.setIdQualificationType(qt.getId());
+						qualification.setIdSubject(qu.getIdSubject());
+						qu.getQualificationList().add(qualification);
 
+					}
+				}
 
-			this.studentQualificationList = this.studentQualificationFilterList;
+			}
 		} catch (Exception e) {
 			throw e;
 		}
@@ -299,12 +298,12 @@ public class TracingBean extends BackingBean {
 		this.studentQualificationFilterList = studentQualificationFilterList;
 	}
 
-	public List<QualificationUtil> getTotalQualificationList() {
-		return totalQualificationList;
+	public List<QualificationUtil> getQualificationUtilList() {
+		return qualificationUtilList;
 	}
 
-	public void setTotalQualificationList(List<QualificationUtil> totalQualificationList) {
-		this.totalQualificationList = totalQualificationList;
+	public void setQualificationUtilList(List<QualificationUtil> qualificationUtilList) {
+		this.qualificationUtilList = qualificationUtilList;
 	}
-
+	
 }

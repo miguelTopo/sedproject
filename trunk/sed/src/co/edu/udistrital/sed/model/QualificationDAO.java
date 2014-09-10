@@ -207,8 +207,8 @@ public class QualificationDAO extends HibernateDAO {
 			hql.append(" INNER JOIN Course c ");
 			hql.append(" ON c.id = sc.idCourse ");
 			hql.append(" WHERE sc.idPeriod = :idPeriod ");
-			// AND sc.idCourse = 1
-			// --AND sc.idcourse IN()
+			hql.append(idCourse != null && !idCourse.equals(0L) ? " AND sc.idCourse = :idCourse " : " AND sc.idCourse IN(:idCourseList) ");
+			
 			qo =
 				getSession().createSQLQuery(hql.toString()).addScalar("sedUserResponsibleFullName", StringType.INSTANCE)
 					.addScalar("name", StringType.INSTANCE).addScalar("lastName", StringType.INSTANCE)
@@ -216,10 +216,16 @@ public class QualificationDAO extends HibernateDAO {
 					.addScalar("idSedUserResponsible", LongType.INSTANCE).addScalar("identificationTypeName", StringType.INSTANCE)
 					.addScalar("idCourse", LongType.INSTANCE).addScalar("courseName", StringType.INSTANCE)
 					.addScalar("idStudentCourse", LongType.INSTANCE).setResultTransformer(Transformers.aliasToBean(Student.class));
+
 			qo.setParameter("idPeriod", idPeriod);
+			if (idCourse != null && !idCourse.equals(0L))
+				qo.setParameter("idCourse", idCourse);
+			else
+				qo.setParameterList("idCourseList", idCourseList);
 
 			return qo.list();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			hql = null;

@@ -13,7 +13,7 @@ public class QualificationTypeDAO extends HibernateDAO {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
-			hql.append(" FROM QualificationType qt WHERE qt.state > 0  ");
+			hql.append(" FROM QualificationType qt WHERE qt.state > 0 ORDER BY qt.id ");
 			qo = getSession().createQuery(hql.toString());
 			return qo.list();
 		} catch (Exception e) {
