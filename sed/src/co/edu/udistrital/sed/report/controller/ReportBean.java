@@ -163,23 +163,14 @@ public class ReportBean extends BackingBean implements IReport {
 			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 			Sheet sheet = this.wb.createSheet(sheetName);
 			// rowFrom, rowTo, colFrom, colTo
-			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 1));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 26));
-			sheet.addMergedRegion(new CellRangeAddress(1, 1, 2, 26));
+			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 7));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 1, 7));
 
-			sheet.addMergedRegion(new CellRangeAddress(2, 2, 3, 12));
-			sheet.addMergedRegion(new CellRangeAddress(2, 2, 14, 25));
-			sheet.addMergedRegion(new CellRangeAddress(2, 2, 27, 34));
+			sheet.addMergedRegion(new CellRangeAddress(2, 2, 6, 7));
 
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 3, 12));
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 14, 25));
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 27, 34));
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 6, 7));
 
-
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 0, 0));
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 1, 12));
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 13, 25));
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 26, 26));
 
 			// /////Title Style
 			Font title = this.wb.createFont();
@@ -214,59 +205,60 @@ public class ReportBean extends BackingBean implements IReport {
 
 			Row titleRow = sheet.createRow((short) 0);
 			titleRow.setHeightInPoints(23);
-			Cell cell = titleRow.createCell(2);
+			Cell cell = titleRow.createCell(1);
 			cell.setCellValue("SECRETARIA DE EDUCACIÓN DISTRITAL");
 			cell.setCellStyle(titleStyle);
 
 			Row schoolRow = sheet.createRow((short) 1);
 			schoolRow.setHeightInPoints(18);
-			cell = schoolRow.createCell(2);
+			cell = schoolRow.createCell(1);
 			cell.setCellValue("COLEGIO LICEO FEMENINO MERCEDES NARIÑO");
 			cell.setCellStyle(subtitleStyle);
 
 			Row data1 = sheet.createRow((short) 2);
-			cell = data1.createCell(2);
+			cell = data1.createCell(1);
 			cell.setCellValue("SEDE");
 			cell.setCellStyle(infoStyle);
 
-			cell = data1.createCell(13);
+			cell = data1.createCell(3);
 			cell.setCellValue("JORNADA");
 			cell.setCellStyle(infoStyle);
 
-			cell = data1.createCell(26);
+			cell = data1.createCell(5);
 			cell.setCellValue("GRUPO");
 			cell.setCellStyle(infoStyle);
 
 			Row data2 = sheet.createRow((short) 3);
-			cell = data2.createCell(2);
+			cell = data2.createCell(1);
 			cell.setCellValue("GRUPO");
 			cell.setCellStyle(infoStyle);
 
-			cell = data2.createCell(13);
+			cell = data2.createCell(3);
 			cell.setCellValue("PERIODO");
 			cell.setCellStyle(infoStyle);
 
-			cell = data2.createCell(26);
+			cell = data2.createCell(5);
 			cell.setCellValue("DIRECTOR DE GRUPO");
 			cell.setCellStyle(infoStyle);
 
 			// Paint Image header
-			InputStream inputStream = new FileInputStream(context.getRealPath("/") + "css/images/bogotaShield.png");
-
-			byte[] bytes = IOUtils.toByteArray(inputStream);
-			int pictureIdx = this.wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-			inputStream.close();
-
-			CreationHelper helper = this.wb.getCreationHelper();
-
-			Drawing drawing = sheet.createDrawingPatriarch();
-
-			ClientAnchor anchor = helper.createClientAnchor();
-			anchor.setCol1(1);
-			anchor.setRow1(2);
-
-			Picture picture = drawing.createPicture(anchor, pictureIdx);
-			picture.resize();
+			// InputStream inputStream = new FileInputStream(context.getRealPath("/") +
+			// "css/images/bogotaShield.png");
+			//
+			// byte[] bytes = IOUtils.toByteArray(inputStream);
+			// int pictureIdx = this.wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+			// inputStream.close();
+			//
+			// CreationHelper helper = this.wb.getCreationHelper();
+			//
+			// Drawing drawing = sheet.createDrawingPatriarch();
+			//
+			// ClientAnchor anchor = helper.createClientAnchor();
+			// anchor.setCol1(1);
+			// anchor.setRow1(2);
+			//
+			// Picture picture = drawing.createPicture(anchor, pictureIdx);
+			// picture.resize();
 
 			return sheet;
 		} catch (Exception e) {
@@ -297,8 +289,8 @@ public class ReportBean extends BackingBean implements IReport {
 						gradeSheet = buildHeaderReport(s.getCourseName());
 						gradeSheet = buildHeaderTable(gradeSheet, s.getQualificationUtilList());
 					}
-					gradeSheet = buildStudentDataRow(gradeSheet, s, studentSheetIndex);
-					studentSheetIndex++;
+					 gradeSheet = buildStudentDataRow(gradeSheet, s, studentSheetIndex);
+					 studentSheetIndex++;
 				}
 
 				wb.removeSheetAt(0);
@@ -318,17 +310,17 @@ public class ReportBean extends BackingBean implements IReport {
 			cell = studentRow.createCell(1);
 			cell.setCellValue(s.getIdentification());
 
-			cell = studentRow.createCell(13);
+			cell = studentRow.createCell(4);
 			cell.setCellValue(s.getLastName() + " " + s.getName());
 
-			cell = studentRow.createCell(26);
+			cell = studentRow.createCell(7);
 			cell.setCellValue("Puesto");
 			// rowFrom, rowTo, colFrom, colTo
-			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 12));
-			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 13, 25));
+			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 3));
+			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 4, 6));
 
 
-			int indexQ = 27;
+			int indexQ = 8;
 
 			for (Qualification q : s.getQualificationList()) {
 				cell = studentRow.createCell(indexQ);
@@ -346,21 +338,26 @@ public class ReportBean extends BackingBean implements IReport {
 	private Sheet buildHeaderTable(Sheet sheet, List<QualificationUtil> qualificationUtilList) throws Exception {
 		try {
 			Row rowHeader = sheet.createRow((short) 6);
+
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 1, 3));
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 4, 6));
+			sheet.addMergedRegion(new CellRangeAddress(6, 8, 7, 7));
+
 			Row rowSubject = sheet.createRow((short) 7);
 			Row rowQualificationType = sheet.createRow((short) 8);
-			
-			//CellStyle
+
+			// CellStyle
 			Font f = this.wb.createFont();
-			f.setBoldweight((short)2);
+			f.setBoldweight((short) 2);
 			CellStyle headerInfoStyle = this.wb.createCellStyle();
 			headerInfoStyle.setAlignment(CellStyle.ALIGN_CENTER);
-			headerInfoStyle.setBorderBottom((short)1);
-			headerInfoStyle.setBorderLeft((short)1);
-			headerInfoStyle.setBorderRight((short)1);
-			headerInfoStyle.setBorderTop((short)1);
+			headerInfoStyle.setBorderBottom((short) 1);
+			headerInfoStyle.setBorderLeft((short) 1);
+			headerInfoStyle.setBorderRight((short) 1);
+			headerInfoStyle.setBorderTop((short) 1);
 			headerInfoStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.index);
 			headerInfoStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-//			headerInfoStyle.setFont(arg0);
 
 			Cell cell = rowHeader.createCell(0);
 			cell.setCellStyle(headerInfoStyle);
@@ -370,17 +367,17 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("Identificación");
 
-			cell = rowHeader.createCell(13);
+			cell = rowHeader.createCell(4);
 			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("Estudiante");
 
-			cell = rowHeader.createCell(26);
+			cell = rowHeader.createCell(7);
 			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue("Puesto");
 
-			int indexHeader = 26;
-			int indexSubject = 26;
-			int indexQt = 27;
+			int indexHeader = 7;
+			int indexSubject = 7;
+			int indexQt = 8;
 			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
 				cell = rowHeader.createCell(indexHeader + 1);
 				cell.setCellValue(ka.getName());
@@ -538,7 +535,7 @@ public class ReportBean extends BackingBean implements IReport {
 		}
 	}
 
-	/** @author */
+	/** @author MTorres 11/9/2014 22:42:34 */
 	private Qualification validateFinalQualification(List<Qualification> qualificationList, Subject sb, Student s) throws Exception {
 		try {
 			Qualification qualification = new Qualification();

@@ -207,8 +207,11 @@ public class QualificationDAO extends HibernateDAO {
 			hql.append(" INNER JOIN Course c ");
 			hql.append(" ON c.id = sc.idCourse ");
 			hql.append(" WHERE sc.idPeriod = :idPeriod ");
-			hql.append(idCourse != null && !idCourse.equals(0L) ? " AND sc.idCourse = :idCourse " : " AND sc.idCourse IN(:idCourseList) ");
-			
+			if (idCourse != null && !idCourse.equals(0L))
+				hql.append(" AND sc.idCourse = :idCourse ");
+			else if (idCourseList != null && !idCourseList.isEmpty())
+				hql.append(" AND sc.idCourse IN(:idCourseList) ");
+
 			qo =
 				getSession().createSQLQuery(hql.toString()).addScalar("sedUserResponsibleFullName", StringType.INSTANCE)
 					.addScalar("name", StringType.INSTANCE).addScalar("lastName", StringType.INSTANCE)
@@ -220,7 +223,7 @@ public class QualificationDAO extends HibernateDAO {
 			qo.setParameter("idPeriod", idPeriod);
 			if (idCourse != null && !idCourse.equals(0L))
 				qo.setParameter("idCourse", idCourse);
-			else
+			else if (idCourseList != null && !idCourseList.isEmpty())
 				qo.setParameterList("idCourseList", idCourseList);
 
 			return qo.list();

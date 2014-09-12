@@ -5,17 +5,27 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui">
 <f:view>
+	<style type="text/css">
+		#tracingSection article{
+		width: 280px;
+		padding: 10px;
+		border: 1px solid white;
+		margin: 2px;
+		display: inline-block;
+		color: black;
+			}
+	</style>
 	<h:form id="tracingForm">
 		<p:panel header="Seguimiento a Estudiantes">
-			<section>
+			<section id="tracingSection">
 				<article>
 					<table>
 						<tr>
 							<td>
-								Periodo
+								Periodo:
 							</td>
 							<td>
-								<p:selectOneMenu value="#{tracingBean.idPeriod}">
+								<p:selectOneMenu value="#{tracingBean.idPeriod}" style="width:98%">
 									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 									<f:selectItems value="#{tracingBean.periodList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"/>
 								</p:selectOneMenu>
@@ -27,12 +37,13 @@
 					<table>
 						<tr>
 							<td>
-								Grado
+								Grado:
 							</td>
 							<td>
-								<p:selectOneMenu value="#{tracingBean.idGrade}">
+								<p:selectOneMenu value="#{tracingBean.idGrade}" style="width:98%">
 									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 									<f:selectItems value="#{tracingBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+									<p:ajax listener="#{tracingBean.handleGradeChange}" update=":tracingForm:somTracingCourse" process="@this"/>
 								</p:selectOneMenu>
 							</td>
 						</tr>
@@ -42,10 +53,10 @@
 					<table>
 						<tr>
 							<td>
-								Curso
+								Curso:
 							</td>
 							<td>
-								<p:selectOneMenu value="#{tracingBean.idCourse}">
+								<p:selectOneMenu id="somTracingCourse" value="#{tracingBean.idCourse}" disabled="#{empty tracingBean.courseTmpList}" style="width:98%">
 									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 									<f:selectItems value="#{tracingBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
 								</p:selectOneMenu>
@@ -54,7 +65,7 @@
 					</table>
 				</article>
 			</section>
-			<div>
+			<div style="text-align:center">
 				<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
 					update=":tracingForm:studentListOp"/>
 			</div>
