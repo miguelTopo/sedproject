@@ -77,7 +77,7 @@ public class TracingBean extends BackingBean {
 			List<Long> idCourseList = null;
 
 
-			if ((this.idGrade != null && !this.idGrade.equals(0L)) && (this.idCourse == null || this.idCourse.equals(0L)))
+			if (this.idCourse == null || this.idCourse.equals(0L) && this.idGrade != null && !this.idGrade.equals(0L))
 				idCourseList = loadCourseList();
 
 			this.studentList = this.controller.loadStudentList(this.idPeriod, this.idGrade, this.idCourse, idCourseList);
@@ -119,6 +119,17 @@ public class TracingBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres 11/9/2014 22:01:52 */
+	public void handleGradeChange() {
+		try {
+			this.courseTmpList = null;
+			if (this.idGrade != null && !this.idGrade.equals(0L))
+				this.courseTmpList = loadCourseListByGrade(this.idGrade);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/** @author MTorres 8/9/2014 22:20:51 */
 	private void buildQualificationStudentList(List<Qualification> qualificationList) throws Exception {
 		try {
@@ -129,11 +140,11 @@ public class TracingBean extends BackingBean {
 
 			List<Long> idQualificationTypeList = new ArrayList<Long>();
 			for (Qualification q : qualificationList) {
-				
-				
+
+
 				if (!idSubject.equals(q.getIdSubject())) {
 					QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
-					
+
 					qu.setSubjectName(subjectName);
 					qu.setKnowledgeAreaName(knowledgeAreaName);
 					this.qualificationUtilList.add(qu);
@@ -147,7 +158,7 @@ public class TracingBean extends BackingBean {
 					idQualificationTypeList.add(q.getIdQualificationType());
 				} else
 					idQualificationTypeList.add(q.getIdQualificationType());
-				
+
 				subjectName = q.getSubjectName();
 				knowledgeAreaName = q.getKnowledgeAreaName();
 			}
@@ -305,5 +316,5 @@ public class TracingBean extends BackingBean {
 	public void setQualificationUtilList(List<QualificationUtil> qualificationUtilList) {
 		this.qualificationUtilList = qualificationUtilList;
 	}
-	
+
 }
