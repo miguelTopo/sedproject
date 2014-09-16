@@ -79,4 +79,5 @@ public class QualificationUtil implements Serializable {
 		this.knowledgeAreaName = knowledgeAreaName;
 	}
 
+	
 }

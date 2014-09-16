@@ -35,6 +35,7 @@ import org.primefaces.context.ApplicationContext;
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.sed.api.IQualificationType;
+import co.edu.udistrital.sed.api.IQualitativeQualification;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.KnowledgeArea;
 import co.edu.udistrital.sed.model.Qualification;
@@ -58,6 +59,7 @@ public class ReportBean extends BackingBean implements IReport {
 	private List<Student> studentList;
 	private List<Subject> subjectGradeList;
 	private List<KnowledgeArea> knowledgeAreaGradeList;
+	private List<QualificationUtil> qualitativeQualificationList;
 
 	// Controller
 	private ReportController controller;
@@ -97,7 +99,6 @@ public class ReportBean extends BackingBean implements IReport {
 							break;
 					}
 				}
-
 			}
 		} catch (Exception e) {
 			throw e;
@@ -272,6 +273,7 @@ public class ReportBean extends BackingBean implements IReport {
 		try {
 			this.wb = (Workbook) o;
 			if (this.wb != null) {
+				wb.removeSheetAt(0);
 				Long idCourse = 0L;
 				List<String> sheetNameList = new ArrayList<String>();
 
@@ -289,11 +291,11 @@ public class ReportBean extends BackingBean implements IReport {
 						gradeSheet = buildHeaderReport(s.getCourseName());
 						gradeSheet = buildHeaderTable(gradeSheet, s.getQualificationUtilList());
 					}
-					 gradeSheet = buildStudentDataRow(gradeSheet, s, studentSheetIndex);
-					 studentSheetIndex++;
+					gradeSheet = buildStudentDataRow(gradeSheet, s, studentSheetIndex);
+					studentSheetIndex++;
 				}
 
-				wb.removeSheetAt(0);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -304,16 +306,26 @@ public class ReportBean extends BackingBean implements IReport {
 	private Sheet buildStudentDataRow(Sheet sheet, Student s, int index) throws Exception {
 		try {
 			Row studentRow = sheet.createRow(index);
+			CellStyle cellStyle = this.wb.createCellStyle();
+			cellStyle.setBorderBottom((short) 1);
+			cellStyle.setBorderLeft((short) 1);
+			cellStyle.setBorderRight((short) 1);
+			cellStyle.setBorderTop((short) 1);
+
 			Cell cell = studentRow.createCell(0);
+			cell.setCellStyle(cellStyle);
 			cell.setCellValue("No");
 
 			cell = studentRow.createCell(1);
+			cell.setCellStyle(cellStyle);
 			cell.setCellValue(s.getIdentification());
 
 			cell = studentRow.createCell(4);
+			cell.setCellStyle(cellStyle);
 			cell.setCellValue(s.getLastName() + " " + s.getName());
 
 			cell = studentRow.createCell(7);
+			cell.setCellStyle(cellStyle);
 			cell.setCellValue("Puesto");
 			// rowFrom, rowTo, colFrom, colTo
 			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 3));
@@ -322,12 +334,65 @@ public class ReportBean extends BackingBean implements IReport {
 
 			int indexQ = 8;
 
+			Long idKnowledgeArea = s.getQualificationList().get(0).getIdKnowledgeArea();
+			Long idSubject = s.getQualificationList().get(0).getIdSubject();
+			Double totalKaValue = 0D;
+			int totalQualification = 0;
+			List<String> qualitativeQualificationList = new ArrayList<String>();
 			for (Qualification q : s.getQualificationList()) {
 				cell = studentRow.createCell(indexQ);
+				cell.setCellStyle(cellStyle);
 				cell.setCellValue(q.getValue());
 				indexQ++;
+
+				if (!idSubject.equals(q.getIdSubject())) {
+					totalQualification++;
+					idSubject = q.getIdSubject();
+				}
+
+				if (!idKnowledgeArea.equals(q.getIdKnowledgeArea())) {
+					qualitativeQualificationList.add(loadQualitativeQualification(totalQualification > 0 ? (totalKaValue / totalQualification)
+						: totalKaValue));
+					idKnowledgeArea = q.getIdKnowledgeArea();
+					totalKaValue = 0D;
+					totalQualification = 0;
+				}
+				if (q.getIdQualificationType().equals(IQualificationType.CF))
+					totalKaValue += q.getValue();
 			}
-			// crear area de columnas 1, 12; 13, 25
+
+			if (totalKaValue != null)
+				qualitativeQualificationList.add(loadQualitativeQualification(totalQualification > 0 ? (totalKaValue / totalQualification)
+					: totalKaValue));
+
+
+			if (qualitativeQualificationList != null && !qualitativeQualificationList.isEmpty()) {
+				CellStyle lowStyle = this.wb.createCellStyle();
+				lowStyle.setAlignment(CellStyle.ALIGN_CENTER);
+				lowStyle.setBorderBottom((short) 1);
+				lowStyle.setBorderLeft((short) 1);
+				lowStyle.setBorderRight((short) 1);
+				lowStyle.setBorderTop((short) 1);
+				lowStyle.setFillForegroundColor(IndexedColors.RED.index);
+				lowStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				lowStyle.setWrapText(true);
+
+				Font lowFont = this.wb.createFont();
+				lowFont.setBoldweight((short) 22);
+				lowFont.setColor(IndexedColors.WHITE.index);
+
+
+				for (String qq : qualitativeQualificationList) {
+					cell = studentRow.createCell(indexQ);
+					cell.setCellValue(qq);
+					if (qq.equals(IQualitativeQualification.LOW))
+						cell.setCellStyle(lowStyle);
+					else
+						cell.setCellStyle(cellStyle);
+					indexQ++;
+				}
+			}
+
 			return sheet;
 
 		} catch (Exception e) {
@@ -335,6 +400,28 @@ public class ReportBean extends BackingBean implements IReport {
 		}
 	}
 
+	/** @author MTorres 13/9/2014 10:51:04 */
+	private String loadQualitativeQualification(Double qualiticationValue) throws Exception {
+		try {
+
+			if (qualiticationValue <= IQualitativeQualification.HIGHER_MAX_VALUE && qualiticationValue >= IQualitativeQualification.HIGHER_MIN_VALUE) {
+				return IQualitativeQualification.HIGHER;
+			} else if (qualiticationValue <= IQualitativeQualification.HIGH_MAX_VALUE
+				&& qualiticationValue >= IQualitativeQualification.HIGH_MIN_VALUE) {
+				return IQualitativeQualification.HIGH;
+			} else if (qualiticationValue <= IQualitativeQualification.BASIC_MAX_VALUE
+				&& qualiticationValue >= IQualitativeQualification.BASIC_MIN_VALUE) {
+				return IQualitativeQualification.BASIC;
+			} else if (qualiticationValue <= IQualitativeQualification.LOW_MAX_VALUE && qualiticationValue >= IQualitativeQualification.LOW_MIN_VALUE) {
+				return IQualitativeQualification.LOW;
+			}
+			return "";
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres 13/9/2014 10:01:45 */
 	private Sheet buildHeaderTable(Sheet sheet, List<QualificationUtil> qualificationUtilList) throws Exception {
 		try {
 			Row rowHeader = sheet.createRow((short) 6);
@@ -403,6 +490,19 @@ public class ReportBean extends BackingBean implements IReport {
 					}
 				}
 			}
+
+
+			Cell cellAux = null;
+
+			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
+				sheet.addMergedRegion(new CellRangeAddress(6, 8, indexQt, indexQt));
+				cellAux = rowHeader.createCell(indexQt);
+				cellAux.setCellStyle(headerInfoStyle);
+				cellAux.setCellValue(ka.getName());
+				indexQt++;
+
+			}
+
 			return sheet;
 		} catch (Exception e) {
 			throw e;
@@ -549,9 +649,14 @@ public class ReportBean extends BackingBean implements IReport {
 			for (Qualification q : qualificationList) {
 				if (q.getIdSubject().intValue() > sb.getId().intValue())
 					break;
-				if (q.getValue() != null && !q.getValue().equals(0D) && q.getIdSubject().equals(sb.getId()))
+				if (q.getValue() != null && !q.getValue().equals(0D) && q.getIdSubject().equals(sb.getId())
+					&& !q.getIdQualificationType().equals(IQualificationType.C4))
 					qualification.setValue(q.getValue());
+				if (q.getIdQualificationType().equals(IQualificationType.C4))
+					qualification.setValue(qualification.getValue() + q.getValue());
 			}
+			if (qualification.getValue() > IQualitativeQualification.HIGHER_MAX_VALUE)
+				qualification.setValue(IQualitativeQualification.HIGHER_MAX_VALUE);
 			return qualification;
 		} catch (Exception e) {
 			throw e;
