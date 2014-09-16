@@ -23,7 +23,7 @@
 								</p:selectOneMenu>								
 							</td>
 							<td>
-								<p:commandButton value="Ver Notas ya" action="#{reportBean.loadReportQualificationList}" update=":sedReportForm:reportStudentOp"/>
+								<p:commandButton value="Ver Notas" action="#{reportBean.loadReportQualificationList}" update=":sedReportForm:reportStudentOp"/>
 							</td>
 							<td style="width:20%"/>
 						</tr>
@@ -82,7 +82,7 @@
 							<h:outputText value="#{s.identification}"/>
 						</p:column>
 						
-						<c:forEach begin="0" end="#{(fn:length(reportBean.subjectList))*4-1}" var="q">
+						<c:forEach begin="0" end="#{(fn:length(reportBean.subjectList))*5-1}" var="q">
 							<p:column style="text-align:center">
 								<h:outputText value="#{s.qualificationList.get(q).value}">
 									<f:convertNumber currencySymbol="" groupingUsed="#{true}" maxFractionDigits="0" type="currency" locale="es_CO"/>
