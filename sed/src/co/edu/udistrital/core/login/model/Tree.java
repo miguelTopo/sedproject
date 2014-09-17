@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tree")
+@Table(name = "tree", schema = "lifemena")
 public class Tree extends AParameter implements Serializable {
 
 	/**

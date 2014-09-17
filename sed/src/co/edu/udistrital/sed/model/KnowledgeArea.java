@@ -15,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "knowledgearea")
+@Table(name = "knowledgearea", schema = "lifemena")
 public class KnowledgeArea extends AParameter implements Serializable {
 
 	/**

@@ -11,8 +11,8 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.ASEDModel;
 
 @Entity
-@Table(name = "studentcourse")
-public class StudentCourse extends ASEDModel{
+@Table(name = "studentcourse", schema = "lifemena")
+public class StudentCourse extends ASEDModel {
 
 	private Long id;
 	private Long idPeriod;

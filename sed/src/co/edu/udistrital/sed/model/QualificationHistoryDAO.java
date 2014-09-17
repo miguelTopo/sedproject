@@ -60,7 +60,6 @@ public class QualificationHistoryDAO extends HibernateDAO {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
-			hql.append(" ");
 			hql.append(" SELECT q.id AS id, ");
 			hql.append(" q.value AS value, ");
 			hql.append(" q.idSubject AS idSubject, ");
@@ -68,7 +67,7 @@ public class QualificationHistoryDAO extends HibernateDAO {
 			hql.append(" s.name AS subjectName, ");
 			hql.append(" ka.id AS idKnowledgeArea, ");
 			hql.append(" ka.name AS knowledgeAreaName ");
-			hql.append(" FROM  ");
+			hql.append(" FROM ");
 			hql.append(Calendar.getInstance().get(Calendar.YEAR) == idPeriod.intValue() ? " Qualification q, " : " QualificationHistory q, ");
 
 			hql.append(" QualificationType qt , ");

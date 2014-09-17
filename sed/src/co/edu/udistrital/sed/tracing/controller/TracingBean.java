@@ -119,6 +119,16 @@ public class TracingBean extends BackingBean {
 		}
 	}
 
+	/** @author MTorres 15/9/2014 23:35:19 */
+	public void goBack() {
+		try {
+			hideAll();
+			this.showStudentList = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/** @author MTorres 11/9/2014 22:01:52 */
 	public void handleGradeChange() {
 		try {
@@ -133,68 +143,72 @@ public class TracingBean extends BackingBean {
 	/** @author MTorres 8/9/2014 22:20:51 */
 	private void buildQualificationStudentList(List<Qualification> qualificationList) throws Exception {
 		try {
-			this.qualificationUtilList = new ArrayList<QualificationUtil>();
-			Long idSubject = qualificationList.get(0).getIdSubject();
-			String subjectName = null;
-			String knowledgeAreaName = null;
+			if (qualificationList != null && !qualificationList.isEmpty()) {
 
-			List<Long> idQualificationTypeList = new ArrayList<Long>();
-			for (Qualification q : qualificationList) {
+				this.qualificationUtilList = new ArrayList<QualificationUtil>();
+				Long idSubject = qualificationList.get(0).getIdSubject();
+				String subjectName = null;
+				String knowledgeAreaName = null;
+
+				List<Long> idQualificationTypeList = new ArrayList<Long>();
+				for (Qualification q : qualificationList) {
 
 
-				if (!idSubject.equals(q.getIdSubject())) {
+					if (!idSubject.equals(q.getIdSubject())) {
+						QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
+
+						qu.setSubjectName(subjectName);
+						qu.setKnowledgeAreaName(knowledgeAreaName);
+						this.qualificationUtilList.add(qu);
+
+						idQualificationTypeList = null;
+						idQualificationTypeList = new ArrayList<Long>();
+						idSubject = q.getIdSubject();
+						subjectName = q.getSubjectName();
+						knowledgeAreaName = q.getKnowledgeAreaName();
+						qu.setKnowledgeAreaName(knowledgeAreaName);
+						idQualificationTypeList.add(q.getIdQualificationType());
+					} else
+						idQualificationTypeList.add(q.getIdQualificationType());
+
+					subjectName = q.getSubjectName();
+					knowledgeAreaName = q.getKnowledgeAreaName();
+				}
+
+				if (idQualificationTypeList != null && !idQualificationTypeList.isEmpty() && idSubject != null) {
 					QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
-
 					qu.setSubjectName(subjectName);
 					qu.setKnowledgeAreaName(knowledgeAreaName);
 					this.qualificationUtilList.add(qu);
-
 					idQualificationTypeList = null;
-					idQualificationTypeList = new ArrayList<Long>();
-					idSubject = q.getIdSubject();
-					subjectName = q.getSubjectName();
-					knowledgeAreaName = q.getKnowledgeAreaName();
-					qu.setKnowledgeAreaName(knowledgeAreaName);
-					idQualificationTypeList.add(q.getIdQualificationType());
-				} else
-					idQualificationTypeList.add(q.getIdQualificationType());
-
-				subjectName = q.getSubjectName();
-				knowledgeAreaName = q.getKnowledgeAreaName();
-			}
-
-			if (idQualificationTypeList != null && !idQualificationTypeList.isEmpty() && idSubject != null) {
-				QualificationUtil qu = new QualificationUtil(idSubject, idQualificationTypeList);
-				qu.setSubjectName(subjectName);
-				qu.setKnowledgeAreaName(knowledgeAreaName);
-				this.qualificationUtilList.add(qu);
-				idQualificationTypeList = null;
-				idSubject = null;
-			}
-
-			for (QualificationUtil qu : this.qualificationUtilList) {
-
-				for (QualificationType qt : getQualificationTypeList()) {
-					if (qu.getIdQualficationTypeList().contains(qt.getId())) {
-
-						for (Qualification q : qualificationList) {
-							if (q.getIdSubject().equals(qu.getIdSubject()) && q.getIdQualificationType().equals(qt.getId())) {
-								qu.getQualificationList().add(q);
-								break;
-							}
-						}
-
-					} else {
-						Qualification qualification = new Qualification();
-						qualification.setValue(0D);
-						qualification.setIdQualificationType(qt.getId());
-						qualification.setIdSubject(qu.getIdSubject());
-						qu.getQualificationList().add(qualification);
-
-					}
+					idSubject = null;
 				}
 
+				for (QualificationUtil qu : this.qualificationUtilList) {
+
+					for (QualificationType qt : getQualificationTypeList()) {
+						if (qu.getIdQualficationTypeList().contains(qt.getId())) {
+
+							for (Qualification q : qualificationList) {
+								if (q.getIdSubject().equals(qu.getIdSubject()) && q.getIdQualificationType().equals(qt.getId())) {
+									qu.getQualificationList().add(q);
+									break;
+								}
+							}
+
+						} else {
+							Qualification qualification = new Qualification();
+							qualification.setValue(0D);
+							qualification.setIdQualificationType(qt.getId());
+							qualification.setIdSubject(qu.getIdSubject());
+							qu.getQualificationList().add(qualification);
+
+						}
+					}
+
+				}
 			}
+
 		} catch (Exception e) {
 			throw e;
 		}

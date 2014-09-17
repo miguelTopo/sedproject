@@ -13,15 +13,13 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "grade")
+@Table(name = "grade", schema = "lifemena")
 public class Grade extends AParameter implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5748391988665868218L;
-
-	private Long idSchool;
 
 	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
@@ -90,15 +88,5 @@ public class Grade extends AParameter implements Serializable {
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
 	}
-
-	@Column(name = "idSchool", nullable = false)
-	public Long getIdSchool() {
-		return idSchool;
-	}
-
-	public void setIdSchool(Long idSchool) {
-		this.idSchool = idSchool;
-	}
-
 
 }

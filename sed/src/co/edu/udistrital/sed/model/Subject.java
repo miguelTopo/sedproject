@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "subject")
+@Table(name = "subject", schema = "lifemena")
 public class Subject extends AParameter implements Serializable {
 
 	/**
@@ -23,7 +23,6 @@ public class Subject extends AParameter implements Serializable {
 
 	private Long idKnowledgeArea;
 	private Long idGrade;
-	private Long orderSheet;
 	private String styleClass;
 
 
@@ -112,16 +111,7 @@ public class Subject extends AParameter implements Serializable {
 	public void setIdGrade(Long idGrade) {
 		this.idGrade = idGrade;
 	}
-
-	@Column(name = "orderSheet", nullable = false)
-	public Long getOrderSheet() {
-		return orderSheet;
-	}
-
-	public void setOrderSheet(Long orderSheet) {
-		this.orderSheet = orderSheet;
-	}
-
+	
 	@Column(name = "styleClass", nullable = false, length = 40)
 	public String getStyleClass() {
 		return styleClass;

@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "period")
+@Table(name = "period", schema = "lifemena")
 public class Period extends AParameter {
 
 	/**

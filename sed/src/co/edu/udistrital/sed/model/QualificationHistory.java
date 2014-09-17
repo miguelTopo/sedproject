@@ -12,7 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.ASEDModel;
 
 @Entity
-@Table(name = "QualificationHistory")
+@Table(name = "QualificationHistory", schema = "lifemena")
 public class QualificationHistory extends ASEDModel {
 
 	private Long idStudentCourse;

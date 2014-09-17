@@ -14,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
-@Table(name = "Assignment")
+@Table(name = "Assignment", schema = "lifemena")
 public class Assignment implements Serializable, Cloneable {
 
 	private Long id;

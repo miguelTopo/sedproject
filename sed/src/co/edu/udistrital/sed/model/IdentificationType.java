@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name="identificationtype")
+@Table(name = "identificationtype", schema = "lifemena")
 public class IdentificationType extends AParameter {
 
 	/**

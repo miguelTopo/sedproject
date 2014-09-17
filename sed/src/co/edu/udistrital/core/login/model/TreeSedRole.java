@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
-@Table(name = "treesedrole")
+@Table(name = "treesedrole", schema = "lifemena")
 public class TreeSedRole implements Serializable {
 
 	/**

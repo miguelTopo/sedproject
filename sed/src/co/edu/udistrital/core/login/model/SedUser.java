@@ -17,7 +17,7 @@ import co.edu.udistrital.core.common.model.AParameter;
 import co.edu.udistrital.sed.model.Student;
 
 @Entity
-@Table(name = "seduser")
+@Table(name = "seduser", schema = "lifemena")
 public class SedUser extends AParameter implements Serializable, Cloneable {
 
 	/**
