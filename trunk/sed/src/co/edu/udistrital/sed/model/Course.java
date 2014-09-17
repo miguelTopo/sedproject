@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name = "Course")
+@Table(name = "Course", schema = "lifemena")
 public class Course extends AParameter {
 
 	private Long idGrade;

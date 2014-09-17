@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import co.edu.udistrital.core.common.model.AParameter;
 
 @Entity
-@Table(name="sedrole")
+@Table(name = "sedrole", schema = "lifemena")
 public class SedRole extends AParameter implements Serializable {
 
 	/**

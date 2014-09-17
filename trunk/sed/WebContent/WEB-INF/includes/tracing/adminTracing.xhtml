@@ -65,7 +65,7 @@
 					</table>
 				</article>
 			</section>
-			<div style="text-align:center">
+			<div style="text-align:center;padding-bottom: 20px;">
 				<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
 					update=":tracingForm:studentListOp"/>
 			</div>
@@ -89,7 +89,7 @@
 							#{!empty s.sedUserResponsibleFullName ? s.sedUserResponsibleFullName : 'No registra'}
 						</p:column>
 						<p:column style="width:25px">
-							<p:commandLink action="#{tracingBean.goStudentDetail}" update=":tracingWrap">
+							<p:commandLink action="#{tracingBean.goStudentDetail}" update=":tracingWrap" title="Detallar">
 								<p:graphicImage value="../css/icon/detail.png" width="20" height="20"/>
 								<f:setPropertyActionListener target="#{tracingBean.studentSelected}" value="#{s}"/>
 							</p:commandLink>

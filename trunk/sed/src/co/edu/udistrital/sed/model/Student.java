@@ -17,7 +17,7 @@ import co.edu.udistrital.core.common.model.AParameter;
 import co.edu.udistrital.sed.util.QualificationUtil;
 
 @Entity
-@Table(name = "student")
+@Table(name = "student", schema = "lifemena")
 public class Student extends AParameter implements Serializable {
 
 

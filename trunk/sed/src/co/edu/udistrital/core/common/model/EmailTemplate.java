@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table
+@Table(name = "emailTemplate", schema = "lifemena")
 public class EmailTemplate extends ASEDModel {
 
 	private Long id;

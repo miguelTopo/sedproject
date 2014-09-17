@@ -15,7 +15,7 @@ import co.edu.udistrital.core.common.model.AParameter;
 import co.edu.udistrital.core.common.model.ASEDModel;
 
 @Entity
-@Table(name = "qualification")
+@Table(name = "qualification", schema = "lifemena")
 public class Qualification extends ASEDModel implements Serializable {
 
 	private Long idStudentCourse;
@@ -218,5 +218,5 @@ public class Qualification extends ASEDModel implements Serializable {
 	public void setIdPeriod(Long idPeriod) {
 		this.idPeriod = idPeriod;
 	}
-	
+
 }
