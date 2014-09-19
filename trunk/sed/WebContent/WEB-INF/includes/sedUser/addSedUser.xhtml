@@ -14,7 +14,6 @@
 			}
 			table{
 				width:100%;
-				border-spacing: 5px;
 			}
 			.ui-label-table{
 				width:35%;
@@ -31,6 +30,11 @@
 					<p>
 						<h:outputText value="#{bundle['page.seduser.labelGuideAddSedUser']}" rendered="#{sedUserBean.showAdd}" />
 						<h:outputText value="#{bundle['page.seduser.labelGuideEditSedUser']}" rendered="#{sedUserBean.showEdit}" />
+					</p>
+					<br/>
+					<br/>
+					<p>
+						#{bundle['page.core.labelDataObligatory']}
 					</p>
 				</div>
 				<div class="ui-subtitle-sed">

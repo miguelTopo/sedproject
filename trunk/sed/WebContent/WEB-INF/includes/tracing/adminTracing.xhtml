@@ -17,18 +17,27 @@
 	</style>
 	<h:form id="tracingForm">
 		<p:panel header="Seguimiento a Estudiantes">
+			<div style="padding-left: 25px;padding-right: 25px;">
+				<p>
+					Para verificar el proceso histórico del estudiante, por favor seleccione el periodo o año en el que el estudiante estaba activo, si tiene la información del grado y curso respectivos seleccione dichos campos; de no contar con dichos datos, puede seleccionar buscar y realizar filtros en la tabla resultante. 
+				</p>
+				<p>
+				#{bundle['page.core.labelDataObligatory']}	
+				</p>
+			</div>
 			<section id="tracingSection">
 				<article>
 					<table>
 						<tr>
 							<td>
-								Periodo:
+								*Periodo:
 							</td>
 							<td>
-								<p:selectOneMenu value="#{tracingBean.idPeriod}" style="width:98%">
+								<p:selectOneMenu id="somTracingPeriod" value="#{tracingBean.idPeriod}" style="width:98%">
 									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 									<f:selectItems value="#{tracingBean.periodList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"/>
 								</p:selectOneMenu>
+								<div id="tracingPeriod_DIV" class="ui-invalid-field"/>
 							</td>
 						</tr>
 					</table>
@@ -66,8 +75,8 @@
 				</article>
 			</section>
 			<div style="text-align:center;padding-bottom: 20px;">
-				<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
-					update=":tracingForm:studentListOp"/>
+				<p:commandButton id="btnTracingSearch" value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
+					onclick="validateTracingSearch()" type="button"/>
 			</div>
 			<p:outputPanel id="studentListOp">
 				<p:outputPanel rendered="#{!empty tracingBean.studentList}">

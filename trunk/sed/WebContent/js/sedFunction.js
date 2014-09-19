@@ -252,3 +252,93 @@ function validateAddStudent() {
 		}	
 	 
  }
+ /**@author MTorres*/
+ function validateLoadQualification(){
+	 
+	 var idForm = "teacherQualificationForm";
+	 
+	 selectCourse = addSelectValidation(idForm + ":somTeacherCourse_input", "tqCourse_DIV");
+	 selectSubject = addSelectValidation(idForm + ":somTeacherSubject_input", "tqSubject_DIV");
+	 
+	 
+	 if (selectCourse && selectSubject) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnLoadQualification',
+				process : '@all',
+				update :'teacherQualificationForm:studentQualificationOp',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}	
+ }
+ function validateTracingSearch(){
+	 var idForm = "tracingForm";
+	 selectPeriod = addSelectValidation(idForm + ":somTracingPeriod_input", "tracingPeriod_DIV");
+	 
+	 if (selectPeriod) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnTracingSearch',
+				process : '@all',
+				update :'tracingForm:studentListOp',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}	
+ }
+ function validateTeacherAssignment(){
+	 var idForm = "selectDateForm";
+	 
+	 selectTeacher = addSelectValidation(idForm + ":somSedUser_input", "sedUser_DIV");
+	 selectGrade = addSelectValidation(idForm + ":somTeacherGrade_input", "teacherGrade_DIV");
+	 selectCourse = addSelectValidation(idForm + ":somTeacherCourse_input", "teacherCourse_DIV");
+	 selectDay = addSelectValidation(idForm + ":somDay_input", "day_DIV");
+	 selectSubject = addSelectValidation(idForm + ":somTeacherSubject_input", "teacherSubject_DIV");
+	 
+	 validStartDate = addTextValidation(idForm + ":tpStartDate_input", true, true, 5, 5);
+	 validEndDate = addTextValidation(idForm + ":tpEndDate_input", true, true, 5, 5);
+	
+	 valid = LiveValidation.massValidate([validStartDate, validEndDate]);
+	 
+	 if (valid && selectTeacher && selectGrade && selectCourse && selectDay && selectSubject) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnTeacherAssignment',
+				process : '@all',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}
+ }
+ function validateLoadReport(){
+	 var idForm = "sedReportForm";
+	 selectGrade = addSelectValidation(idForm + ":somReportGrade_input", "reportGrade_DIV");
+	 
+	 if (selectGrade) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnLoadreport',
+				process : '@all',
+				update : 'sedReportForm:reportStudentOp',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}
+}

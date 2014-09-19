@@ -17,13 +17,17 @@
 								Seleccione el Grado:
 							</td>
 							<td>
-								<p:selectOneMenu value="#{reportBean.idGrade}">
-									<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
-									<f:selectItems value="#{reportBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
-								</p:selectOneMenu>								
+								<p:selectOneMenu id="somReportGrade" value="#{reportBean.idGrade}">
+									<f:selectItem itemValue="0"
+										itemLabel="#{bundle['page.core.labelSelectOne']}" />
+									<f:selectItems value="#{reportBean.gradeList}" var="g"
+										itemLabel="#{g.name}" itemValue="#{g.id}" />
+								</p:selectOneMenu>
+								<div id="reportGrade_DIV" class="ui-invalid-field"/>				
 							</td>
 							<td>
-								<p:commandButton value="Ver Notas" action="#{reportBean.loadReportQualificationList}" update=":sedReportForm:reportStudentOp"/>
+								<p:commandButton id="btnLoadreport" value="Cargar Reporte" action="#{reportBean.loadReportQualificationList}"
+									onclick="validateLoadReport()" type="button"/>
 							</td>
 							<td style="width:20%"/>
 						</tr>

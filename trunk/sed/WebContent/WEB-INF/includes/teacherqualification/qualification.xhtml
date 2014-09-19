@@ -17,20 +17,29 @@
 	</style>
 	<h:form id="teacherQualificationForm">
 		<p:panel header="Calificaciones">
+			<div style="padding-left: 25px;padding-right: 25px;">
+				<p>
+					A continuación se muestra el formulario para realizar el proceso de calificaciones de los estudiantes. Se muestra el listado de cursos que usted tiene asignados, asi mismo como las materias asignadas. 
+				</p>
+				<p>#{bundle['page.core.labelDataObligatory']}</p>
+				<br/>
+				<br/>
+			</div>
 			<section id="qualificationSection">
 				<article style="width: 276px;">
 					<table style="width:100%">
 						<tr>
 							<td style="width:20%">
-								Curso:
+								*Curso:
 							</td>
 							<td style="width:80%">
-								<p:selectOneMenu value="#{teacherQualificationBean.idCourse}" style="width:98%">
+								<p:selectOneMenu id="somTeacherCourse" value="#{teacherQualificationBean.idCourse}" style="width:98%">
 									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 									<f:selectItems value="#{teacherQualificationBean.courseTeacherList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
 									<p:ajax listener="#{teacherQualificationBean.handleCourseChange}" process="@this" 
 										update=":teacherQualificationForm:somTeacherSubject :teacherQualificationForm:studentQualificationOp"/>
 								</p:selectOneMenu>
+								<div id="tqCourse_DIV" class="ui-invalid-field"/>
 							</td>
 						</tr>
 					</table>
@@ -39,7 +48,7 @@
 					<table style="width:100%">
 						<tr>
 							<td style="width:20%">
-								Materia:
+								*Materia:
 							</td>
 							<td style="width:80%">
 								<p:selectOneMenu id="somTeacherSubject" value="#{teacherQualificationBean.idSubject}" disabled="#{teacherQualificationBean.idCourse eq null or teacherQualificationBean.idCourse eq 0}"
@@ -48,14 +57,15 @@
 									<f:selectItems value="#{teacherQualificationBean.subjectTeacherList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
 									<p:ajax process="@this" update=":teacherQualificationForm:studentQualificationOp" listener="#{teacherQualificationBean.cleanQualificationView}"/>
 								</p:selectOneMenu>
+								<div id="tqSubject_DIV" class="ui-invalid-field"/>
 							</td>
 						</tr>
 					</table>
 				</article>
 			</section>
 			<div style="text-align: right;padding-bottom: 25px;padding-right: 100px;">
-				<p:commandButton value="Ir a Notas" action="#{teacherQualificationBean.loadStudentSubjectList}" onstart="PF('statusDialog').show();" 
-					oncomplete="PF('statusDialog').hide();" update=":teacherQualificationForm:studentQualificationOp"/>
+				<p:commandButton id="btnLoadQualification" value="Ir a Notas" action="#{teacherQualificationBean.loadStudentSubjectList}" 
+					onclick="validateLoadQualification()" type="button"/>
 			</div> 
 			<p:outputPanel id="studentQualificationOp">
 				<p:outputPanel rendered="#{!empty teacherQualificationBean.studentList}">

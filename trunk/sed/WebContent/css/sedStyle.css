@@ -24,6 +24,11 @@ body,td,th {
 	color: #848788;
 }
 
+.LV_validation_message{
+	margin-bottom: 1px;
+	margin-top: 1px;
+}
+
 #sedHeader {
 	background-color: #C5DBEC;
 	border-bottom: #2E6E9E;
@@ -67,9 +72,8 @@ body,td,th {
 	height: 35px;
 	padding-left: 20px;
 	border-radius: 5px 5px 5px 5px;
-	padding-top: 0.5px;
-	padding-bottom: 3.5px;
-	color:white;
+	color: white;
+	line-height: 35px;
 }
 .ui-seduser-calendar input{
 	width: 95%;	

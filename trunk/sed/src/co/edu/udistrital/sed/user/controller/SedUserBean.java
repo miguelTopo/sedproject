@@ -524,6 +524,7 @@ public class SedUserBean extends BackingBean {
 			hideAll();
 			setShowAdd(true);
 			this.sedUser = new SedUser();
+			this.sedUser.setIdSedRole(0L);
 			this.student = new Student();
 			setPanelView("addSedUser", "Agregar Usuario", "SedUserBean");
 		} catch (Exception e) {

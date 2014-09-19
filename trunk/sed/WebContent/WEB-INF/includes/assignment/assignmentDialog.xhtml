@@ -8,9 +8,9 @@
 <f:view>
 	<style type="text/css">
 		#selectDateSection article{
-			width: 240px;
-			padding-left: 20px;
-			padding-right: 20px;
+			width: 300px;
+			padding-left: 22px;
+			padding-right: 22px;
 			display: inline-block;
 			}
 			#selectDateSection article table{
@@ -25,36 +25,38 @@
 			}
 	</style>
 	<!-- Dialog Assignment Select Date -->
-	<p:dialog id="dlgSelectDate" widgetVar="dlgSelectDateWV" header="Programar Docente" modal="true" resizable="false" width="600">
+	<p:dialog id="dlgSelectDate" widgetVar="dlgSelectDateWV" header="Programar Docente" modal="true" resizable="false" width="720">
 		<h:form id="selectDateForm">
-		<div style="text-align: justify;padding-bottom: 25px;padding-top: 25px;padding-left: 20px;padding-right: 20px;">
+		<div style="text-align: justify;padding-bottom: 25px;padding-left: 20px;padding-right: 20px;">
 			<p>Por favor diligencie el siguiente formato para asignar una materia a un docente.</p>
+			<p>
+				#{bundle['page.core.labelDataObligatory']}
+			</p>
 		</div>
-		<section>
-			<article style="padding-left: 20px;padding-right: 20px;width: 530px;">
+		<section id="selectDateSection">
+			<article style="padding-left: 20px;padding-right: 20px;width: 640px;">
 				<table style="width:100%;">
 					<tr>
 						<td style="width:18%">
-							Docente:
+							*Docente:
 						</td>
 						<td style="width:82%">
-							<p:selectOneMenu value="#{assignmentBean.assignment.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? 'true' : 'else'}" 
+							<p:selectOneMenu id="somSedUser" value="#{assignmentBean.assignment.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? 'true' : 'else'}" 
 								filterMatchMode="startsWith" style="width:98%">
 								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 								<f:selectItems value="#{assignmentBean.teacherList}" var="t" itemLabel="#{t.sedUserFullName}" itemValue="#{t.id}"/>
 							</p:selectOneMenu>
+							<div id="sedUser_DIV" class="ui-invalid-field"/>
 						</td>
 					</tr>
 					
 				</table>				
 			</article>
-		</section>
-		<section id="selectDateSection">
 			<article>
 				<table>
 					<tr>
 						<td class="ui-label">
-							Grado:
+							*Grado:
 						</td>
 						<td class="ui-content">
 							<p:selectOneMenu id="somTeacherGrade" value="#{assignmentBean.assignment.idGrade}" style="width:98%">
@@ -63,6 +65,7 @@
 								<p:ajax process="@this" listener="#{assignmentBean.handleGradeChange(true)}" 
 									update=":selectDateForm:somTeacherCourse :selectDateForm:somTeacherSubject"/>
 							</p:selectOneMenu>
+							<div id="teacherGrade_DIV" class="ui-invalid-field"/>
 						</td>						
 					</tr>
 				</table>
@@ -71,14 +74,15 @@
 				<table>
 					<tr>
 						<td class="ui-label">
-							Curso:
+							*Curso:
 						</td>
 						<td class="ui-content">
 							<p:selectOneMenu id="somTeacherCourse" value="#{assignmentBean.assignment.idCourse}" 
-								disabled="#{empty assignmentBean.courseTmpList}">
+								disabled="#{empty assignmentBean.courseTmpList}" style="width:98%">
 								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 								<f:selectItems value="#{assignmentBean.courseTmpList}" itemValue="#{c.id}" itemLabel="#{c.name}" var="c"/>
 							</p:selectOneMenu>
+							<div id="teacherCourse_DIV" class="ui-invalid-field"/>
 						</td>						
 					</tr>
 				</table>
@@ -87,10 +91,10 @@
 				<table>
 					<tr>
 						<td class="ui-label">
-							Hora inicial:
+							*Hora inicial:
 						</td>
 						<td class="ui-content">
-							<pe:timePicker value="#{assignmentBean.assignStartDate}" intervalMinutes="30" locale="es" mode="popup">
+							<pe:timePicker id="tpStartDate" value="#{assignmentBean.assignStartDate}" intervalMinutes="30" locale="es" mode="popup">
 								<p:ajax event="timeSelect" process="@this" listener="#{assignmentBean.handleAssignDateChange}"/>
 							</pe:timePicker>
 						</td>
@@ -101,10 +105,10 @@
 				<table>
 					<tr>
 						<td class="ui-label">
-							Hora final:
+							*Hora final:
 						</td>
 						<td class="ui-content">
-							<pe:timePicker value="#{assignmentBean.assignEndDate}" intervalMinutes="30" locale="es" mode="popup">
+							<pe:timePicker id="tpEndDate" value="#{assignmentBean.assignEndDate}" intervalMinutes="30" locale="es" mode="popup">
 								<p:ajax event="timeSelect" process="@this" listener="#{assignmentBean.handleAssignDateChange}"/>
 							</pe:timePicker>
 						</td>						
@@ -115,10 +119,10 @@
 				<table>
 					<tr>
 						<td class="ui-label">
-							Dia:
+							*Dia:
 						</td>
 						<td class="ui-content">
-							<p:selectOneMenu value="#{assignmentBean.idDay}" style="width:98%">
+							<p:selectOneMenu id="somDay" value="#{assignmentBean.idDay}" style="width:98%">
 								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
 								<f:selectItem itemLabel="#{bundle['page.core.labelMonday']}" itemValue="2" />
 								<f:selectItem itemLabel="#{bundle['page.core.labelTuesday']}" itemValue="3" />
@@ -126,6 +130,7 @@
 								<f:selectItem itemLabel="#{bundle['page.core.labelThursday']}" itemValue="5" />
 								<f:selectItem itemLabel="#{bundle['page.core.labelFriday']}" itemValue="6" />
 							</p:selectOneMenu>
+							<div id="day_DIV" class="ui-invalid-field"/>
 						</td>						
 					</tr>
 				</table>
@@ -134,7 +139,7 @@
 					<table>
 					<tr>
 						<td class="ui-label">
-							Materia:
+							*Materia:
 						</td>
 						<td class="ui-content">
 							<p:selectOneMenu id="somTeacherSubject" style="width:98%;" value="#{assignmentBean.assignment.idSubject}" 
@@ -142,6 +147,7 @@
 								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
 								<f:selectItems value="#{assignmentBean.subjectList}" itemLabel="#{s.name}" itemValue="#{s.id}" var="s"/>
 							</p:selectOneMenu>
+							<div id="teacherSubject_DIV" class="ui-invalid-field"/>
 						</td>						
 					</tr>
 				</table>
@@ -149,8 +155,8 @@
 		</section>
 		
 		<div style="text-align:center;padding-top: 30px;">
-			<p:commandButton value="#{assignmentBean.eventAdd ? 'Programar' : 'Guardar Cambios'}" action="#{assignmentBean.saveTeacherAssignment}" 
-				onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
+			<p:commandButton id="btnTeacherAssignment" value="#{assignmentBean.eventAdd ? 'Programar' : 'Guardar Cambios'}" action="#{assignmentBean.saveTeacherAssignment}" 
+				onclick="validateTeacherAssignment()" type="button"/>
 			<p:spacer width="5"/>
 			<p:commandButton value="Eliminar" rendered="#{!assignmentBean.eventAdd}" onclick="PF('dlgAssignmentDeleteWV').show();"/>
 			<p:spacer width="5" rendered="#{!assignmentBean.eventAdd}"/>
