@@ -89,13 +89,13 @@
 					
 						<c:forEach begin="0" end="#{fn:length(teacherQualificationBean.qualificationTypeList)-1}" var="q">
 							<p:column style="width:35px;" headerText="#{teacherQualificationBean.qualificationTypeList.get(q).name}">
-								<pe:inputNumber value="#{s.qualificationList.get(q).value}" decimalSeparator="," style="width:30px;" decimalPlaces="1" disabled="#{s.qualificationList.get(q).idQualificationType eq 4}"/>
+								<pe:inputNumber value="#{s.qualificationList.get(q).value}" decimalSeparator="," style="width:30px;" decimalPlaces="1" disabled="#{s.qualificationList.get(q).idQualificationType eq 5}"/>
 							</p:column>
 						</c:forEach>
 					</p:dataTable>		
 					<div style="text-align:center;padding-top: 20px;">
 						<p:commandButton value="Guardar Notas" action="#{teacherQualificationBean.saveQualificationList}" styleClass="ui-priority-primary" 
-							update=":teacherQualificationForm:studentQualificationOp"/>
+							update=":teacherQualificationForm:studentQualificationOp" onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
 					</div>		
 				</p:outputPanel>
 			</p:outputPanel>

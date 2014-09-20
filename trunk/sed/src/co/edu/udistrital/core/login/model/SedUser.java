@@ -1,7 +1,6 @@
 package co.edu.udistrital.core.login.model;
 
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,7 +17,7 @@ import co.edu.udistrital.sed.model.Student;
 
 @Entity
 @Table(name = "seduser", schema = "lifemena")
-public class SedUser extends AParameter implements Serializable, Cloneable {
+public class SedUser extends AParameter implements Cloneable {
 
 	/**
 	 * 

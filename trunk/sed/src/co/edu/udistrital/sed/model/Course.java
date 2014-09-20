@@ -9,12 +9,15 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import co.edu.udistrital.core.common.model.AParameter;
+import co.edu.udistrital.core.common.model.ASEDModel;
 
 @Entity
 @Table(name = "Course", schema = "lifemena")
-public class Course extends AParameter {
+public class Course extends ASEDModel {
 
 	private Long idGrade;
+	private Long idNextCourse;
+	private String name;
 
 
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -74,6 +77,7 @@ public class Course extends AParameter {
 		this.userChange = userChange;
 	}
 
+	@Column(name = "dateChange", length = 50)
 	public String getDateChange() {
 		return this.dateChange;
 	}
@@ -82,7 +86,7 @@ public class Course extends AParameter {
 		this.dateChange = dateChange;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "idGrade", nullable = false)
 	public Long getIdGrade() {
 		return idGrade;
 	}
@@ -90,6 +94,16 @@ public class Course extends AParameter {
 	public void setIdGrade(Long idGrade) {
 		this.idGrade = idGrade;
 	}
+
+	@Column(name = "idNextCourse", nullable = false)
+	public Long getIdNextCourse() {
+		return idNextCourse;
+	}
+
+	public void setIdNextCourse(Long idNextCourse) {
+		this.idNextCourse = idNextCourse;
+	}
+
 
 
 }

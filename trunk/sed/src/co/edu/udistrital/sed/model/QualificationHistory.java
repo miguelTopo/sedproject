@@ -30,6 +30,8 @@ public class QualificationHistory extends ASEDModel {
 	private String knowledgeAreaName;
 	private String qualificationTypeName;
 	private Long idPeriod;
+	private Long idGrade;
+	private Long idCourse;
 
 	public QualificationHistory() {
 		try {
@@ -212,4 +214,24 @@ public class QualificationHistory extends ASEDModel {
 	public void setIdPeriod(Long idPeriod) {
 		this.idPeriod = idPeriod;
 	}
+
+	@Transient
+	public Long getIdGrade() {
+		return idGrade;
+	}
+
+	public void setIdGrade(Long idGrade) {
+		this.idGrade = idGrade;
+	}
+
+	@Transient
+	public Long getIdCourse() {
+		return idCourse;
+	}
+
+	public void setIdCourse(Long idCourse) {
+		this.idCourse = idCourse;
+	}
+
+
 }

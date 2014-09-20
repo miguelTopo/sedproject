@@ -342,3 +342,37 @@ function validateAddStudent() {
 			return false;
 		}
 }
+ 
+ function addLoginFormValidation(){
+	 var idForm = "loginForm";
+	 valUsername = addTextValidation("loginForm:sedUserName", true, true, 1, 100);
+	 valPassword = addTextValidation(idForm + ":sedPassword", true, true, 1, 200);
+	 return LiveValidation.massValidate([valUsername, valPassword]);
+ }
+ 
+function validateLoginForm(){
+	var idForm = "loginForm";
+	
+	if(addLoginFormValidation()){
+		
+		pass = document.getElementById(idForm + ":sedPassword").value;
+		if (pass.length != 32) {
+			document.getElementById(idForm + ":sedPassword").value = hex_md5(pass);
+		}
+		PF('statusDialog').show();
+		
+		PrimeFaces.ab({
+			formId : idForm,
+			partialSubmit : true,
+			source : idForm + ':btnSedLogin',
+			process : idForm,
+			update : 'loginForm:growl',
+			oncomplete : function(xhr, status, args) {
+				loginUserValidate(xhr, status, args);
+			}
+		});
+		return false;
+		
+	}
+	
+ }

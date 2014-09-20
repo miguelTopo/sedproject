@@ -19,9 +19,7 @@ public class Period extends AParameter {
 	 */
 	private static final long serialVersionUID = 4362377407663768778L;
 
-	@GenericGenerator(name = "generator", strategy = "increment")
 	@Id
-	@GeneratedValue(generator = "generator")
 	@Column(name = "id", nullable = false, unique = true)
 	public Long getId() {
 		return this.id;

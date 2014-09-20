@@ -98,4 +98,52 @@ public class QualificationHistoryDAO extends HibernateDAO {
 
 
 	}
+
+	/** @author MTorres 20/9/2014 15:51:48 */
+	public List<QualificationHistory> loadTotalQualificationList() throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT q.value AS value, ");
+			hql.append(" q.idQualificationType AS idQualificationType, ");
+			hql.append(" q.idStudentCourse AS idStudentCourse, ");
+			hql.append(" q.idSubject AS idSubject, ");
+			hql.append(" sc.id AS idStudentCourse, ");
+			hql.append(" sc.idStudent AS idStudent, ");
+			hql.append(" sc.idCourse AS idCourse, ");
+			hql.append(" sc.idPeriod AS idPeriod, ");
+			hql.append(" c.idGrade AS idGrade  ");
+			hql.append(" FROM Qualification q, ");
+			hql.append(" StudentCourse sc,  ");
+			hql.append(" Course c ");
+			hql.append(" WHERE sc.id = q.idStudentCourse ");
+			hql.append(" AND c.id = sc.idCourse ");
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(QualificationHistory.class));
+			return qo.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
+	/** @author MTorres 20/9/2014 15:59:53 */
+	public void deleteQualificationPeriod() throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" DELETE Qualification ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.executeUpdate();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
 }
