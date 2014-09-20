@@ -32,6 +32,7 @@ public class TeacherQualificationBean extends BackingBean {
 	private boolean validC1;
 	private boolean validC2;
 	private boolean validC3;
+	private boolean validC4;
 
 	private Long idCourse;
 	private Long idFinalQualificationType;
@@ -84,10 +85,13 @@ public class TeacherQualificationBean extends BackingBean {
 			this.validC1 = false;
 			this.validC2 = false;
 			this.validC3 = false;
+			this.validC4 = false;
 			int totalC1 = 0;
 			int totalC2 = 0;
 			int totalC3 = 0;
+			int totalC4 = 0;
 			int totalValidC3 = 0;
+
 
 			for (Student s : this.studentList) {
 				for (Qualification q : s.getQualificationList()) {
@@ -99,6 +103,8 @@ public class TeacherQualificationBean extends BackingBean {
 						totalC3++;
 					if (q.getIdQualificationType().equals(IQualificationType.C3) && q.getValue() > 0)
 						totalValidC3++;
+					if (q.getIdQualificationType().equals(IQualificationType.C4) && q.getValue() > 0)
+						totalC4++;
 				}
 			}
 
@@ -110,6 +116,9 @@ public class TeacherQualificationBean extends BackingBean {
 				return false;
 			} else if (totalC3 != 0 && totalC3 != this.studentList.size()) {
 				addWarnMessage("Guardar Notas", "Verifique que todos los estudiantes tengan una nota para calificación tipo C3.");
+				return false;
+			} else if (totalC4 != 0 && totalC4 != this.studentList.size()) {
+				addWarnMessage("Guardar Notas", "Verifique que todos los estudiantes tengan una nota para calificación tipo C4.");
 				return false;
 			}
 			this.idFinalQualificationType = 0L;
@@ -125,8 +134,13 @@ public class TeacherQualificationBean extends BackingBean {
 			}
 			if (totalC3 == this.studentList.size())
 				this.validC3 = true;
+
+			if (totalC4 != this.studentList.size())
+				this.validC4 = true;
+
 			if (totalValidC3 == this.studentList.size())
 				this.idFinalQualificationType = IQualificationType.C3;
+
 			return true;
 		} catch (Exception e) {
 			throw e;
@@ -156,6 +170,12 @@ public class TeacherQualificationBean extends BackingBean {
 						if ((q.getValue() > IQualificationValue.C3_MAX_VALUE || q.getValue() < IQualificationValue.C3_MIN_VALUE) && this.validC3) {
 							addWarnMessage("Guardar Notas", "Recuerde que la nota 3 debe estar entre " + IQualificationValue.C3_MAX_VALUE + " y "
 								+ IQualificationValue.C3_MIN_VALUE);
+							return false;
+						}
+					} else if (q.getIdQualificationType().equals(IQualificationType.C4)) {
+						if (q.getValue() > IQualificationValue.C4_MAX_VALUE || q.getValue() < IQualificationValue.C4_MIN_VALUE && this.validC4) {
+							addWarnMessage("Guardar Notas", "Recuerde que la nota 4 debe estar entre " + IQualificationValue.C4_MAX_VALUE + " y "
+								+ IQualificationValue.C4_MIN_VALUE);
 							return false;
 						}
 					}
@@ -224,6 +244,8 @@ public class TeacherQualificationBean extends BackingBean {
 						else if (i == 2)
 							q.setIdQualificationType(IQualificationType.C3);
 						else if (i == 3)
+							q.setIdQualificationType(IQualificationType.C4);
+						else if (i == 4)
 							q.setIdQualificationType(IQualificationType.CF);
 						s.getQualificationList().add(q);
 					}

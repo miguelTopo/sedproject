@@ -1,7 +1,10 @@
 package co.edu.udistrital.core.common.list;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -12,6 +15,7 @@ import co.edu.udistrital.core.common.util.resource.ManageProperties;
 import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.core.login.model.TreeSedRole;
+import co.edu.udistrital.sed.api.IPeriodClose;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
@@ -42,7 +46,7 @@ public class BeanList implements Serializable {
 	private static List<IdentificationType> identificationTypeList;
 	private static List<SedRole> sedRoleList;
 	private static List<QualificationType> qualificationTypeList;
-	private static List<Period>periodList;
+	private static List<Period> periodList;
 
 	private static List<EmailTemplate> emailTemplateList;
 
@@ -66,14 +70,42 @@ public class BeanList implements Serializable {
 			loadQualificationTypeList();
 			loadKnowledgeAreaList();
 			loadPeriodList();
+			updatePeriodTask();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void 	loadPeriodList(){
+
+	/** @author MTorres 20/9/2014 15:23:55 */
+	private static void updatePeriodTask() throws Exception {
 		try {
-			if(periodList==null)
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+
+				public void run() {
+					Calendar today = Calendar.getInstance();
+					if (today.get(Calendar.MONTH) == IPeriodClose.MONTH && today.get(Calendar.DAY_OF_MONTH) == IPeriodClose.DAY) {
+						try {
+							controller.updatePeriodTask(Long.valueOf(today.get(Calendar.YEAR) + 1));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					} else {
+						System.out.println("El dia " + today.getTime() + " aun no es dia de cierre de periodo.");
+
+					}
+				}
+			}, 0, 86400000);
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+	public static void loadPeriodList() {
+		try {
+			if (periodList == null)
 				periodList = controller.loadPeriodList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,8 +114,8 @@ public class BeanList implements Serializable {
 
 	public static void loadKnowledgeAreaList() {
 		try {
-			if(knowledgeAreaList==null)
-				knowledgeAreaList=controller.loadKnowledgeAreaList();
+			if (knowledgeAreaList == null)
+				knowledgeAreaList = controller.loadKnowledgeAreaList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -224,5 +256,5 @@ public class BeanList implements Serializable {
 	public static List<Period> getPeriodList() {
 		return periodList;
 	}
-	
+
 }
