@@ -1,0 +1,65 @@
+body {
+	margin: 0;
+}
+
+.ui-content {
+	margin: 0;
+	background-image: url('../css/images/home.jpg');
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	width: 100%;
+	height: 100%;
+}
+
+.ui-user-log {
+	background: -webkit-linear-gradient(90deg, #0A1D2B, #004980);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(90deg, #0A1D2B, #004980);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(90deg, #0A1D2B, #004980);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(90deg, #0A1D2B, #004980);
+	/* Standard syntax (must be last)*/
+	opacity: 0.8;
+	width: 500px;
+	height: 460px;
+	margin: 0 auto;
+	margin-top: 100px;
+	border-radius: 15px 0px 15px 0px;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}
+.ui-login-header{
+	height: 10%; 
+	background: -webkit-linear-gradient(90deg, #0A1D2B, #004980);/* For Safari 5.1 to 6.0 */ 
+	background: -o-linear-gradient(90deg, #0A1D2B, #85C0FA);/* For Opera 11.1 to 12.0 */ 
+	background: -moz-linear-gradient(90deg, #0A1D2B, #85C0FA);/* For Firefox 3.6 to 15 */ 
+	background: linear-gradient(90deg, #0A1D2B, #85C0FA);
+}
+.ui-logo-header{
+	float: left; 
+	width: 25%;
+	height: 100%;
+}
+.ui-lifemena-header{
+	text-align: center; 
+	height: 10%; 
+	font-family: 'Times New Roman', Times, serif; 
+	font-size: 40px; 
+	color: white; 
+	line-height: 75px; 
+	float: left; 
+	width: 50%; 
+	height: 100%
+}
+.ui-lifemena-img{
+	background-image: url('../css/images/lifemena.jpg'); 
+	border-radius: 50% 50%; 
+	height: 100px; 
+	width: 100px; 
+	background-size: 100px 100px; 
+	margin: 0 auto;
+}

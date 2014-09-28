@@ -186,7 +186,6 @@ public class QualificationDAO extends HibernateDAO {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
-			hql.append(" ");
 			hql.append(" SELECT su.name || ' ' || su.lastName AS sedUserResponsibleFullName, ");
 			hql.append(" s.name AS name, ");
 			hql.append(" s.lastName AS lastName, ");
@@ -197,14 +196,14 @@ public class QualificationDAO extends HibernateDAO {
 			hql.append(" c.id AS idCourse, ");
 			hql.append(" c.name AS courseName, ");
 			hql.append(" sc.id AS idStudentCourse ");
-			hql.append(" FROM Student s ");
-			hql.append(" LEFT JOIN SedUser su ");
+			hql.append(" FROM lifemena.Student s ");
+			hql.append(" LEFT JOIN lifemena.SedUser su ");
 			hql.append(" ON s.idSedUserResponsible = su.id ");
-			hql.append(" INNER JOIN StudentCourse sc ");
+			hql.append(" INNER JOIN lifemena.StudentCourse sc ");
 			hql.append(" ON sc.idStudent = s.id ");
-			hql.append(" INNER JOIN identificationType it ");
+			hql.append(" INNER JOIN lifemena.identificationType it ");
 			hql.append(" ON it.id = s.idIdentificationType ");
-			hql.append(" INNER JOIN Course c ");
+			hql.append(" INNER JOIN lifemena.Course c ");
 			hql.append(" ON c.id = sc.idCourse ");
 			hql.append(" WHERE sc.idPeriod = :idPeriod ");
 			if (idCourse != null && !idCourse.equals(0L))

@@ -80,7 +80,8 @@
 			</div>
 			<p:outputPanel id="studentListOp">
 				<p:outputPanel rendered="#{!empty tracingBean.studentList}">
-					<p:dataTable value="#{tracingBean.studentList}" var="s" filteredValue="#{tracingBean.studentFilteringList}">
+					<p:dataTable value="#{tracingBean.studentList}" var="s" filteredValue="#{tracingBean.studentFilteringList}"
+						scrollable="true" scrollHeight="500" emptyMessage="No se encontraron resultados">
 						
 						<p:column headerText="Curso" filterBy="#{s.courseName}" sortBy="#{s.courseName}" filterMatchMode="contains">
 							#{s.courseName}

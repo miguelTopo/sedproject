@@ -30,20 +30,22 @@ public class LoginFilter implements Filter {
 			String url = req.getRequestURI();
 
 			if (session == null || !session.isValidLogin()) {
-				if (!url.endsWith("login") && !url.endsWith("recuperar")) {
+				if (url.contains("css"))
+					chain.doFilter(request, response);
+				else if (!url.endsWith("login") && !url.endsWith("recuperar")) {
 					res.sendRedirect(req.getServletContext().getContextPath() + "/portal/login");
 				} else {
 					chain.doFilter(request, response);
 				}
-			}else{
-				if(url.endsWith("login") || url.endsWith("recuperar")){
+			} else {
+				if (url.contains("css"))
+					chain.doFilter(request, response);
+				else if (url.endsWith("login") || url.endsWith("recuperar")) {
 					res.sendRedirect(req.getServletContext().getContextPath() + "/portal/menu");
 				} else {
 					chain.doFilter(request, response);
 				}
 			}
-			
-			
 
 
 

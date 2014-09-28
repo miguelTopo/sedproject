@@ -164,6 +164,7 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" SELECT s.id AS id, ");
 			hql.append(" s.identification AS identification, ");
 			hql.append(" s.name AS name, ");
+			hql.append(" s.idWorkDay AS idWorkDay, ");
 			hql.append(" s.lastName AS lastName, ");
 			hql.append(" sc.id AS idStudentCourse, ");
 			hql.append(" c.id AS idCourse, ");

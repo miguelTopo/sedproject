@@ -26,6 +26,7 @@ public class Student extends AParameter implements Serializable {
 	private Long idIdentificationType;
 	private Long idSedUser;
 	private Long idSedUserResponsible;
+	private Long idWorkDay;
 
 	// Transient
 	private String courseName;
@@ -176,6 +177,16 @@ public class Student extends AParameter implements Serializable {
 	public void setIdSedUserResponsible(Long idSedUserResponsible) {
 		this.idSedUserResponsible = idSedUserResponsible;
 	}
+	@Column(name = "idWorkDay", nullable = false)
+	public Long getIdWorkDay() {
+		return idWorkDay;
+	}
+
+	public void setIdWorkDay(Long idWorkDay) {
+		this.idWorkDay = idWorkDay;
+	}
+
+
 
 	@Transient
 	public String getCourseName() {
