@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="../../template/externalTemplate.xhtml">
+	<ui:define name="main">
+		<script type="text/javascript">
+			//<![CDATA[
+			function loginUserValidate(xhr, status, args) {
+				if (!args.validationFailed && args.isLogin) {
+					setTimeout(function() {
+						window.location = args.view;
+					}, 500);
+				}
+			}
+			//]]>
+		</script>
+		<h:form id="loginForm">
+			<table style="width: 100%">
+				<tr>
+					<td><p:inputText value="#{loginBean.userName}"
+							placeholder="#{bundle['page.login.labelUserUser']}"
+							style="width:100%" /></td>
+				</tr>
+				<tr>
+					<td><p:password value="#{loginBean.userPassword}"
+							placeholder="#{bundle['page.login.labelPassword']}"
+							style="width:100%" /></td>
+				</tr>
+				<tr>
+					<td><br /></td>
+				</tr>
+				<tr>
+					<td><p:commandButton
+							value="#{bundle['page.login.labelSignIn']}"
+							styleClass="ui-priority-primary" style="width:100%"
+							actionListener="#{loginBean.login}" update=":growl"
+							oncomplete="loginUserValidate(xhr, status, args)" /></td>
+
+				</tr>
+			</table>
+			<div style="text-align: right; padding-top: 20px;">
+				<a href="recuperar"> #{bundle['page.login.labelForgetPassword']}
+				</a>
+			</div>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -34,8 +34,10 @@ import org.primefaces.context.ApplicationContext;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
+import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.sed.api.IQualificationType;
 import co.edu.udistrital.sed.api.IQualitativeQualification;
+import co.edu.udistrital.sed.model.Assignment;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.KnowledgeArea;
 import co.edu.udistrital.sed.model.Qualification;
@@ -159,10 +161,34 @@ public class ReportBean extends BackingBean implements IReport {
 	}
 
 	/** @author MTorres */
-	private Sheet buildHeaderReport(String sheetName) throws Exception {
+	private Sheet buildHeaderReport(String sheetName, Long idCourse, Long idWorkDay) throws Exception {
 		try {
-			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+			Assignment teacher = this.controller.loadTeacherManager(idCourse, idWorkDay);
+
 			Sheet sheet = this.wb.createSheet(sheetName);
+			sheet.setColumnWidth(0, 3875);
+			sheet.setColumnWidth(1, 2580);
+			sheet.setColumnWidth(2, 6460);
+			sheet.setColumnWidth(3, 2580);
+			sheet.setColumnWidth(4, 4550);
+			sheet.setColumnWidth(5, 5170);
+			sheet.setColumnWidth(6, 3250);
+			sheet.setColumnWidth(7, 3875);
+
+			int subjectCount = 0;
+			int knowledgeAreaCount = 0;
+
+			// Verificar el numero de qualification existentes
+			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
+				knowledgeAreaCount++;
+				for (Subject s : ka.getSubjectList())
+					subjectCount += getQualificationTypeList().size();
+			}
+			subjectCount += 8;
+			for (int i = 0; i < knowledgeAreaCount; i++) {
+				sheet.setColumnWidth(subjectCount, 6460);
+				subjectCount++;
+			}
 			// rowFrom, rowTo, colFrom, colTo
 			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 7));
@@ -199,7 +225,7 @@ public class ReportBean extends BackingBean implements IReport {
 			CellStyle infoStyle = this.wb.createCellStyle();
 			infoStyle.setAlignment(CellStyle.ALIGN_CENTER);
 			infoStyle.setFont(info);
-			infoStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.index);
+			infoStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.index);
 			infoStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 			// ////////////////////////
 
@@ -221,45 +247,56 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellValue("SEDE");
 			cell.setCellStyle(infoStyle);
 
+			//
+			cell = data1.createCell(2);
+			cell.setCellValue("Liceo Femenino Mercedes Nariño");
+
 			cell = data1.createCell(3);
 			cell.setCellValue("JORNADA");
 			cell.setCellStyle(infoStyle);
 
-			cell = data1.createCell(5);
-			cell.setCellValue("GRUPO");
-			cell.setCellStyle(infoStyle);
+			cell = data1.createCell(4);
+			cell.setCellValue("Mañana");
 
 			Row data2 = sheet.createRow((short) 3);
 			cell = data2.createCell(1);
 			cell.setCellValue("GRUPO");
 			cell.setCellStyle(infoStyle);
 
+			cell = data2.createCell(2);
+			cell.setCellValue(teacher != null ? teacher.getCourseName() : "Sin Información");
+
 			cell = data2.createCell(3);
 			cell.setCellValue("PERIODO");
 			cell.setCellStyle(infoStyle);
+
+			cell = data2.createCell(4);
+			cell.setCellValue(teacher != null ? teacher.getIdPeriod().toString() : "Sin Información");
 
 			cell = data2.createCell(5);
 			cell.setCellValue("DIRECTOR DE GRUPO");
 			cell.setCellStyle(infoStyle);
 
+			cell = data2.createCell(6);
+			cell.setCellValue(teacher != null ? teacher.getTeacherFullName() : "Sin Información");
+
+			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 			// Paint Image header
-			// InputStream inputStream = new FileInputStream(context.getRealPath("/") +
-			// "css/images/bogotaShield.png");
-			//
-			// byte[] bytes = IOUtils.toByteArray(inputStream);
-			// int pictureIdx = this.wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-			// inputStream.close();
-			//
-			// CreationHelper helper = this.wb.getCreationHelper();
-			//
-			// Drawing drawing = sheet.createDrawingPatriarch();
-			//
-			// ClientAnchor anchor = helper.createClientAnchor();
-			// anchor.setCol1(1);
-			// anchor.setRow1(2);
-			//
-			// Picture picture = drawing.createPicture(anchor, pictureIdx);
-			// picture.resize();
+			InputStream inputStream = new FileInputStream(context.getRealPath("/") + "css/images/reportImage.png");
+
+			byte[] bytes = IOUtils.toByteArray(inputStream);
+			int pictureIdx = this.wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+			inputStream.close();
+
+			CreationHelper helper = this.wb.getCreationHelper();
+
+			Drawing drawing = sheet.createDrawingPatriarch();
+
+			ClientAnchor anchor = helper.createClientAnchor();
+			anchor.setCol1(0);
+			anchor.setRow1(0);
+			Picture picture = drawing.createPicture(anchor, pictureIdx);
+			picture.resize();
 
 			return sheet;
 		} catch (Exception e) {
@@ -288,8 +325,9 @@ public class ReportBean extends BackingBean implements IReport {
 					// Verificar que no exista la hoja en el documento, puesto que genera error
 					if (!sheetNameList.contains(s.getCourseName())) {
 						sheetNameList.add(s.getCourseName());
-						gradeSheet = buildHeaderReport(s.getCourseName());
+						gradeSheet = buildHeaderReport(s.getCourseName(), s.getIdCourse(), s.getIdWorkDay());
 						gradeSheet = buildHeaderTable(gradeSheet, s.getQualificationUtilList());
+						studentSheetIndex = 9;
 					}
 					gradeSheet = buildStudentDataRow(gradeSheet, s, studentSheetIndex);
 					studentSheetIndex++;
@@ -493,6 +531,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 
 			Cell cellAux = null;
+			headerInfoStyle.setWrapText(true);
 
 			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
 				sheet.addMergedRegion(new CellRangeAddress(6, 8, indexQt, indexQt));

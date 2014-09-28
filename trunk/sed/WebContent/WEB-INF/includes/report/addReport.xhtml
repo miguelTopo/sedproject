@@ -35,11 +35,11 @@
 				</article>
 			</section>
 			
-			<p:outputPanel id="reportStudentOp">
+			<p:outputPanel id="reportStudentOp" style="padding-top:25px;">
 				<p:outputPanel rendered="#{!empty reportBean.studentList}">
 				<div>
 				<p:scrollPanel mode="native" style="width:100%;border-style:none;">
-				<p:dataTable id="reportTable" value="#{reportBean.studentList}" var="s" style="width:#{fn:length(reportBean.knowledgeAreaGradeList)*800}px;">
+				<p:dataTable id="reportTable" value="#{reportBean.studentList}" var="s" style="width:#{fn:length(reportBean.knowledgeAreaGradeList)*800}px;max-height: 500px;">
 						
 						<p:columnGroup type="header">
             				<p:row>

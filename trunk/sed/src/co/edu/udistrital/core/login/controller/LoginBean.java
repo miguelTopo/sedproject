@@ -20,7 +20,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 @ManagedBean
 @SessionScoped
-@URLMappings(mappings = {@URLMapping(id = "login", pattern = "/portal/login", viewId = "/pages/sedLogin.jspx"),
+@URLMappings(mappings = {@URLMapping(id = "login", pattern = "/portal/login", viewId = "/pages/login/sedLogin.jspx"),
 	@URLMapping(id = "menu", pattern = "/portal/menu", viewId = "/pages/sed.jspx")})
 public class LoginBean extends BackingBean implements Serializable {
 

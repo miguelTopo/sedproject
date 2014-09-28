@@ -13,6 +13,7 @@ import org.hibernate.transform.Transformers;
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.connection.HibernateDAO;
+import co.edu.udistrital.core.login.model.SedUser;
 
 public class AssignmentDAO extends HibernateDAO {
 
@@ -254,4 +255,39 @@ public class AssignmentDAO extends HibernateDAO {
 			qo = null;
 		}
 	}
+
+	/** @author MTorres 27/9/2014 17:16:18 */
+	public Assignment loadTeacherManager(Long idCourse, Long idWorkDay) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo = null;
+		try {
+			hql.append(" SELECT a.id AS id, ");
+			hql.append(" a.idPeriod AS idPeriod, ");
+			hql.append(" a.idCourse AS idCourse, ");
+			hql.append(" a.idSedUser AS idSedUser, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" su.name ||' '||su.lastName AS teacherFullName ");
+			hql.append(" FROM Assignment a, ");
+			hql.append(" Course c, ");
+			hql.append(" SedUser su ");
+			hql.append(" WHERE c.id = a.idCourse ");
+			hql.append(" AND su.id = a.idSedUser ");
+			hql.append(" AND c.id = :idCourse ");
+			hql.append(" AND a.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Assignment.class));
+			qo.setParameter("idCourse", idCourse);
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setMaxResults(1);
+
+			return (Assignment) qo.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			hql = null;
+			qo = null;
+		}
+	}
+
 }

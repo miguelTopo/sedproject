@@ -1,93 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
-<f:view>
 	<h:head>
-		<link rel="stylesheet" type="text/css" href="../css/sedStyle.css" />
-		<f:loadBundle basename="co.edu.udistrital.core.common.util.resource.webMessages" var="bundle" />
-		
-		<script type="text/javascript">
-		  //<![CDATA[
-		  function loginUserValidate(xhr, status, args) {
-	    		if (!args.validationFailed && args.isLogin) {
-	      		setTimeout(function() {
-	        	window.location = args.view;
-	      	}, 500);
-	    	}
-	  		}
-		//]]>
-		</script>
 	</h:head>
+	<style>
+		.content{
+			background-image: url('../css/images/home.jpg');
+			background-repeat: no-repeat;
+			background-size:100% 100%;
+		}
+	</style>
 	<h:body>
+		<div class="content">
+		
+		</div>
 		<h:form id="loginForm">
 			<p:growl id="growl" showDetail="true" life="6000" autoUpdate="true" globalOnly="true" />
-			<p:dialog id="dlgGeneralStatus" widgetVar="PF('statusDialog')"
-				closable="false" header="Procesando..." resizable="false"
-				draggable="false" modal="true">
-				<div align="center">
-					<p:graphicImage value="../css/images/loadingAjax.gif" />
-				</div>
-			</p:dialog>
-			<div id="sedHeader" align="center">
-				<table>
-					<tr>
-						<td><p:graphicImage value="../css/images/bogotaShield.png" height="85" width="70" /></td>
-						<td><p:graphicImage value="../css/images/logoSed.png" /></td>
-					</tr>
-				</table>
-			</div>
-			<div align="center" style="padding-top: 70px">
-				<div style="width: 25%;padding-top: 4%;">
-					<p:panel id="loginPanel"
-						header="#{bundle['page.core.labelWelcome']}">
-						<p:focus context=":loginForm:loginPanel" />
-						<table cellpadding="3" cellspacing="3" width="100%">
-							<tr>
-								<td width="5%" />
-								<td width="35%" />
-								<td width="55%" />
-								<td width="5%" />
-							</tr>
-							<tr>
-								<td />
-								<td>#{bundle['page.login.labelUser']}:</td>
-								<td><p:inputText value="#{loginBean.userName}"
-										placeholder="#{bundle['page.login.labelUserUser']}" /></td>
-							</tr>
-							<tr>
-								<td />
-								<td>#{bundle['page.login.labelPassword']}:</td>
-								<td><p:password value="#{loginBean.userPassword}"
-										placeholder="#{bundle['page.login.labelPassword']}" /></td>
-							</tr>
-							<tr>
-								<td>
-									<br/>
-								</td>
-							</tr>
-						</table>
-
-						<div align="center">
-							<p:commandButton value="#{bundle['page.login.labelSignIn']}" styleClass="ui-priority-primary"
-								actionListener="#{loginBean.login}" update=":loginForm:growl" oncomplete="loginUserValidate(xhr, status, args)" />
-						</div>
-						<div style="padding:20px;">
-							<a href="recuperar">
-								#{bundle['page.login.labelForgetPassword']}
-							</a> 
-						</div>
-
-					</p:panel>
-				</div>
-			</div>
-			
-			
-			
+			aca haciendo algo
 		</h:form>
 	</h:body>
-</f:view>
 </html>
