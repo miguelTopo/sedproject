@@ -6,10 +6,11 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
 
-<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" style="max-height:550px">
+<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" style="max-height:550px"
+	showEffect="slide" hideEffect="clip">
 	<h:form id="dlgStdSelectForm">
 		<p:outputPanel id="studentSelectOp">
-	<table style="width: 700px; border-spacing: 7px;">
+			<table style="width: 700px; border-spacing: 7px;">
 				<tr>
 					<td style="width: 5%" />
 					<td style="width: 13%" />
@@ -21,12 +22,13 @@
 				<tr>
 					<td />
 					<td colspan="4" style="text-align:center;">
-					Por favor seleccione el (los) estudiante(s) que estan a cargo del usuario que está creando.</td>
+						#{bundle['page.seduser.labelStudentSelectResponsibleGuide']}
+					</td>
 				</tr>
 				<tr>
 					<td />
 					<td style="text-align: center">
-						Grado:
+						#{bundle['page.sed.labelGrade']}:
 					</td>
 					<td>
 						<p:selectOneMenu id="somStdGrade" value="#{sedUserBean.sedUser.idStudentGrade}" style="width:98%">
@@ -37,7 +39,7 @@
 						</p:selectOneMenu>
 					</td>
 					<td style="text-align: center">
-						Curso:
+						#{bundle['page.sed.labelCourse']}:
 					</td>
 					<td>
 						<p:selectOneMenu id="somStdCourse" value="#{sedUserBean.sedUser.idStudentCourse}" style="width:98%"
@@ -54,11 +56,11 @@
 						<p:dataTable id="stdResponsibleTable" value="#{sedUserBean.studentList}" var="s"
 							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" style="max-height: 200px;">
 							<p:column headerText="Nombres" width="150">
-									#{s.name}	
-								</p:column>
+								#{s.name}	
+							</p:column>
 
 							<p:column headerText="Apellidos" width="150">
-									#{s.lastName}	
+								#{s.lastName}	
 							</p:column>
 
 							<p:column style="text-align:center" width="35">
@@ -81,17 +83,17 @@
 					<td colspan="4">
 						<p:outputPanel id="responsibleStdOp">
 							<p:outputPanel rendered="#{!empty sedUserBean.studentResponsibleList}">
-						El Usuario es responsable y/o acudiente de: 
+								#{bundle['page.seduser.labelStudentResponsibleTo']}:
 							<p:dataTable id="responsibleStdTable" value="#{sedUserBean.studentResponsibleList}" var="sr" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
 								scrollable="true" scrollHeight="75">
 								
-								<p:column headerText="Nombres">
+								<p:column headerText="#{bundle['page.student.labelStudentName']}">
 									#{sr.name}	
 								</p:column>
 
-							<p:column headerText="Apellidos">
+								<p:column headerText="#{bundle['page.student.labelStudentLastName']}">
 									#{sr.lastName}	
-							</p:column>
+								</p:column>
 							
 							<p:column style="text-align:center" width="35">
 								<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 

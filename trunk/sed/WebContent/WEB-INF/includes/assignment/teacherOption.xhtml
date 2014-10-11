@@ -1,29 +1,30 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-<f:view>
-	<section style="padding-left: 15px;">
-		<article>
-			<table style="width:100%">
-				<tr>
-					<td style="width:22%">
-						Docente:
-					</td>
-					<td style="width:78%">
-						<p:selectOneMenu value="#{assignmentBean.assignmentFilter.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? true : false}" filterMatchMode="startsWith" 
-							style="width:98%">
-							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
-							<f:selectItems value="#{assignmentBean.teacherList}" var="t" itemLabel="#{t.sedUserFullName}" itemValue="#{t.id}"/>
-							<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('assignmentScheduleWV').update();"/>
-						</p:selectOneMenu>
-					</td>		
-				</tr>
-			</table>
-		</article>
-	</section>
+	<table>
+		<tr>
+			<td style="width:5%"/>
+			<td style="width:18%"/>
+			<td style="width:72%"/>
+			<td style="width:5%"/>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				#{bundle['page.sed.labelTeacher']}:
+			</td>
+			<td>
+				<p:selectOneMenu value="#{assignmentBean.assignmentFilter.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? true : false}" filterMatchMode="startsWith" 
+					style="width:98%">
+					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
+					<f:selectItems value="#{assignmentBean.teacherList}" var="t" itemLabel="#{t.sedUserFullName}" itemValue="#{t.id}"/>
+					<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('assignmentScheduleWV').update();"/>
+				</p:selectOneMenu>
+			</td>
+		</tr>
+	</table>
 </f:view>
-</html>

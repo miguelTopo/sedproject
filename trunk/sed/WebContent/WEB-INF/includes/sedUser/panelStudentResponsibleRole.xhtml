@@ -1,39 +1,36 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
-<f:view>
-	<article style="width:100%;padding-top:25px;">
-		<div style="text-align:center;padding-bottom:20px">
-			<p:commandButton value="Seleccionar Estudiante" action="#{sedUserBean.goSelectStudent}" oncomplete="PF('dlgStudentSelectWV').show();" 
-				process="@this" update=":dlgStdSelectForm:studentSelectOp"/>
-		</div>
-		<div style="width:60%;margin:0 auto;">
-			<p>
-				Estudiante(s) seleccionados:
-			</p>
-			<p:dataTable id="stdResList" value="#{sedUserBean.studentResponsibleList}" var="stdRes" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
-				scrollable="true" scrollHeight="75">
-			
-				<p:column headerText="Nombres">
-					#{stdRes.name}	
-				</p:column>
-
-				<p:column headerText="Apellidos">
-					#{stdRes.lastName}	
-				</p:column>
-							
-				<p:column style="text-align:center" width="35">
-					<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" update=":addSedUserForm:opChangeRole" 
-						process="@this :addSedUserForm:somSedRole">
-						<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
-						<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{stdRes}" />
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
-		</div>
-	</article>
+	
+	<div style="text-align:center;padding-bottom:20px">
+		<p:commandButton value="#{bundle['page.seduser.labelStudentSelect']}" action="#{sedUserBean.goSelectStudent}" 
+			oncomplete="PF('dlgStudentSelectWV').show();" process="@this" update=":dlgStdSelectForm:studentSelectOp"/>
+	</div>	
+	
+	<div style="width:60%;margin:0 auto;">
+		<p>
+			#{bundle['page.seduser.labelStudentSelectedList']}:
+		</p>
+		<p:dataTable id="stdResList" value="#{sedUserBean.studentResponsibleList}" var="stdRes" 
+			emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" scrollHeight="75">
+		
+			<p:column headerText="#{bundle['page.student.labelStudentName']}">
+				#{stdRes.name}	
+			</p:column>
+				<p:column headerText="#{bundle['page.student.labelStudentLastName']}">
+				#{stdRes.lastName}	
+			</p:column>
+						
+			<p:column style="text-align:center" width="35">
+				<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" update=":addSedUserForm:opChangeRole" 
+					process="@this :addSedUserForm:somSedRole">
+					<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
+					<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{stdRes}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</div>
 </f:view>
-</html>

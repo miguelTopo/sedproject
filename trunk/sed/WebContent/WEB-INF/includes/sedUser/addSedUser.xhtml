@@ -1,255 +1,220 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions">
-<f:view>
-		<style type="text/css">
-			section article{
-			width: 388px;
-			padding-left: 35px;
-			padding-right: 35px;
-			display: inline-block;
-			}
-			table{
-				width:100%;
-			}
-			.ui-label-table{
-				width:35%;
-			}
-			.ui-content-table{
-				width:65%;
-			}
-			
-	</style>
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:o="http://omnifaces.org/ui">
+	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>
 	<h:form id="addSedUserForm">
 		<p:panel id="addSedUserPanel" header="#{sedUserBean.showAdd ? bundle['page.seduser.labelAddUser'] : bundle['page.seduser.labelEditUser']}">
 			<div style="padding:25px;">
-				<div style="padding-bottom: 25px;">
+				<div>
 					<p>
 						<h:outputText value="#{bundle['page.seduser.labelGuideAddSedUser']}" rendered="#{sedUserBean.showAdd}" />
 						<h:outputText value="#{bundle['page.seduser.labelGuideEditSedUser']}" rendered="#{sedUserBean.showEdit}" />
 					</p>
-					<br/>
-					<br/>
 					<p>
 						#{bundle['page.core.labelDataObligatory']}
 					</p>
 				</div>
-				<div class="ui-subtitle-sed">
-						<h4 style="color: white;">
-							#{bundle['page.seduser.labelPersonalData']}
-						</h4>
-				</div>
-				<br/>
-				<br/>
-				<section>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											#{bundle['page.student.labelStudentLastName']}:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:inputText id="txtSuLastName" value="#{sedUserBean.sedUser.lastName}" style="width:95%"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.student.labelStudentName']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:inputText id="txtSuName" value="#{sedUserBean.sedUser.name}" style="width:95%"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.student.labelIdentificationType']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:selectOneMenu id="somIdType" value="#{sedUserBean.sedUser.idIdentificationType}" style="width:98%">
-										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
-										<f:selectItems value="#{sedUserBean.identificationTypeList}" var="itl" itemLabel="#{itl.name}" itemValue="#{itl.id}" />
-									</p:selectOneMenu>
-									<div id="valIdType_DIV" class="ui-invalid-field"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.student.labelStudentIdentification']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:inputText id="txtSuIdentification" value="#{sedUserBean.sedUser.identification}" style="width:95%">
-										<p:ajax event="blur" process="@this" update=":addSedUserForm:opIdentExist"
-											listener="#{sedUserBean.validateIdentification}" />
-									</p:inputText>
-									<pe:keyFilter for="txtSuIdentification" mask="pint" /> 
-						
-									<p:outputPanel id="opIdentExist">
-										<p:outputPanel rendered="#{sedUserBean.existIdentification}">
-											<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-invalid-field" />
-										</p:outputPanel>
-									</p:outputPanel>
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.student.labelStudentEmail']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:inputText id="txtSuEmail" value="#{sedUserBean.sedUser.email}" style="width:95%;text-transform:lowercase;">
-										<p:ajax process="@this" update=":addSedUserForm:opEmailExist" listener="#{sedUserBean.validateEmail}" event="blur" />
-									</p:inputText> 
-						
-									<p:outputPanel id="opEmailExist">
-										<p:outputPanel rendered="#{sedUserBean.existEmail}">
-											<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-invalid-field" />
-										</p:outputPanel>
-									</p:outputPanel>
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										Fecha de nacimiento
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:calendar id="birthdayDate" value="#{sedUserBean.sedUser.birthdayDate}" pattern="yyyy/MM/dd" 
-										styleClass="ui-seduser-calendar" locale="es" navigator="true"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-			</section>
-			<br/>
-			<br/>
 				
-				<div class="ui-subtitle-sed">
-					<h4 style="color: white;">
-						#{bundle['page.seduser.labelUserData']}
-					</h4>
-				</div>
-				<br/>
-				<br/>
-				<section>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										Tipo de usuario:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:selectOneMenu id="somSedRole" value="#{sedUserBean.sedUser.idSedRole}" style="width:98%">
-										<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
-										<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
-										<p:ajax process="@this" update=":addSedUserForm:opChangeRole :addSedUserForm:btnAddSedUser" 
-											listener="#{sedUserBean.handleRoleChange}" disabled="#{sedUserBean.showEdit}"/>
-										<p:ajax process="@this" update=":addSedUserForm:opChangeRole :addSedUserForm:btnUpdateSedUser" 
-											listener="#{sedUserBean.handleRoleChange}" disabled="#{sedUserBean.showAdd}"/>	
-									</p:selectOneMenu>
-									<div id="valIdSedRole_DIV" class="ui-invalid-field"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-					
+				<table>
+					<tr>
+						<td style="width:5%"/>
+						<td style="width:18%"/>
+						<td style="width:25%"/>
+						<td style="width:4%"/>
+						<td style="width:18%"/>
+						<td style="width:25%"/>
+						<td style="width:5%"/>
+					</tr>
+					<tr>
+						<td colspan="7">
+							<div class="ui-subtitle-sed">
+								<h4 style="color: white;">
+									#{bundle['page.seduser.labelPersonalData']}
+								</h4>
+							</div>			
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<br/>
+						</td>
+					</tr>	
+					<tr>
+						<td/>
+						<td>
+							#{bundle['page.student.labelStudentLastName']}:
+						</td>
+						<td>
+							<p:inputText id="txtSuLastName" value="#{sedUserBean.sedUser.lastName}" style="width:95%"/>
+						</td>
+						<td/>
+						<td>
+							#{bundle['page.student.labelStudentName']}:
+						</td>
+						<td>
+							<p:inputText id="txtSuName" value="#{sedUserBean.sedUser.name}" style="width:95%"/>
+						</td>
+					</tr>
+					<tr>
+						<td/>
+						<td>
+							#{bundle['page.student.labelIdentificationType']}:
+						</td>
+						<td>
+							<p:selectOneMenu id="somIdType" value="#{sedUserBean.sedUser.idIdentificationType}" style="width:98%">
+								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+								<f:selectItems value="#{sedUserBean.identificationTypeList}" var="itl" itemLabel="#{itl.name}" itemValue="#{itl.id}" />
+							</p:selectOneMenu>
+							<div id="valIdType_DIV" class="ui-invalid-field"/>
+						</td>
+						<td/>
+						<td>
+							#{bundle['page.student.labelStudentIdentification']}:
+						</td>
+						<td>
+							<p:inputText id="txtSuIdentification" value="#{sedUserBean.sedUser.identification}" style="width:95%">
+								<p:ajax event="blur" process="@this" update=":addSedUserForm:opIdentExist"
+									listener="#{sedUserBean.validateIdentification}" />
+							</p:inputText>
+							<pe:keyFilter for="txtSuIdentification" mask="pint" /> 
+				
+							<p:outputPanel id="opIdentExist">
+								<p:outputPanel rendered="#{sedUserBean.existIdentification}">
+									<h:outputText value="#{bundle['page.seduser.labelExistIdentification']}" styleClass="ui-invalid-field" />
+								</p:outputPanel>
+							</p:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<td/>
+						<td>
+							#{bundle['page.student.labelStudentEmail']}:
+						</td>
+						<td>
+							<p:inputText id="txtSuEmail" value="#{sedUserBean.sedUser.email}" style="width:95%;text-transform:lowercase;">
+								<p:ajax process="@this" update=":addSedUserForm:opEmailExist" listener="#{sedUserBean.validateEmail}" event="blur" />
+							</p:inputText> 
+				
+							<p:outputPanel id="opEmailExist">
+								<p:outputPanel rendered="#{sedUserBean.existEmail}">
+									<h:outputText value="#{bundle['page.seduser.labelExistEmail']}" styleClass="ui-invalid-field" />
+								</p:outputPanel>
+							</p:outputPanel>
+						</td>
+						<td/>
+						<td>
+							#{bundle['page.student.labelStudentBirthday']}:
+						</td>
+						<td>
+							<p:calendar id="birthdayDate" value="#{sedUserBean.sedUser.birthdayDate}" pattern="yyyy/MM/dd" 
+								styleClass="ui-seduser-calendar" locale="es" navigator="true"/>
+						</td>
+					</tr>
+					<tr>
+						<td/>
+						<td>
+							#{bundle['page.seduser.labelUserType']}:
+						</td>
+						<td>
+							<p:selectOneMenu id="somSedRole" value="#{sedUserBean.sedUser.idSedRole}" style="width:98%">
+								<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}"/>
+								<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
+								<p:ajax process="@this" update=":addSedUserForm:opChangeRole :addSedUserForm:btnAddSedUser" 
+									listener="#{sedUserBean.handleRoleChange}" disabled="#{sedUserBean.showEdit}"/>
+								<p:ajax process="@this" update=":addSedUserForm:opChangeRole :addSedUserForm:btnUpdateSedUser" 
+									listener="#{sedUserBean.handleRoleChange}" disabled="#{sedUserBean.showAdd}"/>	
+							</p:selectOneMenu>
+							<div id="valIdSedRole_DIV" class="ui-invalid-field"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<br/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="7">
+							<div class="ui-subtitle-sed">
+								<h4 style="color: white;">
+									#{bundle['page.seduser.labelUserData']}
+								</h4>
+							</div>
+						</td>
+					</tr>
+				</table>
 					<p:outputPanel id="opChangeRole">
-						<p:outputPanel rendered="#{sedUserBean.sedUser.idSedRole eq 3}">
+						<p:outputPanel rendered="#{sedUserBean.sedUser.idSedRole eq ISedRole.STUDENT}">
 							<ui:include src="/WEB-INF/includes/sedUser/panelStudentRole.xhtml" />
 						</p:outputPanel>
-						<p:outputPanel rendered="#{sedUserBean.sedUser.idSedRole eq 4}">
+						<p:outputPanel rendered="#{sedUserBean.sedUser.idSedRole eq ISedRole.STUDENT_RESPONSIBLE}">
 							<ui:include src="/WEB-INF/includes/sedUser/panelStudentResponsibleRole.xhtml" />
 						</p:outputPanel>
 					</p:outputPanel>
-				</section>
-				<div style="padding-top: 20px;">
-					<p>
-						<h:outputText value="#{bundle['page.seduser.pw.labelGuideAddSedUser']}" escape="false" rendered="#{sedUserBean.showAdd}" />
-						<h:outputText value="#{bundle['page.seduser.pw.labelGuideEditSedUser']}" escape="false" rendered="#{sedUserBean.showEdit}" />
-					</p>
-				</div>
-				<section>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.login.labelPassword']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:password id="userPw" value="#{sedUserBean.userPassword}" disabled="#{sedUserBean.randomPassword}" style="width:95%"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-									<strong>
-										#{bundle['page.login.labelRepeatPassword']}:
-									</strong>
-								</td>
-								<td class="ui-content-table">
-									<p:password id="userPwRetry" value="#{sedUserBean.confirmPassword}" disabled="#{sedUserBean.randomPassword}" style="width:95%"/>
-								</td>
-							</tr>
-						</table>
-					</article>
-		
-				</section>
-				
-				<br/>
-				<br/>
-				<section>
-					<article style="width:100%;">
+			<table>
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:18%"/>
+					<td style="width:25%"/>
+					<td style="width:4%"/>
+					<td style="width:18%"/>
+					<td style="width:25%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="5">
+						<p>
+							<h:outputText value="#{bundle['page.seduser.pw.labelGuideAddSedUser']}" escape="false" rendered="#{sedUserBean.showAdd}" />
+							<h:outputText value="#{bundle['page.seduser.pw.labelGuideEditSedUser']}" escape="false" rendered="#{sedUserBean.showEdit}" />
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<br/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						#{bundle['page.login.labelPassword']}:
+					</td>
+					<td>
+						<p:password id="userPw" value="#{sedUserBean.userPassword}" disabled="#{sedUserBean.randomPassword}" style="width:95%"/>
+					</td>
+					<td/>
+					<td>
+						#{bundle['page.login.labelRepeatPassword']}:
+					</td>
+					<td>
+						<p:password id="userPwRetry" value="#{sedUserBean.confirmPassword}" disabled="#{sedUserBean.randomPassword}" style="width:95%"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<br/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="5">
 						<p:selectBooleanCheckbox id="booleanPassword" value="#{sedUserBean.randomPassword}">
 							<p:ajax process="@this" update=":addSedUserForm:userPw :addSedUserForm:userPwRetry :addSedUserForm:btnAddSedUser" />
 						</p:selectBooleanCheckbox>
 						
 						<p:spacer width="20" /> 
 						
-						<p:commandLink value="Generar contraseña automáticamente." action="#{sedUserBean.activeRandomPassword}" 
-							process="@this" update=":addSedUserForm:booleanPassword :addSedUserForm:userPw :addSedUserForm:userPwRetry :addSedUserForm:btnAddSedUser"/>					
-					</article>
-				</section>
+						<p:commandLink value="#{bundle['page.seduser.labelAutomaticPassword']}" action="#{sedUserBean.activeRandomPassword}" 
+							process="@this" update=":addSedUserForm:booleanPassword :addSedUserForm:userPw :addSedUserForm:userPwRetry :addSedUserForm:btnAddSedUser"/>
+					</td>
+				</tr>
+			</table>
 
-			<div align="center">
+			<div style="text-align: center;padding-top: 15px;">
 				<p:commandButton id="btnAddSedUser" value="#{bundle['page.seduser.labelAddUser']}" onclick="validateAddSedUser(#{sedUserBean.randomPassword}, #{sedUserBean.sedUser.idSedRole});" 
 					type="button" styleClass="ui-priority-primary" action="#{sedUserBean.saveSedUser}" rendered="#{sedUserBean.showAdd}" />
 					
@@ -265,7 +230,4 @@
 	</h:form>
 	
 	<ui:include src="/WEB-INF/includes/sedUser/dialogSedUser.xhtml" />
-	
-	
 </f:view>
-</html>

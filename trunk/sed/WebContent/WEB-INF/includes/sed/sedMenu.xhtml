@@ -8,17 +8,18 @@
 	<h:form>
 		<ui:repeat var="rootTree" value="#{loginBean.treeList}">
 			<p:fieldset legend="#{rootTree.name}" toggleable="true"
-				toggleSpeed="500">
+				toggleSpeed="500" style="text-align:center !important;">
 				<div align="center">
 					<p:dataGrid var="leafTree" columns="#{fn:length(rootTree.leafTreeList)}" value="#{rootTree.leafTreeList}"
 						style="border-style:none !important;">
 						<div style="width: 150px; height: 150px;text-align: center;margin:0 auto;">
-							<a href="/sed#{leafTree.urlPattern}"> <p:panel
-									header="#{leafTree.name}">
-									<p:graphicImage value="../css/icon/#{leafTree.icon}" width="70"
-										title="#{leafTree.name}" height="70" />
-									<br />
-								</p:panel>
+							<a href="/sed#{leafTree.urlPattern}">
+								<div style="background-color: #E0E0E0;width: 130px;height: 100px;line-height: -27px;padding-top: 15px;border-radius: 5px 10px 15px 20px;color: black;"> 
+								<p:graphicImage value="../css/icon/#{leafTree.icon}" width="70"
+									title="#{leafTree.name}" height="70" />
+									<br/>
+								<h:outputText value="#{leafTree.name}"/>
+								</div>
 							</a>
 						</div>
 					</p:dataGrid>

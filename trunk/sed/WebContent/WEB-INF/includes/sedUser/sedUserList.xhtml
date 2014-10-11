@@ -5,158 +5,168 @@
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
 	<h:form id="sedUserForm">
-		  <h:inputHidden id="disableEnter"/><p:defaultCommand target="disableEnter"/>
-			<p:panel header="Usuarios del Sistema">
-			<table width="100%" cellpadding="3" cellspacing="3">
+		<h:inputHidden id="disableEnter" />
+		<p:defaultCommand target="disableEnter" />
+		<p:panel header="#{bundle['page.seduser.labelUserList']}">
+			<br/>
+			<table style="width: 100%">
 				<tr>
-					<td width="3%" />
-					<td width="94%" />
-					<td width="3%" />
+					<td width="5%" />
+					<td width="90%" />
+					<td width="5%" />
 				</tr>
 				<tr>
 					<td />
-					<td>A continuación se presenta un listado con todos los
-						usuarios que en este momento existen en el sistema, asi como su
-						respectivo rol. Si desea crear un nuevo usuario puede agregarlo
-						dando clic en el botón crear usuario. Recuerde que dependiendo que
-						el rol es el que define las responsabilidades del usuario en el
-						sistema. Si no tiene claro el listado de responsabilidades, por
-						favor remitase al administrador del sistema.</td>
-				</tr>
-				<tr>
-					<td><br /> <br /></td>
-				</tr>
-				<tr>
-					<td />
-					<td><p:dataTable id="sedUserTable" value="#{sedUserBean.sedUserList}" var="u" filteredValue="#{sedUserBean.sedUserFilteredList}"
-							paginatorAlwaysVisible="false" resizableColumns="false" widgetVar="sedUserTableWV"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="20,40,60" paginator="true" rows="20"
-							filterDelay="600" emptyMessage="#{bundle['page.seduser.labelEmptyList']}"
-							style="width:95%">
-							
-							<f:facet name="header">
-								<div style="text-align: right;padding:10px;">
-									<p:outputPanel>
-										<h:outputText value="#{bundle['page.core.labelSearch']}:" />
-										<p:inputText id="globalFilter" onkeyup="PF('sedUserTableWV').filter();" style="width:200px;"/>
-									</p:outputPanel>
-								</div>
-							</f:facet>
-							
-								<p:column sortBy="#{u.lastName}" filterBy="#{u.lastName}"
-								filterMatchMode="contains" style="width:150px"
-								headerText="#{bundle['page.student.labelStudentLastName']}">
-								<h:outputText value="#{u.lastName}" />
-							</p:column>
-							
-							<p:column sortBy="#{u.name}" filterBy="#{u.name}"
-								filterMatchMode="contains" style="width:150px"
-								headerText="#{bundle['page.student.labelStudentName']}">
-								#{u.name}
-							</p:column>			
-											
-							<p:column sortBy="#{u.identification}" filterBy="#{u.identification}"
-								filterMatchMode="contains" style="width:120px"
-								headerText="#{bundle['page.student.labelStudentIdentification']}">
-								#{u.identification}
-							</p:column>
-							
-							<p:column filterBy="#{u.idIdentificationType}" filterMatchMode="exact"
-								headerText="#{bundle['page.student.labelIdentificationType']}" style="width:140px">
-								<f:facet name="filter">
-									<p:selectOneMenu value="#{sedUserBean.idFilterIdentificationType}" onchange="PF('sedUserTableWV').filter();" style="width:135px">
-										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="#{null}" noSelectionOption="true"/>
-										<f:selectItems value="#{sedUserBean.identificationTypeList}" var="it" itemLabel="#{it.name}" itemValue="#{it.id}"/>
-									</p:selectOneMenu>
-									
-								</f:facet>
-								#{u.nameIdentificationType}
-							</p:column>
-												
-							<p:column filterBy="#{u.idSedRole}"
-								filterMatchMode="exact" style="width:150px;text-align:center;"
-								headerText="#{bundle['page.seduser.labelUserType']}">
-								<f:facet name="filter">
-									<p:selectOneMenu value="#{sedUserBean.idFilterSedRole}" onchange="PF('sedUserTableWV').filter();">
-										<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="#{null}" noSelectionOption="true"/>
-										<f:selectItems value="#{sedUserBean.sedRoleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.id}"/>
-									</p:selectOneMenu>
-								</f:facet>
-								#{u.nameSedRole}
-							</p:column>
-
-							<p:column style="width:25px">
-								<div align="center">
-									<p:commandLink title="#{bundle['page.core.labelDetail']}" action="#{sedUserBean.goDetailUser}">
-										<p:graphicImage value="../css/icon/detail.png" width="20" height="20" />
-										<f:setPropertyActionListener target="#{sedUserBean.selectedSedUser}" value="#{u}" />
-									</p:commandLink>
-								</div>
-							</p:column>
-
-							<p:column width="25">
-								<div align="center">
-									<p:commandLink title="#{bundle['page.core.labelEdit']}"
-										action="#{sedUserBean.goEditUser}">
-										<p:graphicImage value="../css/icon/edit.png" width="20"
-											height="20" />
-										<f:setPropertyActionListener target="#{sedUserBean.sedUser}" value="#{u}" />
-									</p:commandLink>
-								</div>
-							</p:column>
-							<p:column width="25">
-								<div align="center">
-									<p:commandLink title="#{bundle['page.core.labelDelete']}" oncomplete="PF('dlgDeleteUserWV').show();" 
-										update=":sedUserForm:dlgDeleteUser">
-										<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
-										<f:setPropertyActionListener target="#{sedUserBean.selectedSedUser}" value="#{u}" />
-									</p:commandLink>
-								</div>
-							</p:column>
-						</p:dataTable></td>
+					<td>#{bundle['page.seduser.labelModuleUserGuide']}</td>
 				</tr>
 			</table>
+			<div style="padding-top: 30px;padding-left: 3px;padding-right: 3px;">
+				<p:dataTable id="sedUserTable" value="#{sedUserBean.sedUserList}"
+					var="u" filteredValue="#{sedUserBean.sedUserFilteredList}"
+					paginatorAlwaysVisible="false" resizableColumns="false"
+					widgetVar="sedUserTableWV"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="20,40,60" paginator="true" rows="20"
+					filterDelay="600"
+					emptyMessage="#{bundle['page.seduser.labelEmptyList']}"
+					style="width:100%">
+
+					<f:facet name="header">
+						<div style="text-align: right; padding: 10px;">
+							<p:outputPanel>
+								<h:outputText value="#{bundle['page.core.labelSearch']}:" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('sedUserTableWV').filter();" style="width:200px;" />
+							</p:outputPanel>
+						</div>
+					</f:facet>
+
+					<p:column sortBy="#{u.lastName}" filterBy="#{u.lastName}" filterMatchMode="contains"
+						headerText="#{bundle['page.student.labelStudentLastName']}">
+						#{u.lastName}
+					</p:column>
+
+					<p:column sortBy="#{u.name}" filterBy="#{u.name}" filterMatchMode="contains" 
+						headerText="#{bundle['page.student.labelStudentName']}">
+							#{u.name}
+					</p:column>
+
+					<p:column sortBy="#{u.identification}" filterBy="#{u.identification}" filterMatchMode="contains"
+						headerText="#{bundle['page.student.labelStudentIdentification']}">
+							#{u.identification}
+					</p:column>
+
+					<p:column filterBy="#{u.idIdentificationType}" filterMatchMode="exact"
+						headerText="#{bundle['page.student.labelIdentificationType']}">
+						<f:facet name="filter">
+							<p:selectOneMenu
+								value="#{sedUserBean.idFilterIdentificationType}"
+								onchange="PF('sedUserTableWV').filter();" style="width:135px">
+								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}"
+									itemValue="#{null}" noSelectionOption="true" />
+								<f:selectItems value="#{sedUserBean.identificationTypeList}"
+									var="it" itemLabel="#{it.name}" itemValue="#{it.id}" />
+							</p:selectOneMenu>
+
+						</f:facet>
+							#{u.nameIdentificationType}
+					</p:column>
+
+					<p:column filterBy="#{u.idSedRole}" filterMatchMode="exact"
+						style="text-align:center;" headerText="#{bundle['page.seduser.labelUserType']}">
+						<f:facet name="filter">
+							<p:selectOneMenu value="#{sedUserBean.idFilterSedRole}"
+								onchange="PF('sedUserTableWV').filter();">
+								<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}"
+									itemValue="#{null}" noSelectionOption="true" />
+								<f:selectItems value="#{sedUserBean.sedRoleList}" var="r"
+									itemLabel="#{r.name}" itemValue="#{r.id}" />
+							</p:selectOneMenu>
+						</f:facet>
+						#{u.nameSedRole}
+					</p:column>
+
+					<p:column style="width:25px">
+						<div align="center">
+							<p:commandLink title="#{bundle['page.core.labelDetail']}"
+								action="#{sedUserBean.goDetailUser}">
+								<p:graphicImage value="../css/icon/detail.png" width="20"
+									height="20" />
+								<f:setPropertyActionListener
+									target="#{sedUserBean.selectedSedUser}" value="#{u}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+					<p:column style="width:25px">
+						<div align="center">
+							<p:commandLink title="#{bundle['page.core.labelEdit']}"
+								action="#{sedUserBean.goEditUser}">
+								<p:graphicImage value="../css/icon/edit.png" width="20"
+									height="20" />
+								<f:setPropertyActionListener target="#{sedUserBean.sedUser}"
+									value="#{u}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+					<p:column style="width:25px">
+						<div align="center">
+							<p:commandLink title="#{bundle['page.core.labelDelete']}"
+								oncomplete="PF('dlgDeleteUserWV').show();"
+								update=":sedUserForm:dlgDeleteUser">
+								<p:graphicImage value="../css/icon/delete.png" width="20"
+									height="20" />
+								<f:setPropertyActionListener
+									target="#{sedUserBean.selectedSedUser}" value="#{u}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+				</p:dataTable>
+			</div>
+
 			<br />
 			<div align="center">
-				<p:commandButton value="#{bundle['page.seduser.labelAddUser']}" styleClass="ui-priority-primary"
-					action="#{sedUserBean.goAddUser}" />
+				<p:commandButton value="#{bundle['page.seduser.labelAddUser']}"
+					styleClass="ui-priority-primary" action="#{sedUserBean.goAddUser}" />
 			</div>
 		</p:panel>
-		
-		<!-- Dialog Delete SedUser -->
-		<p:dialog id="dlgDeleteUser" header="Eliminar Usuario" widgetVar="dlgDeleteUserWV" modal="true" resizable="false" width="300" showEffect="drop" hideEffect="fade">
+
+		<p:dialog id="dlgDeleteUser" header="#{bundle['page.seduser.labelUserDelete']}" widgetVar="dlgDeleteUserWV" modal="true" resizable="false"
+			width="300" showEffect="slide" hideEffect="clip">
 			<table>
 				<tr>
-					<td style="width:10%"/>
-					<td style="width:80%"/>
-					<td style="width:10%"/>
+					<td style="width: 10%" />
+					<td style="width: 80%" />
+					<td style="width: 10%" />
 				</tr>
 				<tr>
-					<td/>
-					<td style="text-align:center;">
-						El Usuario seleccionado es: <strong>#{sedUserBean.selectedSedUser.name} #{sedUserBean.selectedSedUser.lastName}</strong>
+					<td />
+					<td style="text-align: center;">
+						#{bundle['page.seduser.labelSelectedUser']}: <strong>#{sedUserBean.selectedSedUser.name}
+							#{sedUserBean.selectedSedUser.lastName}</strong>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<br/>
-					</td>
+					<td><br /></td>
 				</tr>
 				<tr>
-					<td/>
-					<td style="text-align:center;">
+					<td />
+					<td style="text-align: center;">
 						<strong>
-							¿Está seguro que desea eliminar el usuario seleccionado?
+							¿#{bundle['page.seduser.sureUserDelete']}? 
 						</strong>
 					</td>
 				</tr>
 			</table>
-			<div style="padding-top:25px;text-align:center;">
-				<p:commandButton value="#{bundle['page.core.labelAccept']}" action="#{sedUserBean.deleteSedUser}" oncomplete="PF('statusDialog').hide();PF('dlgDeleteUserWV').hide();" 
-					onstart="PF('statusDialog').show();" update=":sedUserForm:sedUserTable"/>
-				<p:spacer width="5"/>
-				<p:commandButton value="#{bundle['page.core.labelCancel']}" type="button" onclick="PF('dlgDeleteUserWV').hide();"/>
+			<div style="padding-top: 25px; text-align: center;">
+				<p:commandButton value="#{bundle['page.core.labelAccept']}"
+					action="#{sedUserBean.deleteSedUser}"
+					oncomplete="PF('statusDialog').hide();PF('dlgDeleteUserWV').hide();"
+					onstart="PF('statusDialog').show();"
+					update=":sedUserForm:sedUserTable" />
+				<p:spacer width="5" />
+				<p:commandButton value="#{bundle['page.core.labelCancel']}"
+					type="button" onclick="PF('dlgDeleteUserWV').hide();" />
 			</div>
 		</p:dialog>
 	</h:form>

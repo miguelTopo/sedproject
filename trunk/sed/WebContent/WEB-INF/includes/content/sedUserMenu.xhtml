@@ -7,6 +7,11 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
 	<div style="width:100%">
+		<div>
+			<p:commandLink onclick="window.open('menu','_self');" title="#{bundle['page.core.labelGoHome']}">
+				<p:graphicImage value="../css/icon/home.png" width="40" height="40"/>
+			</p:commandLink>
+		</div>
 		<p:panelMenu>
 			<c:forEach begin="0" end="#{fn:length(loginBean.treeList)-1}" var="i">
 				<p:submenu label="#{loginBean.treeList.get(i).name}">
@@ -18,6 +23,13 @@
 				</p:submenu>
 			</c:forEach>
 		</p:panelMenu>
+		<div style="height: 50px;padding-top: 35px;">
+			<p:imageSwitch effect="#{loginBean.imageEffect}" speed="1000">
+				<ui:repeat var="i" value="#{loginBean.imageList}">
+					<p:graphicImage value="../css/images/#{i}" height="200" width="250"/>
+				</ui:repeat>
+			</p:imageSwitch>
+		</div>
 	</div>
 </f:view>
 </html>

@@ -2,7 +2,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
 <f:view>
 	<script type="text/javascript">
   //<![CDATA[
@@ -13,18 +14,39 @@
   	}
 	//]]>
 	</script>
-	<h:form id="headerForm">
+	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>
+<h:form id="headerForm">
+	<div class="ui-login-header">
+		<div class="ui-lifemena-header">
+			Liceo Femenino Mercedes Nariño
+		</div>
+		<div style="float: right;width: 30%;padding-top: 20px;text-align: center;">
+			<p:menuButton value="#{loginBean.userSession.name} #{loginBean.userSession.lastName}" iconPos="right">
+				<p:menuitem value="Cambiar Contraseña" url="/portal/clave" icon="ui-icon-locked"/>
+				<p:menuitem value="Cerrar Sesión" action="#{loginBean.sedUserLogout}" onstart="PF('statusDialog').show();" 
+					oncomplete="PF('statusDialog').hide();logout(xhr, status, args);" icon="ui-icon-power"/>
+			</p:menuButton>
+		</div>
+	</div>
 		<div id="sedHeader" align="center">
-			<div style="float:left;">
-				#{loginBean.userSession.sedRoleName}
+			<div style="width:70%;float: left;line-height: 4;text-align: justify;padding-left: 35px;">
+				Bienvenida(o): #{loginBean.userSession.name} #{loginBean.userSession.lastName} 
 			</div>
-			<div style="float: right;width: 30%;padding-top: 0.5%;">
-				<p:menuButton value="#{loginBean.userSession.name} #{loginBean.userSession.lastName}" iconPos="right">
-					<p:menuitem value="Cambiar Contraseña" url="/portal/clave" icon="ui-icon-locked"/>
-					<p:menuitem value="Cerrar Sesión" action="#{loginBean.sedUserLogout}" onstart="PF('statusDialog').show();" 
-						oncomplete="PF('statusDialog').hide();logout(xhr, status, args);" icon="ui-icon-power"/>
-				</p:menuButton>
-			</div>			
+			<div style="width: 20%;float: left;text-align: justify;padding-left: 35px;padding-top: 10px;">
+				<div style="width: 70%;float: left;text-align: right;margin-right: 10px;line-height: 3;">
+					#{loginBean.userSession.sedRoleName}
+				</div>
+				<div style="width:20%;float:left;">
+					<p:graphicImage value="../css/images/administrator.png" height="35" width="35" 
+						title="#{loginBean.userSession.sedRoleName}" rendered="#{loginBean.userSession.idSedRole eq ISedRole.ADMINISTRATOR}"/>
+					<p:graphicImage value="../css/images/teacher.png" height="35" width="35" 
+						title="#{loginBean.userSession.sedRoleName}" rendered="#{loginBean.userSession.idSedRole eq ISedRole.TEACHER}"/>
+					<p:graphicImage value="../css/images/student.png" height="35" width="35" 
+						title="#{loginBean.userSession.sedRoleName}" rendered="#{loginBean.userSession.idSedRole eq ISedRole.STUDENT}"/>
+					<p:graphicImage value="../css/images/father.png" height="35" width="35" 
+						title="#{loginBean.userSession.sedRoleName}" rendered="#{loginBean.userSession.idSedRole eq ISedRole.STUDENT_RESPONSIBLE}"/>
+				</div>
+			</div>
 		</div>
 	</h:form>
 </f:view>

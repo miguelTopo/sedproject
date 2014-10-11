@@ -1,14 +1,15 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:p="http://primefaces.org/ui">
-<f:view>
-
-	<p:panel header="Calificaciones">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
 	
-	<p:outputPanel rendered="#{studentQualificationBean.userSession.idSedRole eq 4}">
+	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>	
+	<p:panel header="#{bundle['page.qualification.labelQualification']}">
+	
+	<p:outputPanel rendered="#{studentQualificationBean.userSession.idSedRole eq ISedRole.STUDENT_RESPONSIBLE}">
 		<h:form id="responsibleStdForm">
 			<table>
 				<tr>
@@ -21,7 +22,7 @@
 				<tr>
 					<td/>
 					<td>
-						Seleccione el estudiante:
+						#{bundle['page.qualification.sq.labelStudentSelect']}:
 					</td>
 					<td>
 						<p:selectOneMenu value="#{studentQualificationBean.idStudent}" style="width:98%">
@@ -31,7 +32,7 @@
 							</p:selectOneMenu>
 					</td>
 					<td>
-						<p:commandButton value="Buscar" action="#{studentQualificationBean.loadQualificationList}" 
+						<p:commandButton value="#{bundle['page.core.labelSearch']}" action="#{studentQualificationBean.loadQualificationList}" 
 								update=":studentQualificationOp"/>
 					</td>
 				</tr>
@@ -109,12 +110,12 @@
 
 		<p:ajax event="tabChange" listener="#{studentQualificationBean.handleTabChange}" global="false" />
 		
-		<p:tab id="stdQualificationTab" title="Mis notas">
+		<p:tab id="stdQualificationTab" title="#{bundle['page.qualification.sq.labelMyQualification']}">
 			<h:form id="studentQualificationForm">
 				<ui:include src="/WEB-INF/includes/student/qualification/studentQualification.xhtml" />
 			</h:form>
 		</p:tab>
-		<p:tab id="stdHistoricalTab" title="Histórico de Notas">
+		<p:tab id="stdHistoricalTab" title="#{bundle['page.qualification.sq.labelHistorical']}">
 			<h:form>
 				<ui:include src="/WEB-INF/includes/student/qualification/historicalQualification.xhtml" />
 			</h:form>
@@ -124,4 +125,3 @@
 	</p:outputPanel>
 	</p:panel>
 </f:view>
-</html>

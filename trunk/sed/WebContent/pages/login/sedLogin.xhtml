@@ -19,12 +19,12 @@
 		<h:form id="loginForm">
 			<table style="width: 100%">
 				<tr>
-					<td><p:inputText value="#{loginBean.userName}"
+					<td><p:inputText id="txtUserName" value="#{loginBean.userName}"
 							placeholder="#{bundle['page.login.labelUserUser']}"
 							style="width:100%" /></td>
 				</tr>
 				<tr>
-					<td><p:password value="#{loginBean.userPassword}"
+					<td><p:password id="txtUserPassword" value="#{loginBean.userPassword}"
 							placeholder="#{bundle['page.login.labelPassword']}"
 							style="width:100%" /></td>
 				</tr>
@@ -32,11 +32,10 @@
 					<td><br /></td>
 				</tr>
 				<tr>
-					<td><p:commandButton
-							value="#{bundle['page.login.labelSignIn']}"
-							styleClass="ui-priority-primary" style="width:100%"
+					<td><p:commandButton id="btnSedLogin" value="#{bundle['page.login.labelSignIn']}"
+							styleClass="ui-priority-primary" style="width:100%" onclick="loginValidation();"
 							actionListener="#{loginBean.login}" update=":growl"
-							oncomplete="loginUserValidate(xhr, status, args)" /></td>
+							oncomplete="loginUserValidate(xhr, status, args);" /></td>
 
 				</tr>
 			</table>

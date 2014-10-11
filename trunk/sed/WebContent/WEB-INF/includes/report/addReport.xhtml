@@ -1,39 +1,45 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-<f:view>
 	<h:form id="sedReportForm">
 		<p:panel id="sedReportPanel" header="Reporte SED">
-			<section>
-				<article>
-					<table style="width:100%;">
-						<tr>
-							<td style="width:20%"/>
-							<td>
-								Seleccione el Grado:
-							</td>
-							<td>
-								<p:selectOneMenu id="somReportGrade" value="#{reportBean.idGrade}">
-									<f:selectItem itemValue="0"
-										itemLabel="#{bundle['page.core.labelSelectOne']}" />
-									<f:selectItems value="#{reportBean.gradeList}" var="g"
-										itemLabel="#{g.name}" itemValue="#{g.id}" />
-								</p:selectOneMenu>
-								<div id="reportGrade_DIV" class="ui-invalid-field"/>				
-							</td>
-							<td>
-								<p:commandButton id="btnLoadreport" value="Cargar Reporte" action="#{reportBean.loadReportQualificationList}"
-									onclick="validateLoadReport()" type="button"/>
-							</td>
-							<td style="width:20%"/>
-						</tr>
-					</table>
-				</article>
-			</section>
+			<table>
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:10%"/>
+					<td style="width:20%"/>
+					<td style="width:20%"/>
+					<td style="width:20%"/>
+					<td style="width:10%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="5">
+						<h:outputText value="#{bundle['page.report.labelLoadReportGuide']}" escape="false"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"/>
+					<td>
+						#{bundle['page.report.labelSelectGrade']}:
+					</td>
+					<td>
+						<p:selectOneMenu id="somReportGrade" value="#{reportBean.idGrade}" style="width:98%;">
+							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" />
+							<f:selectItems value="#{reportBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}" />
+						</p:selectOneMenu>
+					</td>
+					<td>
+						<p:commandButton id="btnLoadreport" value="Cargar Reporte" action="#{reportBean.loadReportQualificationList}"
+							onclick="validateLoadReport()" type="button"/>
+					</td>
+				</tr>
+			</table>
 			
 			<p:outputPanel id="reportStudentOp" style="padding-top:25px;">
 				<p:outputPanel rendered="#{!empty reportBean.studentList}">
@@ -109,4 +115,3 @@
 		</p:panel>
 	</h:form>
 </f:view>
-</html>

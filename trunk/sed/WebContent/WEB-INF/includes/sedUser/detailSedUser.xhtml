@@ -2,195 +2,172 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
 <f:view>
-		<style type="text/css">
-			section article{
-			width: 388px;
-			padding-left: 35px;
-			padding-right: 35px;
-			display: inline-block;
-			}
-			table{
-				width:100%;
-				border-spacing: 5px;
-			}
-			.ui-label-table{
-				width:35%;
-			}
-			.ui-content-table{
-				width:65%;
-			}
-			
-		</style>
+	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>
 	<h:form id="detailUserForm">
-		<p:panel id="detailPanel" header="Detallar Usuario">
-				<br/>
-				<br/>
-				<section>
-					<div class="ui-subtitle-sed">
-						<h4>
-							Datos Personales
-						</h4>
-					</div>
-					<br/>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											#{bundle['page.student.labelStudentLastName']}:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.lastName}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											#{bundle['page.student.labelStudentName']}:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.name}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											#{bundle['page.student.labelIdentificationType']}:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.nameIdentificationType}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											#{bundle['page.student.labelStudentIdentification']}:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.identification}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											#{bundle['page.student.labelStudentEmail']}:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.email}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											Fecha de Nacimiento:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.birthday}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											Tipo de Usuario:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.nameSedRole}
-								</td>
-							</tr>
-						</table>
-					</article>
-					<article/>
-				</section>
-				<br/>
-				<br/>
-				<p:outputPanel rendered="#{sedUserBean.selectedSedUser.idSedRole eq 3}">
-					<div class="ui-subtitle-sed">
-						<h4>
-							Datos del Estudiante
-						</h4>
-					</div>
-					<br/>
-					<section>
-						<article>
-							<table>
-								<tr>
-									<td class="ui-label-table">
-										<strong>
-											Grado:
-										</strong>
-									</td>
-									<td class="ui-content-table">
-										#{sedUserBean.selectedSedUser.studentGradeName}
-									</td>
-								</tr>
-							</table>
-						</article>
-					<article>
-						<table>
-							<tr>
-								<td class="ui-label-table">
-										<strong>
-											Curso:
-										</strong>
-								</td>
-								<td class="ui-content-table">
-									#{sedUserBean.selectedSedUser.studentCourseName}
-								</td>
-							</tr>
-						</table>
-					</article>
-					</section>
-				</p:outputPanel>
-				
-				<p:outputPanel rendered="#{sedUserBean.selectedSedUser.idSedRole eq 4}">
-					<div class="ui-subtitle-sed">
-						<h4>
-							Estudiantes a cargo del Padre de Familia
-						</h4>
-					</div>
+		<p:panel id="detailPanel" header="#{bundle['page.seduser.labelUserDetail']}">
+			<table>
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:18%"/>
+					<td style="width:25%"/>
+					<td style="width:4%"/>
+					<td style="width:18%"/>
+					<td style="width:25%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td colspan="7">
+						<div class="ui-subtitle-sed">
+							<h4>
+								#{bundle['page.seduser.labelPersonalData']}
+							</h4>
+						</div>	
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<br/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						#{bundle['page.student.labelStudentLastName']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.lastName}
+					</td>
+					<td/>
+					<td>
+						#{bundle['page.student.labelStudentName']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.name}
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						#{bundle['page.student.labelIdentificationType']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.nameIdentificationType}
+					</td>
+					<td/>
+					<td>
+						#{bundle['page.student.labelStudentIdentification']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.identification}
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						#{bundle['page.student.labelStudentEmail']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.email}
+					</td>
+					<td/>
+					<td>
+						#{bundle['page.student.labelStudentBirthday']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.birthday}
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						#{bundle['page.seduser.labelUserType']}:
+					</td>
+					<td>
+						#{sedUserBean.selectedSedUser.nameSedRole}
+					</td>
+					<td/>
+				</tr>
+			</table>
+			<p:outputPanel rendered="#{sedUserBean.selectedSedUser.idSedRole eq ISedRole.STUDENT}">
+				<table>
+					<tr>
+						<td style="width:5%"/>
+						<td style="width:18%"/>
+						<td style="width:25%"/>
+						<td style="width:4%"/>
+						<td style="width:18%"/>
+						<td style="width:25%"/>
+						<td style="width:5%"/>
+					</tr>
+					<tr>
+						<td colspan="7">
+							<div class="ui-subtitle-sed">
+								<h4>
+									#{bundle['page.seduser.labelStudentData']}
+								</h4>
+							</div>	
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<br/>
+						</td>
+					</tr>
+					<tr>
+						<td/>
+						<td>
+							#{bundle['page.sed.labelGrade']}:
+						</td>
+						<td>
+							#{sedUserBean.selectedSedUser.studentGradeName}
+						</td>
+						<td/>
+						<td>
+							#{bundle['page.sed.labelCourse']}:
+						</td>
+						<td>
+							#{sedUserBean.selectedSedUser.studentCourseName}
+						</td>					
+					</tr>
+				</table>
+			</p:outputPanel>
+			
+			<p:outputPanel rendered="#{sedUserBean.selectedSedUser.idSedRole eq ISedRole.STUDENT_RESPONSIBLE}">
+			
+				<table>
+					<tr>
+						<td style="width:5%"/>
+						<td style="width:18%"/>
+						<td style="width:25%"/>
+						<td style="width:4%"/>
+						<td style="width:18%"/>
+						<td style="width:25%"/>
+						<td style="width:5%"/>
+					</tr>
+					<tr>
+						<td colspan="7">
+							<div class="ui-subtitle-sed">
+								<h4>	
+									#{bundle['page.seduser.labelStudentResponsibleList']}
+								</h4>
+							</div>
+						</td>
+					</tr>
+				</table>
 					<br/>
 					<div style="padding-top: 30px;width: 75%;margin: 0 auto;">
-						<p:dataTable value="#{sedUserBean.studentResponsibleList}" var="s" emptyMessage="Actualmente no hay estudiantes asociados">
-							<p:column headerText="Apellidos"> 
+						<p:dataTable value="#{sedUserBean.studentResponsibleList}" var="s" 
+							emptyMessage="#{bundle['page.seduser.labelStudentResponsibleEmptyList']}">
+							<p:column headerText="#{bundle['page.student.labelStudentLastName']}"> 
 								#{s.lastName}
 							</p:column>
-							<p:column headerText="Nombres"> 
+							<p:column headerText="#{bundle['page.student.labelStudentName']}"> 
 								#{s.name}
 							</p:column>
-							<p:column headerText="Curso" style="text-align:center"> 
+							<p:column headerText="#{bundle['page.sed.labelCourse']}" style="text-align:center"> 
 								#{s.courseName}
 							</p:column>
 						</p:dataTable>
