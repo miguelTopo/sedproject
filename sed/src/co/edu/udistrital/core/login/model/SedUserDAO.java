@@ -30,7 +30,7 @@ public class SedUserDAO extends HibernateDAO {
 
 			qo = getSession().createQuery(hql.toString());
 			qo.setParameter("userName", userName);
-			qo.setParameter("md5Password", ManageMD5.parseMD5(password));
+			qo.setParameter("md5Password", password);
 			qo.setParameter("state", IState.ACTIVE);
 			qo.setMaxResults(1);
 
@@ -211,7 +211,7 @@ public class SedUserDAO extends HibernateDAO {
 			hql.append(" SELECT su.id AS id, ");
 			hql.append(" su.name AS name, ");
 			hql.append(" su.lastName AS lastName, ");
-			hql.append(" sul.userName AS userName ");
+			hql.append(" su.identification AS identification ");
 			hql.append(" FROM SedUser su, ");
 			hql.append(" SedUserLogin sul ");
 			hql.append(" WHERE sul.idSedUser = su.id ");
@@ -225,7 +225,6 @@ public class SedUserDAO extends HibernateDAO {
 
 			return (SedUser) qo.uniqueResult();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		} finally {
 			hql = null;

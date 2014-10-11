@@ -53,8 +53,6 @@ public class StudentQualificationBean extends BackingBean {
 				handleTabChange();
 			} else if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
 				this.studentResponsibleList = this.controller.loadStudentResponsibleList(getUserSession().getIdSedUser());
-				for (Student s : this.studentResponsibleList)
-					System.out.println(s.getName() + " " + s.getLastName() + " " + s.getId());
 			}
 		} catch (Exception e) {
 			throw e;

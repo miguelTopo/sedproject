@@ -17,63 +17,61 @@
 	</style>
 	<h:form id="tracingForm">
 		<p:panel header="Seguimiento a Estudiantes">
-			<div style="padding-left: 25px;padding-right: 25px;">
-				<p>
-					Para verificar el proceso histórico del estudiante, por favor seleccione el periodo o año en el que el estudiante estaba activo, si tiene la información del grado y curso respectivos seleccione dichos campos; de no contar con dichos datos, puede seleccionar buscar y realizar filtros en la tabla resultante. 
-				</p>
-				<p>
-				#{bundle['page.core.labelDataObligatory']}	
-				</p>
-			</div>
-			<section id="tracingSection">
-				<article>
-					<table>
-						<tr>
-							<td>
-								*Periodo:
-							</td>
-							<td>
-								<p:selectOneMenu id="somTracingPeriod" value="#{tracingBean.idPeriod}" style="width:98%">
-									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-									<f:selectItems value="#{tracingBean.periodList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"/>
-								</p:selectOneMenu>
-								<div id="tracingPeriod_DIV" class="ui-invalid-field"/>
-							</td>
-						</tr>
-					</table>
-				</article>
-				<article>
-					<table>
-						<tr>
-							<td>
-								Grado:
-							</td>
-							<td>
-								<p:selectOneMenu value="#{tracingBean.idGrade}" style="width:98%">
-									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-									<f:selectItems value="#{tracingBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
-									<p:ajax listener="#{tracingBean.handleGradeChange}" update=":tracingForm:somTracingCourse" process="@this"/>
-								</p:selectOneMenu>
-							</td>
-						</tr>
-					</table>
-				</article>
-				<article>
-					<table>
-						<tr>
-							<td>
-								Curso:
-							</td>
-							<td>
-								<p:selectOneMenu id="somTracingCourse" value="#{tracingBean.idCourse}" disabled="#{empty tracingBean.courseTmpList}" style="width:98%">
-									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-									<f:selectItems value="#{tracingBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
-								</p:selectOneMenu>
-							</td>
-						</tr>
-					</table>
-				</article>
-			</section>
+			<table>
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:15%"/>
+					<td style="width:15%"/>
+					<td style="width:15%"/>
+					<td style="width:15%"/>
+					<td style="width:15%"/>
+					<td style="width:15%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td colspan="6">
+						<p>
+							Para verificar el proceso histórico del estudiante, por favor seleccione el periodo o año en el que el estudiante estaba activo, si tiene la información del grado y curso respectivos seleccione dichos campos; de no contar con dichos datos, puede seleccionar buscar y realizar filtros en la tabla resultante. 
+						</p>
+						<p>
+							#{bundle['page.core.labelDataObligatory']}	
+						</p>		
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td style="text-align: center;">
+						*#{bundle['page.sed.labelPeriod']}:
+					</td>
+					<td>
+						<p:selectOneMenu id="somTracingPeriod" value="#{tracingBean.idPeriod}" style="width:98%">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+							<f:selectItems value="#{tracingBean.periodList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"/>
+						</p:selectOneMenu>
+						<div id="tracingPeriod_DIV" class="ui-invalid-field"/>
+					</td>
+					<td style="text-align: center;">
+						#{bundle['page.sed.labelGrade']}:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{tracingBean.idGrade}" style="width:98%">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+							<f:selectItems value="#{tracingBean.gradeList}" var="g" itemLabel="#{g.name}" itemValue="#{g.id}"/>
+							<p:ajax listener="#{tracingBean.handleGradeChange}" update=":tracingForm:somTracingCourse" process="@this"/>
+						</p:selectOneMenu>
+					</td>
+					<td style="text-align: center;">
+						#{bundle['page.sed.labelCourse']}:
+					</td>
+					<td>
+						<p:selectOneMenu id="somTracingCourse" value="#{tracingBean.idCourse}" disabled="#{empty tracingBean.courseTmpList}" style="width:98%">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+							<f:selectItems value="#{tracingBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table>
 			<div style="text-align:center;padding-bottom: 20px;">
 				<p:commandButton id="btnTracingSearch" value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
 					onclick="validateTracingSearch()" type="button"/>
@@ -96,7 +94,7 @@
 							#{s.name}
 						</p:column>
 						<p:column headerText="Acudiente" filterBy="#{s.sedUserResponsibleFullName}" sortBy="#{s.sedUserResponsibleFullName}" filterMatchMode="contains">
-							#{!empty s.sedUserResponsibleFullName ? s.sedUserResponsibleFullName : 'No registra'}
+							#{!empty s.sedUserResponsibleFullName ? s.sedUserResponsibleFullName : bundle['page.core.labelNotRegister']}
 						</p:column>
 						<p:column style="width:25px">
 							<p:commandLink action="#{tracingBean.goStudentDetail}" update=":tracingWrap" title="Detallar">

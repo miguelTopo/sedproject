@@ -7,9 +7,10 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <f:view>
 		<p:dataTable id="stdQualificationHistory" value="#{studentQualificationBean.studentQualificationList}" var="q" 
-			filteredValue="#{studentQualificationBean.studentQualificationFilterList}">
+			filteredValue="#{studentQualificationBean.studentQualificationFilterList}" 
+			emptyMessage="#{bundle['page.qualification.sq.labelEmptyList']}">
 			
-			<p:column headerText="Periodo" sortBy="#{q.idPeriod}" filterBy="#{q.idPeriod}" 
+			<p:column headerText="#{bundle['page.sed.labelPeriod']}" sortBy="#{q.idPeriod}" filterBy="#{q.idPeriod}" 
 				filterMatchMode="contains" filterStyleClass="ui-table-filter" style="width:10%;text-align:center;">
 				<h:outputText value="#{q.idPeriod}"/>
 			</p:column>

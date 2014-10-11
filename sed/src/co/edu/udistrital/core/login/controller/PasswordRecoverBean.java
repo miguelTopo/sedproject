@@ -64,14 +64,14 @@ public class PasswordRecoverBean implements Serializable {
 					if (this.controller.updateSedUserPassword(user.getId(), password)) {
 						sendEmailRecoverPassword(user, password);
 						cleanVar();
-						BackingBean.addInfoMessage("Restablecer contraseña",
-							"Se ha enviado un correo electrónico al correo con los datos necesarios para que ingreses nuevamente.");
+						BackingBean.addInfoMessage("Restablecer contraseÃ±a",
+							"Se ha enviado un correo electrÃ³nico al correo con los datos necesarios para que ingreses nuevamente.");
 					}
 
 
 				} else {
-					BackingBean.addWarnMessage("Recuperar contraseña",
-						"Su usuario no se encuentra activo en el sistema. Por favor comuníquese con el administrador del sistema.");
+					BackingBean.addWarnMessage("Recuperar contraseÃ±a",
+						"Su usuario no se encuentra activo en el sistema. Por favor comunÃ­quese con el administrador del sistema.");
 					return;
 				}
 			}
@@ -85,7 +85,7 @@ public class PasswordRecoverBean implements Serializable {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.PASSWORD_RECOVER);
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), sedUser.getName()
-				+ " " + sedUser.getLastName(), sedUser.getIdentification(), password), this.userEmail.trim());
+				+ " " + sedUser.getLastName(), sedUser.getIdentification(), password), this.userEmail.trim().toLowerCase());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

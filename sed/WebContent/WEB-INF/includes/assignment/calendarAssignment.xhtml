@@ -1,69 +1,73 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-		
-<f:view>
-	<style type="text/css">
-		#calendarAssigmSection article{
-			width: 45%;
-			padding-left: 15px;
-			padding-right: 15px;
-			display: inline-block;
-			}
-			#calendarAssigmSection article table{
-				width:100%;
-				border-spacing: 5px;
-			}
-	</style>
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>
 	<h:form id="calendarAssigmentForm">
-		<p:panel header="Carga Académica">
-			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole ne 1}">
-				<div>
-					<p>
-						Para consultar los horarios por favor seleccione el criterio de búsqueda y llene el formulario respectivo. 
-					</p>
-				</div>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq 1}">
-			<div>
-				<p>
-					Mediante el siguiente modulo podrá almacenar la asignación académica de cada uno de los cursos. Para facilitar el proceso de inscripción puede realizar filtros por docente o por curso.
-				</p>
-				<p>
-					Si desea agregar una nueva asignación por favor de clic en el botón Agregar Asignación o de clic en alguna parte vacia del calendario.
-				</p>
-			</div>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq 1}">
-				<div style="text-align: right;padding-top: 25px;padding-bottom: 25px;">
-					<p:commandButton value="Agregar Asignación" action="#{assignmentBean.goAddAssignment}" oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>
-				</div>
-			</p:outputPanel>
-			<section id="calendarAssigmSection">
-				<article>
-					<table>
-						<tr>
-							<td style="width:50%">
-								Seleccione el criterio de búsqueda:			
-							</td>
-							<td style="width:50%">
-								<p:selectOneMenu value="#{assignmentBean.sheduleOption}" style="width:98%">
-									<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
-									<f:selectItem itemValue="1" itemLabel="Docente"/>
-									<f:selectItem itemValue="2" itemLabel="Curso"/>
-									<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp" listener="#{assignmentBean.cleanFilterParameter}"/>
-								</p:selectOneMenu>
-							</td>						
-						</tr>
-					</table>
-				</article>
-			</section>
-			<p:outputPanel id="scheduleOptionOp">
-					<p:outputPanel rendered="#{assignmentBean.sheduleOption eq 1}">
+		<p:panel header="#{bundle['page.assignment.labelAcademicChange']}">
+			<table>
+				<tr>
+					<td style="width: 5%"/>
+					<td style="width: 90%"/>
+					<td style="width: 5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR}">
+							<div>
+								<p>
+									#{bundle['page.assignment.labelGenericGuide']}
+								</p>
+							</div>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq ISedRole.ADMINISTRATOR}">
+							<div>
+								<h:outputText value="#{bundle['page.assignment.labelAdminGuide']}" escape="false"/>
+							</div>
+						</p:outputPanel>
+					</td>
+				</tr>
 				
+			</table>
+			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq ISedRole.ADMINISTRATOR}">
+				<div style="text-align: center;padding-top: 25px;padding-bottom: 25px;">
+					<p:commandButton value="#{bundle['page.assignment.labelAddAssignment']}" action="#{assignmentBean.goAddAssignment}" 
+						oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>
+				</div>
+			</p:outputPanel>
+			
+			
+			<table>
+				<tr>
+					<td style="width:5%"/>
+					<td style="width:18%"/>
+					<td style="width:72%"/>
+					<td style="width:5%"/>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						#{bundle['page.assignment.labelCriteriaSearch']}:
+					</td>
+					<td>
+						<p:selectOneMenu value="#{assignmentBean.sheduleOption}" style="width:33%">
+							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
+							<f:selectItem itemValue="1" itemLabel="#{bundle['page.sed.labelTeacher']}"/>
+							<f:selectItem itemValue="2" itemLabel="#{bundle['page.sed.labelCourse']}"/>
+							<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp" listener="#{assignmentBean.cleanFilterParameter}"/>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table>
+			
+			<p:outputPanel id="scheduleOptionOp">
+			
+					<p:outputPanel rendered="#{assignmentBean.sheduleOption eq 1}">
 						<ui:include src="/WEB-INF/includes/assignment/teacherOption.xhtml"/>
 					</p:outputPanel>
 				
@@ -73,22 +77,22 @@
 				
 				</p:outputPanel>
 				
-			<div>
+			<div style="padding-top: 25px;">
 				<p:schedule id="assignmentSchedule" value="#{assignmentBean.model}" locale="es" showWeekends="false" centerHeaderTemplate="true" aspectRatio="2"
 					view="agendaWeek" showHeader="false" allDaySlot="false" widgetVar="assignmentScheduleWV" timeZone="America/Bogota" tooltip="true" 
-					draggable="#{assignmentBean.userSession.idSedRole eq 1}" resizable="#{assignmentBean.userSession.idSedRole eq 1}">
+					draggable="#{assignmentBean.userSession.idSedRole eq ISedRole.ADMINISTRATOR}" resizable="#{assignmentBean.userSession.idSedRole eq ISedRole.ADMINISTRATOR}">
 			
 					<p:ajax event="dateSelect" listener="#{assignmentBean.onDateSelect}" oncomplete="PF('dlgSelectDateWV').show()" 
-						update=":selectDateForm" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/>
+						update=":selectDateForm" disabled="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR}"/>
 						
             		<p:ajax event="eventSelect" listener="#{assignmentBean.onEventSelect}" oncomplete="PF('dlgSelectDateWV').show()" 
-            			update=":selectDateForm" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/>
+            			update=":selectDateForm" disabled="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR}"/>
             			
             		<p:ajax event="eventMove" listener="#{assignmentBean.onEventMove}" 
-            			oncomplete="PF('assignmentScheduleWV').update();addWarnResize();" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/>
+            			oncomplete="PF('assignmentScheduleWV').update();addWarnResize();" disabled="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR}"/>
             			
             		<p:ajax event="eventResize" listener="#{assignmentBean.onEventResize}" 
-            			oncomplete="PF('assignmentScheduleWV').update();addWarnResize();" disabled="#{assignmentBean.userSession.idSedRole ne 1}"/> 
+            			oncomplete="PF('assignmentScheduleWV').update();addWarnResize();" disabled="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR}"/> 
 			 
 				</p:schedule>
 			</div>
@@ -98,4 +102,3 @@
 	
 	<ui:include src="/WEB-INF/includes/assignment/assignmentDialog.xhtml"/>
 </f:view>
-</html>

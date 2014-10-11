@@ -376,3 +376,53 @@ function validateLoginForm(){
 	}
 	
  }
+
+function validLoginData(){
+	var idForm ="loginForm";
+	userName = addTextValidation(idForm + ":txtUserName", true, true, 1, 100);
+	userPw = addTextValidation(idForm + ":txtUserPassword", true, true, 1, 60);
+	return LiveValidation.massValidate([ userName, userPw ]);
+}
+
+function loginValidation(){
+	if(validLoginData()){
+		pass = document.getElementById("loginForm:txtUserPassword").value;
+		if (pass.length != 32) {
+			document.getElementById("loginForm:txtUserPassword").value = hex_md5(pass);
+		}
+		PrimeFaces.ab({
+			formId : 'loginForm',
+			partialSubmit : true,
+			source : 'loginForm:btnSedLogin',
+			process : 'loginForm',
+			update : 'growl',
+			oncomplete : function(xhr, status, args) {
+				loginUserValidate(xhr, status, args);
+			}
+		});
+		return false;
+	}
+}
+
+function validateRecoverPw(){
+	
+	var idForm ="forgetPasswordForm";
+	
+	valEmail = addEmailValidation(idForm + ":txtSedUserEmail", true, true);
+
+	valid = LiveValidation.massValidate([valEmail]);
+	
+	 if (valid) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':btnRecoverPw',
+				process : '@all',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+				}
+			});
+			return false;
+		}
+}

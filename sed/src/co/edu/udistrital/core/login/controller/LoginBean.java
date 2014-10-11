@@ -1,7 +1,10 @@
 package co.edu.udistrital.core.login.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -31,11 +34,13 @@ public class LoginBean extends BackingBean implements Serializable {
 
 	// Simple Java Data Object
 	private String userName;
+	private String imageEffect;
 	private String userPassword;
 
 	// UserList
 	List<Tree> treeList;
 	List<User> userSessionList;
+	List<String> imageList;
 
 	// User
 	private LoginController controller;
@@ -44,12 +49,49 @@ public class LoginBean extends BackingBean implements Serializable {
 		try {
 			this.controller = new LoginController();
 			this.validLogin = false;
+			this.imageList = new ArrayList<String>() {
+				{
+					add("basketball.jpg");
+					add("building.jpg");
+					add("home.jpg");
+				}
+			};
+			loadEffectSwitch();
+
+
 			if (getUserSession() == null) {
 				redirect("/portal/login");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	/** @author MTorres 11/10/2014 16:43:12 */
+	private void loadEffectSwitch() throws Exception {
+		try {
+			Random random = new Random();
+			int i = random.nextInt(4 - 1 + 1);
+			switch (i) {
+				case 0:
+					this.imageEffect = "turnDown";
+				break;
+				case 1:
+					this.imageEffect = "wipe";
+				break;
+				case 2:
+					this.imageEffect = "fade";
+				break;
+				case 3:
+					this.imageEffect = "zoom";
+				break;
+
+				default:
+					this.imageEffect = "fade";
+				break;
+			}
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
@@ -189,6 +231,22 @@ public class LoginBean extends BackingBean implements Serializable {
 
 	public void setValidLogin(boolean validLogin) {
 		this.validLogin = validLogin;
+	}
+
+	public List<String> getImageList() {
+		return imageList;
+	}
+
+	public void setImageList(List<String> imageList) {
+		this.imageList = imageList;
+	}
+
+	public String getImageEffect() {
+		return imageEffect;
+	}
+
+	public void setImageEffect(String imageEffect) {
+		this.imageEffect = imageEffect;
 	}
 
 
