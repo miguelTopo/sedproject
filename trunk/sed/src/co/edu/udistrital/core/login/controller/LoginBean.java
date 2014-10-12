@@ -59,8 +59,6 @@ public class LoginBean extends BackingBean implements Serializable {
 				}
 			};
 			loadEffectSwitch();
-
-
 			if (getUserSession() == null) {
 				redirect("/portal/login");
 			}
