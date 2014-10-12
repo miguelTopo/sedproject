@@ -2,7 +2,6 @@ package co.edu.udistrital.core.login.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -10,12 +9,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
-import org.primefaces.context.RequestContext;
-
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.controller.ManageCookie;
 import co.edu.udistrital.core.login.model.Tree;
-import co.edu.udistrital.session.common.SedSession;
 import co.edu.udistrital.session.common.User;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -54,6 +50,12 @@ public class LoginBean extends BackingBean implements Serializable {
 					add("basketball.jpg");
 					add("building.jpg");
 					add("home.jpg");
+					add("basketball2.jpg");
+					add("church.jpg");
+					add("court.jpg");
+					add("sculpture.jpg");
+					add("wall.jpg");
+					add("wallGirl.png");
 				}
 			};
 			loadEffectSwitch();
