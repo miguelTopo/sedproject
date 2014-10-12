@@ -58,7 +58,7 @@ public class SedUserController extends Controller {
 	}
 
 	/** @author MTorres */
-	public boolean saveSedUser(SedUser sedUser, String userPassword, String user, List<Student> studentResponsibleList) throws Exception {
+	public Long saveSedUser(SedUser sedUser, String userPassword, String user, List<Student> studentResponsibleList) throws Exception {
 		SedUserDAO dao = new SedUserDAO();
 		Transaction tx = null;
 		try {
@@ -109,20 +109,31 @@ public class SedUserController extends Controller {
 
 			}
 
-			// Crea instancias para Padre de Familia si posee estudiantes a su cargo
-			if (sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE) && (studentResponsibleList != null && !studentResponsibleList.isEmpty())) {
-				List<Long> idStudentList = new ArrayList<Long>(studentResponsibleList.size());
-
-				for (Student s : studentResponsibleList) {
-					idStudentList.add(s.getId());
-				}
-				dao.updateResponsibleList(idStudentList, sedUser.getId(), user);
-			}
 			tx.commit();
-			return true;
+			return sedUser.getId();
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			tx.rollback();
+			throw e;
+		} finally {
+			dao.getSession().close();
+			dao = null;
+			tx = null;
+		}
+	}
+
+	
+	public void updateResponsibleList(List<Long> idStudentList, Long idResponsible, String user) throws Exception {
+		SedUserDAO dao = new SedUserDAO();
+		Transaction tx = null;
+		try {
+			tx = dao.getSession().beginTransaction();
+			dao.updateResponsibleList(idStudentList, idResponsible, user);
+			tx.commit();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			if (tx != null && tx.isActive())
+				tx.rollback();
 			throw e;
 		} finally {
 			dao.getSession().close();
@@ -160,9 +171,8 @@ public class SedUserController extends Controller {
 				if (idStudentResponsibleDropList != null && !idStudentResponsibleDropList.isEmpty())
 					dao.deleteResponsibleList(idStudentResponsibleDropList, user);
 
-			}
-			else if(sedUser.getIdSedRole().equals(ISedRole.STUDENT)){
-				if(!dao.updateStudentCourse(sedUser))
+			} else if (sedUser.getIdSedRole().equals(ISedRole.STUDENT)) {
+				if (!dao.updateStudentCourse(sedUser))
 					return false;
 			}
 			tx.commit();

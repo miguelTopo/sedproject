@@ -194,8 +194,22 @@ public class SedUserBean extends BackingBean {
 			this.sedUser.setEmail(this.sedUser.getEmail().trim().toLowerCase());
 			this.sedUser.setBirthday(ManageDate.formatDate(this.sedUser.getBirthdayDate(), ManageDate.YYYY_MM_DD));
 
-			if (this.controller.saveSedUser(this.sedUser, this.userPassword, getUserSession() != null ? getUserSession().getIdentification()
-				: "admin", this.studentResponsibleList)) {
+			Long idSedUser =
+				this.controller.saveSedUser(this.sedUser, this.userPassword, getUserSession() != null ? getUserSession().getIdentification()
+					: "admin", this.studentResponsibleList);
+
+			if (idSedUser != null) {
+
+				// Crea instancias para Padre de Familia si posee estudiantes a su cargo
+				if (this.sedUser.getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)
+					&& (this.studentResponsibleList != null && !this.studentResponsibleList.isEmpty())) {
+					List<Long> idStudentList = new ArrayList<Long>(studentResponsibleList.size());
+					for (Student s : studentResponsibleList) {
+						idStudentList.add(s.getId());
+					}
+					this.controller.updateResponsibleList(idStudentList, idSedUser, getUserSession().getIdentification());
+				}
+
 				this.sedUserList.add(this.sedUser);
 				this.sedUserFilteredList = this.sedUserList;
 				threadMailSaveSedUser();
