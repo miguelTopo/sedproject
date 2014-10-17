@@ -3,20 +3,15 @@ package co.edu.udistrital.core.login.controller;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.hibernate.Transaction;
-
-import com.ocpsoft.pretty.faces.annotation.URLMapping;
-
 import co.edu.udistrital.core.common.api.IEmailTemplate;
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
-import co.edu.udistrital.core.common.util.RandomPassword;
-import co.edu.udistrital.core.login.model.SedUser;
-import co.edu.udistrital.core.login.model.SedUserDAO;
 import co.edu.udistrital.core.mail.io.mn.aws.MailGeneratorFunction;
 import co.edu.udistrital.core.mail.io.mn.aws.SMTPEmail;
+
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
 @ViewScoped
@@ -43,13 +38,13 @@ public class PasswordBean extends BackingBean {
 	private boolean validateSuccessPassword() throws Exception {
 		try {
 			if (!this.password.equals(this.retryPassword)) {
-				addWarnMessage("Cambiar contraseña", "Las contraseñas ingresadas como nuevas no coinciden, por favor verifique.");
+				addWarnMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.login.warnPasswordNoMatch"));
 				return false;
 			} else {
 				String pwMd5 = ManageMD5.parseMD5(this.passwordOld);
 				this.passwordOld = null;
 				if (!this.controller.validateOldUserPassword(getUserSession().getIdSedUser(), pwMd5)) {
-					addWarnMessage("Cambiar contraseña", "La contraseña antigua no coincide.");
+					addWarnMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.login.warnOldPassword"));
 					return false;
 				}
 				return true;
@@ -63,13 +58,13 @@ public class PasswordBean extends BackingBean {
 	private boolean validateUpdatePassword() throws Exception {
 		try {
 			if (this.passwordOld == null || this.passwordOld.trim().isEmpty()) {
-				addWarnMessage("Cambiar contraseña", "Por favor diligencie la contraseña antigua.");
+				addWarnMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.password.warnOldPassword"));
 				return false;
 			} else if (this.password == null || this.password.trim().isEmpty()) {
-				addWarnMessage("Cambiar contraseña", "Por favor diligencie la nueva contraseña.");
+				addWarnMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.password.warnNewPassword"));
 				return false;
 			} else if (this.retryPassword == null || this.retryPassword.trim().isEmpty()) {
-				addWarnMessage("Cambiar contraseña", "Por favor diligencie nuevamente la nueva contraseña en el campo 'Confirmar contraseña'.");
+				addWarnMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.password.warnRetryPassword"));
 				return false;
 			} else
 				return validateSuccessPassword();
@@ -86,7 +81,7 @@ public class PasswordBean extends BackingBean {
 				SMTPEmail e = new SMTPEmail();
 
 				e.sendProcessMail(null, t.getSubject(),
-					MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), userName, userPassword), "migueltrock@gmail.com"/*email*/);
+					MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), userName, userPassword), email);
 			}
 		} catch (Exception e) {
 			throw e;
@@ -123,10 +118,9 @@ public class PasswordBean extends BackingBean {
 				.getIdentification())) {
 				threadPasswordUpdate();
 				clearVar();
-				addInfoMessage("Cambiar contraseña", "La contraseña se actualizó exitosamente.");
+				addInfoMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.password.labelSuccessUpdate"));
 			} else {
-				addErrorMessage("Cambiar contraseña",
-					"Ocurriò un error al intentar modificar la contraseña, por favor comuniquese con el administrador del sistema.");
+				addErrorMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.password.errorUpdate"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

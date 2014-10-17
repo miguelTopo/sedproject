@@ -1,6 +1,5 @@
 package co.edu.udistrital.sed.report.controller;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,13 +10,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hwpf.model.NilPICFAndBinData;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
@@ -27,14 +22,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.util.IOUtils;
-import org.hibernate.engine.spi.LoadQueryInfluencers;
-import org.primefaces.context.ApplicationContext;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
-import co.edu.udistrital.core.login.model.SedUser;
 import co.edu.udistrital.sed.api.IQualificationType;
 import co.edu.udistrital.sed.api.IQualitativeQualification;
 import co.edu.udistrital.sed.model.Assignment;
@@ -151,15 +142,6 @@ public class ReportBean extends BackingBean implements IReport {
 		}
 	}
 
-	public static void main(String[] args) {
-		File f = new File("/home/torres/workspace/sed/WebContent/css/images/logoSed.png");
-		if (f.exists()) {
-			System.out.println("esto al parcer existe");
-		} else {
-			System.out.println("no guey");
-		}
-	}
-
 	/** @author MTorres */
 	private Sheet buildHeaderReport(String sheetName, Long idCourse, Long idWorkDay) throws Exception {
 		try {
@@ -190,6 +172,8 @@ public class ReportBean extends BackingBean implements IReport {
 				subjectCount++;
 			}
 			// rowFrom, rowTo, colFrom, colTo
+			
+			
 			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 7));
 			sheet.addMergedRegion(new CellRangeAddress(1, 1, 1, 7));
@@ -233,52 +217,52 @@ public class ReportBean extends BackingBean implements IReport {
 			Row titleRow = sheet.createRow((short) 0);
 			titleRow.setHeightInPoints(23);
 			Cell cell = titleRow.createCell(1);
-			cell.setCellValue("SECRETARIA DE EDUCACIÓN DISTRITAL");
+			cell.setCellValue(getMessage("page.report.labelEducationalSecretariat"));
 			cell.setCellStyle(titleStyle);
 
 			Row schoolRow = sheet.createRow((short) 1);
 			schoolRow.setHeightInPoints(18);
 			cell = schoolRow.createCell(1);
-			cell.setCellValue("COLEGIO LICEO FEMENINO MERCEDES NARIÑO");
+			cell.setCellValue(getMessage("page.report.labelLifemenaSchool"));
 			cell.setCellStyle(subtitleStyle);
 
 			Row data1 = sheet.createRow((short) 2);
 			cell = data1.createCell(1);
-			cell.setCellValue("SEDE");
+			cell.setCellValue(getMessage("page.report.labelHeadquarter"));
 			cell.setCellStyle(infoStyle);
 
 			//
 			cell = data1.createCell(2);
-			cell.setCellValue("Liceo Femenino Mercedes Nariño");
+			cell.setCellValue(getMessage("page.report.labelLifemenaSchoolLower"));
 
 			cell = data1.createCell(3);
-			cell.setCellValue("JORNADA");
+			cell.setCellValue(getMessage(getMessage("page.report.labelWorkday")));
 			cell.setCellStyle(infoStyle);
 
 			cell = data1.createCell(4);
-			cell.setCellValue("Mañana");
+			cell.setCellValue(getMessage("page.report.labelMorningWorkday"));
 
 			Row data2 = sheet.createRow((short) 3);
 			cell = data2.createCell(1);
-			cell.setCellValue("GRUPO");
+			cell.setCellValue(getMessage("page.report.labelGroup"));
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(2);
-			cell.setCellValue(teacher != null ? teacher.getCourseName() : "Sin Información");
+			cell.setCellValue(teacher != null ? teacher.getCourseName() : getMessage("page.core.labelNoInformation"));
 
 			cell = data2.createCell(3);
-			cell.setCellValue("PERIODO");
+			cell.setCellValue(getMessage("page.report.labelPeriod"));
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(4);
 			cell.setCellValue(teacher != null ? teacher.getIdPeriod().toString() : "Sin Información");
 
 			cell = data2.createCell(5);
-			cell.setCellValue("DIRECTOR DE GRUPO");
+			cell.setCellValue(getMessage("page.report.labelGroupManage"));
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(6);
-			cell.setCellValue(teacher != null ? teacher.getTeacherFullName() : "Sin Información");
+			cell.setCellValue(teacher != null ? teacher.getTeacherFullName() : getMessage("page.core.labelNoInformation"));
 
 			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 			// Paint Image header
@@ -352,7 +336,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 			Cell cell = studentRow.createCell(0);
 			cell.setCellStyle(cellStyle);
-			cell.setCellValue("No");
+			cell.setCellValue(getMessage("page.report.labelNumber"));
 
 			cell = studentRow.createCell(1);
 			cell.setCellStyle(cellStyle);
@@ -364,7 +348,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 			cell = studentRow.createCell(7);
 			cell.setCellStyle(cellStyle);
-			cell.setCellValue("Puesto");
+			cell.setCellValue(getMessage("page.report.labelStand"));
 			// rowFrom, rowTo, colFrom, colTo
 			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 3));
 			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 4, 6));
@@ -477,28 +461,29 @@ public class ReportBean extends BackingBean implements IReport {
 			f.setBoldweight((short) 2);
 			CellStyle headerInfoStyle = this.wb.createCellStyle();
 			headerInfoStyle.setAlignment(CellStyle.ALIGN_CENTER);
-			headerInfoStyle.setBorderBottom((short) 1);
-			headerInfoStyle.setBorderLeft((short) 1);
-			headerInfoStyle.setBorderRight((short) 1);
-			headerInfoStyle.setBorderTop((short) 1);
+			
+			headerInfoStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			headerInfoStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			headerInfoStyle.setBorderRight(CellStyle.BORDER_THIN);
+			headerInfoStyle.setBorderTop(CellStyle.BORDER_THIN);
 			headerInfoStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.index);
 			headerInfoStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
 			Cell cell = rowHeader.createCell(0);
 			cell.setCellStyle(headerInfoStyle);
-			cell.setCellValue("No.");
+			cell.setCellValue(getMessage("page.report.labelNumber"));
 
 			cell = rowHeader.createCell(1);
 			cell.setCellStyle(headerInfoStyle);
-			cell.setCellValue("Identificación");
+			cell.setCellValue(getMessage("page.student.labelStudentIdentification"));
 
 			cell = rowHeader.createCell(4);
 			cell.setCellStyle(headerInfoStyle);
-			cell.setCellValue("Estudiante");
+			cell.setCellValue(getMessage("page.report.labelStudent"));
 
 			cell = rowHeader.createCell(7);
 			cell.setCellStyle(headerInfoStyle);
-			cell.setCellValue("Puesto");
+			cell.setCellValue(getMessage("page.report.labelStand"));
 
 			int indexHeader = 7;
 			int indexSubject = 7;
@@ -706,7 +691,7 @@ public class ReportBean extends BackingBean implements IReport {
 	private boolean validateLoadReportQualificationList() throws Exception {
 		try {
 			if (this.idGrade == null || this.idGrade.equals(0L)) {
-				addWarnMessage("Ver Notas", "Por favor seleccione el grado.");
+				addWarnMessage(getMessage("page.qualification.tc.labelView"), getMessage("page.report.warnGradeSelect"));
 				return false;
 			}
 			return true;

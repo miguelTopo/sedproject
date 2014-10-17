@@ -6,8 +6,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.primefaces.event.CellEditEvent;
-
 import co.edu.udistrital.core.common.controller.BackingBean;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.sed.api.IQualificationType;
@@ -109,16 +107,16 @@ public class TeacherQualificationBean extends BackingBean {
 			}
 
 			if (totalC1 != 0 && totalC1 != this.studentList.size()) {
-				addWarnMessage("Guardar Notas", "Verifique que todos los estudiantes tengan una nota para calificación tipo C1.");
+				addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnMissingC1"));
 				return false;
 			} else if (totalC2 != 0 && totalC2 != this.studentList.size()) {
-				addWarnMessage("Guardar Notas", "Verifique que todos los estudiantes tengan una nota para calificación tipo C2.");
+				addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnMissingC2"));
 				return false;
 			} else if (totalC3 != 0 && totalC3 != this.studentList.size()) {
-				addWarnMessage("Guardar Notas", "Verifique que todos los estudiantes tengan una nota para calificación tipo C3.");
+				addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnMissingC3"));
 				return false;
 			} else if (totalC4 != 0 && totalC4 != this.studentList.size()) {
-				addWarnMessage("Guardar Notas", "Verifique que todos los estudiantes tengan una nota para calificación tipo C4.");
+				addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnMissingC4"));
 				return false;
 			}
 			this.idFinalQualificationType = 0L;
@@ -156,26 +154,26 @@ public class TeacherQualificationBean extends BackingBean {
 
 					if (q.getIdQualificationType().equals(IQualificationType.C1)) {
 						if ((q.getValue() > IQualificationValue.C1_MAX_VALUE || q.getValue() < IQualificationValue.C1_MIN_VALUE) && this.validC1) {
-							addWarnMessage("Guardar Notas", "Recuerde que la nota 1 debe estar entre " + IQualificationValue.C1_MAX_VALUE + " y "
-								+ IQualificationValue.C1_MIN_VALUE);
+							addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnRememberC1")
+								+ IQualificationValue.C1_MAX_VALUE + " y " + IQualificationValue.C1_MIN_VALUE);
 							return false;
 						}
 					} else if (q.getIdQualificationType().equals(IQualificationType.C2)) {
 						if ((q.getValue() > IQualificationValue.C2_MAX_VALUE || q.getValue() < IQualificationValue.C2_MIN_VALUE) && this.validC2) {
-							addWarnMessage("Guardar Notas", "Recuerde que la nota 2 debe estar entre " + IQualificationValue.C2_MAX_VALUE + " y "
-								+ IQualificationValue.C2_MIN_VALUE);
+							addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnRememberC2")
+								+ IQualificationValue.C2_MAX_VALUE + " y " + IQualificationValue.C2_MIN_VALUE);
 							return false;
 						}
 					} else if (q.getIdQualificationType().equals(IQualificationType.C3)) {
 						if ((q.getValue() > IQualificationValue.C3_MAX_VALUE || q.getValue() < IQualificationValue.C3_MIN_VALUE) && this.validC3) {
-							addWarnMessage("Guardar Notas", "Recuerde que la nota 3 debe estar entre " + IQualificationValue.C3_MAX_VALUE + " y "
-								+ IQualificationValue.C3_MIN_VALUE);
+							addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnRememberC3")
+								+ IQualificationValue.C3_MAX_VALUE + " y " + IQualificationValue.C3_MIN_VALUE);
 							return false;
 						}
 					} else if (q.getIdQualificationType().equals(IQualificationType.C4)) {
 						if (q.getValue() > IQualificationValue.C4_MAX_VALUE || q.getValue() < IQualificationValue.C4_MIN_VALUE && this.validC4) {
-							addWarnMessage("Guardar Notas", "Recuerde que la nota 4 debe estar entre " + IQualificationValue.C4_MAX_VALUE + " y "
-								+ IQualificationValue.C4_MIN_VALUE);
+							addWarnMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.warnRememberC4")
+								+ IQualificationValue.C4_MAX_VALUE + " y " + IQualificationValue.C4_MIN_VALUE);
 							return false;
 						}
 					}
@@ -191,10 +189,10 @@ public class TeacherQualificationBean extends BackingBean {
 	private boolean validLoadStudentSubjectList() throws Exception {
 		try {
 			if (this.idCourse == null || this.idCourse.equals(0L)) {
-				addWarnMessage("Ir a notas", "Por favor seleccione el curso");
+				addWarnMessage(getMessage("page.qualification.tc.labelView"), getMessage("page.assignment.warnCourse"));
 				return false;
 			} else if (this.idSubject == null || this.idSubject.equals(0L)) {
-				addWarnMessage("Ir a notas", "Por favor seleccione la materia");
+				addWarnMessage(getMessage("page.qualification.tc.labelView"), getMessage("page.assignment.warnSubject"));
 				return false;
 			}
 			return true;
@@ -210,16 +208,13 @@ public class TeacherQualificationBean extends BackingBean {
 				return;
 
 			if (this.studentList != null && validQualificationList()) {
-
 				loadFinalStudentQualification();
-
-
 
 				if (this.controller.saveQualificationList(this.studentList, getUserSession().getIdSedUser(), this.idSubject, getUserSession()
 					.getIdentification())) {
 					this.validC1 = this.validC2 = this.validC3 = false;
 					loadStudentSubjectList();
-					addInfoMessage("Guardar Notas", "Las notas ingresadas han sido almacenadas exitosamente.");
+					addInfoMessage(getMessage("page.qualification.tq.labelSave"), getMessage("page.qualification.tq.labelSuccessSave"));
 				}
 			}
 		} catch (Exception e) {
