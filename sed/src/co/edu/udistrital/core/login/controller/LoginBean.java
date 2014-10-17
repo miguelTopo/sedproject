@@ -119,7 +119,7 @@ public class LoginBean extends BackingBean implements Serializable {
 				addInfoMessage("Bienvenid@", getUserSession().getName() + " " + getUserSession().getLastName());
 			} else {
 				this.validLogin = false;
-				addWarnMessage("Iniciar Sesión", "Las Credenciales usadas son inválidas.");
+				addWarnMessage(getMessage("page.login.labelLogin"), getMessage("page.login.warnInvalidCredential"));
 			}
 			getSession(false).setAttribute("user", getUserSession());
 			getRequestContext().addCallbackParam("isLogin", this.validLogin);
@@ -165,10 +165,10 @@ public class LoginBean extends BackingBean implements Serializable {
 	private boolean validateLoginData() throws Exception {
 		try {
 			if (this.userName == null || this.userName.trim().isEmpty()) {
-				addWarnMessage("Ingresar", "Por favor ingrese el nombre de usuario.");
+				addWarnMessage(getMessage("page.login.labelSignIn"), getMessage("page.login.warnUserName"));
 				return false;
 			} else if (this.userPassword == null || this.userPassword.trim().isEmpty()) {
-				addWarnMessage("Ingresar", "Por favor ingrese la contrase�a.");
+				addWarnMessage(getMessage("page.login.labelSignIn"), getMessage("page.login.warnPassword"));
 				return false;
 			} else
 				return true;

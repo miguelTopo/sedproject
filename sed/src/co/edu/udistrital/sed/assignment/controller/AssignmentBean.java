@@ -86,10 +86,6 @@ public class AssignmentBean extends BackingBean {
 	public void init() {
 		try {
 			this.model = new DefaultScheduleModel();
-			Calendar today = Calendar.getInstance();
-			// this.assignmentList =
-			// this.controller.loadAssignmentListByPeriod(Long.valueOf(today.get(Calendar.YEAR)));
-			// loadScheduleData();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -144,15 +140,14 @@ public class AssignmentBean extends BackingBean {
 				this.controller.validAvailability(this.assignment.getId(), this.assignment.getIdCourse(), this.idDay, this.assignStartDate,
 					this.assignEndDate, null);
 			if (!valid) {
-				addWarnMessage("Programar Docente",
-					"Ya existe un docente asignado para el curso y horas especificadas, o hay crude de horario, por favor verifique.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnBusySchedule"));
 				return valid;
 			} else
 				valid =
 					this.controller.validAvailability(this.assignment.getId(), this.assignment.getIdCourse(), this.idDay, this.assignStartDate,
 						this.assignEndDate, this.assignment.getIdSedUser());
 			if (!valid) {
-				addWarnMessage("Programar Docente", "El docente seleccionado ya posee asignación para la fecha y horas indicadas.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnAvailableTeacher"));
 				return valid;
 			}
 			return true;
@@ -166,28 +161,28 @@ public class AssignmentBean extends BackingBean {
 	private boolean validSaveTeacherAssignment() throws Exception {
 		try {
 			if (this.assignment == null) {
-				addWarnMessage("Programar Docente", "Por favor diligencie completamente el formulario.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnEmptyForm"));
 				return false;
 			} else if (this.assignment.getIdSedUser() == null || this.assignment.getIdSedUser().equals(0L)) {
-				addWarnMessage("Programar Docente", "Por favor seleccione el docente.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnTeacher"));
 				return false;
 			} else if (this.assignment.getIdGrade() == null || this.assignment.getIdGrade().equals(0L)) {
-				addWarnMessage("Programar Docente", "Por favor seleccione el grado.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnGrade"));
 				return false;
 			} else if (this.assignment.getIdCourse() == null || this.assignment.getIdCourse().equals(0L)) {
-				addWarnMessage("Programar Docente", "Por favor seleccione el curso.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnCourse"));
 				return false;
 			} else if (this.assignStartDate == null) {
-				addWarnMessage("Programar Docente", "Por favor seleccione la hora inicial.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnStartHour"));
 				return false;
 			} else if (this.assignEndDate == null) {
-				addWarnMessage("Programar Docente", "Por favor seleccione la hora final.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnEndHour"));
 				return false;
 			} else if (this.idDay == null || this.idDay.equals(0L)) {
-				addWarnMessage("Programar Docente", "Por favor seleccione el día.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnDay"));
 				return false;
 			} else if (this.assignment.getIdSubject() == null || this.assignment.getIdSubject().equals(0L)) {
-				addWarnMessage("Programar Docente", "Por favor seleccione la materia.");
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnSubject"));
 				return false;
 			} else if (!handleAssignDateChange()) {
 				return false;
@@ -295,10 +290,9 @@ public class AssignmentBean extends BackingBean {
 	public void loadDeleteMessage() {
 		try {
 			if (this.eventDelete)
-				addInfoMessage("Eliminar Asignación", "La asignación se eliminó exitosamente.");
+				addInfoMessage(getMessage("page.assignment.labelDelete"), getMessage("page.assignment.labelSuccessAssignmentDelete"));
 			else
-				addErrorMessage("Eliminar Asignación",
-					"Ocurrió un error y no fue posible eliminar la asignación. Consulte al administrador del sistema.");
+				addErrorMessage(getMessage("page.assignment.labelDelete"), getMessage("page.assignment.errorAssignmentDelete"));
 
 			this.eventDelete = false;
 		} catch (Exception e) {
@@ -414,8 +408,7 @@ public class AssignmentBean extends BackingBean {
 		try {
 			this.warnResizeEvent = -1;
 			if (event == null) {
-				addErrorMessage("Mover Asignación",
-					"Ocurrió un problema y no fue posible moverl la asignación, por favor consulte con el administrador del sistema.");
+				addErrorMessage(getMessage("page.assignment.labelMove"), getMessage("page.assignment.errorAssignmentMove"));
 				return;
 			}
 			this.event = event.getScheduleEvent();
@@ -430,8 +423,7 @@ public class AssignmentBean extends BackingBean {
 		try {
 			this.warnResizeEvent = -1;
 			if (event == null) {
-				addErrorMessage("Mover Asignación",
-					"Ocurrió un problema y no fue posible moverl la asignación, por favor consulte con el administrador del sistema.");
+				addErrorMessage(getMessage("page.assignment.labelMove"), getMessage("page.assignment.errorAssignmentMove"));
 				return;
 			}
 			this.event = event.getScheduleEvent();
@@ -446,11 +438,10 @@ public class AssignmentBean extends BackingBean {
 		try {
 			switch (this.warnResizeEvent) {
 				case 0:
-					addWarnMessage("Mover Asignación",
-						"No fue posible mover la asignación por cruce de horario o disponibilidad docente. Por favor verifique.");
+					addWarnMessage(getMessage("page.assignment.labelMove"), getMessage("page.assignment.warnAvailableScheduleMove"));
 				break;
 				case 1:
-					addInfoMessage("Mover Asignación", "La asignación se ha movido exitosamente.");
+					addInfoMessage(getMessage("page.assignment.labelMove"), getMessage("page.assignment.labelSuccessAssignmentMove"));
 				break;
 				default:
 				break;
@@ -570,10 +561,10 @@ public class AssignmentBean extends BackingBean {
 				this.endDate.set(Calendar.SECOND, 0);
 
 				if (calStartDate.equals(calEndDate)) {
-					addWarnMessage("Programar Docente", "Las horas de inicio y fin no pueden ser identicas, por favor verifique.");
+					addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnEqualHour"));
 					return false;
 				} else if (calStartDate.after(calEndDate)) {
-					addWarnMessage("Programar Docente", "Error en las horas seleccionadas por favor verifique.");
+					addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.errorSelectedHour"));
 					return false;
 				}
 				return true;
@@ -596,7 +587,8 @@ public class AssignmentBean extends BackingBean {
 						if (this.assignmentFilter.getIdSedUser() != null && !this.assignmentFilter.getIdSedUser().equals(0L)) {
 							this.assignmentList = this.controller.loadAssignmentListByTeacher(this.assignmentFilter.getIdSedUser());
 							if (this.assignmentList == null || this.assignmentList.isEmpty())
-								addWarnMessage("Calendario académico", "El docente seleccionado no tiene asignación hasta el momento.");
+								addWarnMessage(getMessage("page.assignment.labelAcademicSchedule"),
+									getMessage("page.assignment.labelEmptyAssignment"));
 							else
 								loadScheduleData();
 						}
@@ -606,7 +598,8 @@ public class AssignmentBean extends BackingBean {
 							&& this.assignmentFilter.getIdCourse() != null && !this.assignmentFilter.getIdCourse().equals(0L)) {
 							this.assignmentList = this.controller.loadAssignmentListByCourse(this.assignmentFilter.getIdCourse());
 							if (this.assignmentList == null || this.assignmentList.isEmpty())
-								addWarnMessage("Calendario académico", "El curso seleccionado no posee aún materias ni docentes asignados.");
+								addWarnMessage(getMessage("page.assignment.labelAcademicSchedule"),
+									getMessage("page.assignment.labelCourseEmptyAssignment"));
 							else
 								loadScheduleData();
 						}
@@ -669,8 +662,7 @@ public class AssignmentBean extends BackingBean {
 	public boolean getValidateSedUserRole() throws Exception {
 		try {
 			if (getUserSession() != null) {
-				if (getUserSession().getIdSedRole().equals(ISedRole.ADMINISTRATOR)
-					|| getUserSession().getIdSedRole().equals(ISedRole.STUDENT)
+				if (getUserSession().getIdSedRole().equals(ISedRole.ADMINISTRATOR) || getUserSession().getIdSedRole().equals(ISedRole.STUDENT)
 					|| getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)
 					|| getUserSession().getIdSedRole().equals(ISedRole.TEACHER))
 					return true;

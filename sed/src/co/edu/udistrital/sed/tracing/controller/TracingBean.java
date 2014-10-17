@@ -83,7 +83,7 @@ public class TracingBean extends BackingBean {
 			this.studentList = this.controller.loadStudentList(this.idPeriod, this.idGrade, this.idCourse, idCourseList);
 			this.studentFilteringList = this.studentList;
 			if (this.studentList == null || this.studentList.isEmpty())
-				addInfoMessage("Buscar", "No se encontró ningun estudiante con los criterios seleccionados.");
+				addInfoMessage(getMessage("page.core.labelSearch"), getMessage("page.tracing.labelEmptySearch"));
 
 
 		} catch (Exception e) {
@@ -95,7 +95,7 @@ public class TracingBean extends BackingBean {
 	private boolean validateLoadStudentList() throws Exception {
 		try {
 			if (this.idPeriod == null || this.idPeriod.equals(0L)) {
-				addWarnMessage("Buscar", "El criterio minimo de búsqueda es el periodo, por favor seleccione uno.");
+				addWarnMessage(getMessage("page.core.labelSearch"), getMessage("page.tracing.warnMinimalCriteria"));
 				return false;
 			}
 			return true;

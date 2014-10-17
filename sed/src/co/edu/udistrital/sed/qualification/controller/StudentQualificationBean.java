@@ -101,7 +101,7 @@ public class StudentQualificationBean extends BackingBean {
 			if (qualificationStudentList != null && !qualificationStudentList.isEmpty())
 				orderQualificationList(qualificationStudentList);
 			else
-				addInfoMessage("Calificaciones", "El estudiante aún no tiene notas registradas.");
+				addInfoMessage(getMessage("page.qualification.labelQualification"), getMessage("page.qualification.sq.labelEmptyQualification"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,8 +126,9 @@ public class StudentQualificationBean extends BackingBean {
 					Qualification qs = new Qualification();
 					qs.setValue(q.getValue());
 					qs.setIdQualificationType(q.getIdQualificationType());
-					idPeriod = q.getIdPeriod() != null && !q.getIdPeriod().equals(0L) ? q.getIdPeriod() : Long.valueOf(Calendar.getInstance()
-						.get(Calendar.YEAR));
+					idPeriod =
+						q.getIdPeriod() != null && !q.getIdPeriod().equals(0L) ? q.getIdPeriod() : Long.valueOf(Calendar.getInstance().get(
+							Calendar.YEAR));
 					qs.setIdPeriod(idPeriod);
 
 
@@ -182,7 +183,7 @@ public class StudentQualificationBean extends BackingBean {
 	public void handleDataExporter(Object o) {
 		try {
 			Workbook wb = (Workbook) o;
-			wb.setSheetName(0, "Datos Educacional");
+			wb.setSheetName(0, "Reporte");
 			CellStyle bs = wb.createCellStyle();
 			bs.setBorderBottom(BorderFormatting.BORDER_THIN);
 			bs.setBottomBorderColor(IndexedColors.BLACK.getIndex());
