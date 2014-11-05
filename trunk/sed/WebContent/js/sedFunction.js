@@ -185,6 +185,7 @@ function validateAddStudent() {
 				update :'addSedUserForm:addSedUserPanel',
 				oncomplete : function(xhr, status, args) {
 					PF('statusDialog').hide();
+					PF('sedUserTableWV').clearFilters();
 				}
 			});
 			return false;

@@ -209,7 +209,9 @@ public class AssignmentBean extends BackingBean {
 			this.assignment.setDateCreation(ManageDate.getCurrentDate(ManageDate.YYYY_MM_DD));
 			this.assignment.setState(IState.ACTIVE);
 
-			if (this.controller.saveTeacherAssignment(this.assignment)) {
+			Long idAssignment = this.controller.saveTeacherAssignment(this.assignment);
+
+			if (idAssignment != null) {
 
 				String teacher = loadTeacherFullNameById(this.assignment.getIdSedUser());
 				String subjectName = loadSubjectById(this.assignment.getIdSubject()).getName();
@@ -223,9 +225,18 @@ public class AssignmentBean extends BackingBean {
 				}
 				this.startDate.set(Calendar.DAY_OF_WEEK, Integer.parseInt(this.idDay.toString()));
 				this.endDate.set(Calendar.DAY_OF_WEEK, Integer.parseInt(this.idDay.toString()));
+				this.assignment.setId(idAssignment);
+				this.assignment.setTeacherFullName(teacher);
+				this.assignment.setSubjectName(subjectName);
+				this.assignment.setCourseName(courseName);
+				this.assignment.setSubjectStyleClass(eventStyle);
 
-				this.model.addEvent(new DefaultScheduleEvent(teacher + " " + subjectName + " " + courseName, this.startDate.getTime(), this.endDate
-					.getTime(), eventStyle));
+				DefaultScheduleEvent ev =
+					new DefaultScheduleEvent(teacher + " " + subjectName + " " + courseName, this.startDate.getTime(), this.endDate.getTime(),
+						eventStyle);
+				ev.setData(this.assignment);
+
+				this.model.addEvent(ev);
 
 
 				clearSelectDateDialog();

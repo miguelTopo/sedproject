@@ -220,7 +220,7 @@ public class SedUserBean extends BackingBean {
 
 		} catch (Exception e) {
 			addFatalMessage("Guardar Usuario",
-				"Ocurrió un error inesperado y no fué posible agregar el usuario. Por favor consulte al administrador del sistema.");
+				"Ocurriï¿½ un error inesperado y no fuï¿½ posible agregar el usuario. Por favor consulte al administrador del sistema.");
 			e.printStackTrace();
 		}
 	}
@@ -605,6 +605,7 @@ public class SedUserBean extends BackingBean {
 			this.studentResponsibleList = new ArrayList<Student>();
 			this.idStudentResponsibleDropList = null;
 			setShowList(true);
+			getRequestContext().execute("PF('sedUserTableWV').clearFilters();");
 			setPanelView("sedUserList", "Lista de Usuarios", "SedUserBean");
 		} catch (Exception e) {
 

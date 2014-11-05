@@ -44,14 +44,14 @@ public class AssignmentController extends Controller {
 	}
 
 	/** @author MTorres 22/7/2014 23:09:53 */
-	public boolean saveTeacherAssignment(Assignment assignment) throws Exception {
+	public Long saveTeacherAssignment(Assignment assignment) throws Exception {
 		AssignmentDAO dao = new AssignmentDAO();
 		Transaction tx = null;
 		try {
 			tx = dao.getSession().beginTransaction();
 			dao.getSession().saveOrUpdate(assignment);
 			tx.commit();
-			return true;
+			return assignment.getId();
 		} catch (Exception e) {
 			dao.getSession().cancelQuery();
 			if (tx != null && tx.isActive())

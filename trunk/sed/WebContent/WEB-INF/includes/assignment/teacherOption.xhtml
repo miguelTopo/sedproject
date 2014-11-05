@@ -22,7 +22,8 @@
 					style="width:98%">
 					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 					<f:selectItems value="#{assignmentBean.teacherList}" var="t" itemLabel="#{t.sedUserFullName}" itemValue="#{t.id}"/>
-					<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('assignmentScheduleWV').update();"/>
+					<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('statusDialog').hide();PF('assignmentScheduleWV').update();"
+						onstart="PF('statusDialog').show();"/>
 				</p:selectOneMenu>
 			</td>
 		</tr>
