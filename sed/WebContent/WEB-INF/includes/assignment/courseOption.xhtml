@@ -36,7 +36,8 @@
 					disabled="#{assignmentBean.assignmentFilter.idGrade eq null or assignmentBean.assignmentFilter.idGrade eq 0}">
 					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 					<f:selectItems value="#{assignmentBean.courseTmpList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>
-					<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('assignmentScheduleWV').update();"/>
+					<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('statusDialog').hide();PF('assignmentScheduleWV').update();"
+						onstart="PF('statusDialog').show();"/>
 				</p:selectOneMenu>
 			</td>
 		</tr>
