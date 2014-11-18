@@ -68,7 +68,7 @@
 			</table>
 			<div style="text-align: right;padding-bottom: 25px;padding-right: 100px;">
 				<p:commandButton id="btnLoadQualification" value="#{bundle['page.qualification.tc.labelView']}" action="#{teacherQualificationBean.loadStudentSubjectList}" 
-					onclick="validateLoadQualification()" type="button"/>
+					onclick="validateLoadQualification()" type="button" icon="ui-icon-clipboard"/>
 			</div> 
 			<p:outputPanel id="studentQualificationOp">
 				<p:outputPanel rendered="#{!empty teacherQualificationBean.studentList}">

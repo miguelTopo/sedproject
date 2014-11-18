@@ -8,7 +8,7 @@
 	
 	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>
 	<h:form id="calendarAssigmentForm">
-		<p:panel header="#{bundle['page.assignment.labelAcademicChange']}">
+		<p:panel id="calendarAssigmentPanel" header="#{bundle['page.assignment.labelAcademicChange']}">
 			<table>
 				<tr>
 					<td style="width: 5%"/>
@@ -18,7 +18,7 @@
 				<tr>
 					<td/>
 					<td>
-						<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR}">
+						<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.ADMINISTRATOR and assignmentBean.userSession.idSedRole ne ISedRole.TEACHER}">
 							<div>
 								<p>
 									#{bundle['page.assignment.labelGenericGuide']}
@@ -30,6 +30,11 @@
 								<h:outputText value="#{bundle['page.assignment.labelAdminGuide']}" escape="false"/>
 							</div>
 						</p:outputPanel>
+						<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq ISedRole.TEACHER}">
+							<div>
+								A continuación te presentamos tu carga académica de la semana.
+							</div>
+						</p:outputPanel>
 					</td>
 				</tr>
 				
@@ -37,7 +42,7 @@
 			<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole eq ISedRole.ADMINISTRATOR}">
 				<div style="text-align: center;padding-top: 25px;padding-bottom: 25px;">
 					<p:commandButton value="#{bundle['page.assignment.labelAddAssignment']}" action="#{assignmentBean.goAddAssignment}" 
-						oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm"/>
+						oncomplete="PF('dlgSelectDateWV').show()" update=":selectDateForm" icon="ui-icon-note"/>
 				</div>
 			</p:outputPanel>
 			
@@ -52,15 +57,19 @@
 				<tr>
 					<td/>
 					<td>
-						#{bundle['page.assignment.labelCriteriaSearch']}:
+						<h:outputText value="#{bundle['page.assignment.labelCriteriaSearch']}:" rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.TEACHER and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}"/>
 					</td>
 					<td>
-						<p:selectOneMenu value="#{assignmentBean.sheduleOption}" style="width:33%">
+						<p:outputPanel rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.TEACHER and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}">
+						<p:selectOneMenu id="filterOption" value="#{assignmentBean.sheduleOption}" style="width:33%">
 							<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 							<f:selectItem itemValue="1" itemLabel="#{bundle['page.sed.labelTeacher']}"/>
 							<f:selectItem itemValue="2" itemLabel="#{bundle['page.sed.labelCourse']}"/>
-							<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp" listener="#{assignmentBean.cleanFilterParameter}"/>
+							<p:ajax process="@this" update=":calendarAssigmentForm:scheduleOptionOp :calendarAssigmentForm:btnTeacherSearch :calendarAssigmentForm:btnCourseSearch" 
+								listener="#{assignmentBean.cleanFilterParameter}"/>
 						</p:selectOneMenu>
+						<div id="filterOption_DIV" class="ui-invalid-field"/>
+						</p:outputPanel>
 					</td>
 				</tr>
 			</table>
@@ -75,6 +84,11 @@
 						<ui:include src="/WEB-INF/includes/assignment/courseOption.xhtml"/>
 					</p:outputPanel>
 				
+				</p:outputPanel>
+				
+				<p:outputPanel style="text-align: right;" rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.TEACHER}">
+					<p:commandButton value="Limpiar" action="#{assignmentBean.loadScheduleUserDefault}" update=":calendarAssigmentForm:calendarAssigmentPanel"
+						onstart="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();" icon="ui-icon-arrowreturnthick-1-w"/>
 				</p:outputPanel>
 				
 			<div style="padding-top: 25px;">

@@ -6,8 +6,8 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
 
-<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720" style="max-height:550px"
-	showEffect="slide" hideEffect="clip">
+<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720"
+	showEffect="slide" hideEffect="clip" height="550">
 	<h:form id="dlgStdSelectForm">
 		<p:outputPanel id="studentSelectOp">
 			<table style="width: 700px; border-spacing: 7px;">
@@ -54,15 +54,14 @@
 					<td />
 					<td colspan="4">
 						<p:dataTable id="stdResponsibleTable" value="#{sedUserBean.studentList}" var="s"
-							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" style="max-height: 200px;">
-							<p:column headerText="Nombres" width="150">
-								#{s.name}	
-							</p:column>
-
+							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" scrollHeight="250">
+							
 							<p:column headerText="Apellidos" width="150">
 								#{s.lastName}	
 							</p:column>
-
+							<p:column headerText="Nombres" width="150">
+								#{s.name}	
+							</p:column>
 							<p:column style="text-align:center" width="35">
 								<p:commandLink title="#{bundle['page.core.labelSelect']}" action="#{sedUserBean.addStudent}" 
 									update=":dlgStdSelectForm:responsibleStdOp">
@@ -87,17 +86,16 @@
 							<p:dataTable id="responsibleStdTable" value="#{sedUserBean.studentResponsibleList}" var="sr" emptyMessage="#{bundle['page.student.labelEmptyList']}" 
 								scrollable="true" scrollHeight="75">
 								
-								<p:column headerText="#{bundle['page.student.labelStudentName']}">
-									#{sr.name}	
-								</p:column>
-
 								<p:column headerText="#{bundle['page.student.labelStudentLastName']}">
 									#{sr.lastName}	
 								</p:column>
-							
+								<p:column headerText="#{bundle['page.student.labelStudentName']}">
+									#{sr.name}	
+								</p:column>
+						
 							<p:column style="text-align:center" width="35">
 								<p:commandLink title="#{bundle['page.core.labelDelete']}" action="#{sedUserBean.removeStudent}" 
-									update=":dlgStdSelectForm:responsibleStdOp :addSedUserForm:opChangeRole">
+									update=":dlgStdSelectForm:responsibleStdOp">
 									<p:graphicImage value="../css/icon/delete.png" width="20" height="20" />
 									<f:setPropertyActionListener target="#{sedUserBean.studentSelected}" value="#{sr}" />
 								</p:commandLink>

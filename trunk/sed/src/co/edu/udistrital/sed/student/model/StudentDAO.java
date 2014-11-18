@@ -94,6 +94,7 @@ public class StudentDAO extends HibernateDAO {
 			hql.append(" AND c.id = sc.idCourse ");
 			hql.append(" AND sc.idCourse = :idCourse ");
 			hql.append(" AND s.state = :state ");
+			hql.append(" ORDER BY s.lastName ");
 
 			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(Student.class));
 			qo.setParameter("idCourse", idCourse);
@@ -305,6 +306,33 @@ public class StudentDAO extends HibernateDAO {
 		} finally {
 			hql = null;
 			qo = null;
+		}
+	}
+
+	/**
+	 * @author Miguel 18/11/2014 8:07:13
+	 */
+	public Long loadStudentCourse(Long idStudent) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo;
+		try {
+			hql.append(" SELECT sc.idCourse ");
+			hql.append(" FROM StudentCourse sc ");
+			hql.append(" WHERE sc.idStudent = :idStudent ");
+			hql.append(" AND sc.idPeriod = :idPeriod ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idStudent", idStudent);
+			qo.setParameter("idPeriod", Long.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+			qo.setMaxResults(1);
+
+			Object o = qo.uniqueResult();
+
+			return o != null ? Long.valueOf(o.toString()) : null;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
 		}
 	}
 }

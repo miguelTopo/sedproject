@@ -4,12 +4,18 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<o:importConstants type="co.edu.udistrital.core.login.api.ISedRole" var="ISedRole"/>
 	<table>
 		<tr>
 			<td style="width:5%"/>
 			<td style="width:18%"/>
-			<td style="width:72%"/>
+			<td style="width:25%"/>
+			<td style="width:4%"/>
+			<td style="width:18%"/>
+			<td style="width:25%"/>
 			<td style="width:5%"/>
 		</tr>
 		<tr>
@@ -17,15 +23,31 @@
 			<td>
 				#{bundle['page.sed.labelTeacher']}:
 			</td>
-			<td>
-				<p:selectOneMenu value="#{assignmentBean.assignmentFilter.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? true : false}" filterMatchMode="startsWith" 
+			<td colspan="#{assignmentBean.userSession.idSedRole ne ISedRole.STUDENT_RESPONSIBLE and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT ? '1' : '4'}">
+				<p:selectOneMenu id="filterTeacher" value="#{assignmentBean.assignmentFilter.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? true : false}" filterMatchMode="startsWith" 
 					style="width:98%">
 					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
 					<f:selectItems value="#{assignmentBean.teacherList}" var="t" itemLabel="#{t.sedUserFullName}" itemValue="#{t.id}"/>
-					<p:ajax process="@this" update="@none" listener="#{assignmentBean.filterScheduleOption}" oncomplete="PF('statusDialog').hide();PF('assignmentScheduleWV').update();"
-						onstart="PF('statusDialog').show();"/>
 				</p:selectOneMenu>
+				<div id="filterTeacher_DIV" class="ui-invalid-field"/>
+			</td>
+			<td/>
+			<td>
+				<h:outputText rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.STUDENT_RESPONSIBLE and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}" value="Tipo de busqueda:"/>
+			</td>
+			<td>
+				<p:selectOneMenu id="filterAssignmentType" value="#{assignmentBean.assignmentFilter.idAssignmentType}" style="width:98%"
+					rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.STUDENT_RESPONSIBLE and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}">
+					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
+					<f:selectItem itemValue="3" itemLabel="Completo" />
+					<f:selectItems value="#{assignmentBean.assignmentTypeList}" var="a" itemValue="#{a.id}" itemLabel="#{a.name}"/>
+				</p:selectOneMenu>
+				<div id="filterAssignmentType_DIV" class="ui-invalid-field"/>
 			</td>
 		</tr>
 	</table>
+	<div style="text-align: center;padding-top: 20px;">
+		<p:commandButton id="btnTeacherSearch" value="Buscar" action="#{assignmentBean.filterScheduleOption}" icon="ui-icon-search"
+			onclick="validateFilterSchedule(#{assignmentBean.sheduleOption}, #{assignmentBean.userSession.idSedRole})" type="button"/>
+	</div>
 </f:view>

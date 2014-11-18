@@ -8,7 +8,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import co.edu.udistrital.core.common.model.AParameter;
 import co.edu.udistrital.core.common.model.ASEDModel;
 
 @Entity

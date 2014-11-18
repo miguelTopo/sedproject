@@ -1,5 +1,6 @@
 package co.edu.udistrital.sed.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.hibernate.transform.Transformers;
 
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.connection.HibernateDAO;
+import co.edu.udistrital.core.login.api.ISedRole;
 
 public class CourseDAO extends HibernateDAO {
 
@@ -55,4 +57,51 @@ public class CourseDAO extends HibernateDAO {
 		}
 	}
 
+	/**
+	 * @author Miguel 17/11/2014 16:58:18
+	 */
+	public List<Long> loadStudentCourse(Long idSedUser, List<Long> idStudentList, Long idSedRole) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo;
+		try {
+			hql.append(" SELECT DISTINCT (sc.idCourse) ");
+			hql.append(" FROM StudentCourse sc ");
+			hql.append(" WHERE sc.idStudent IN(:idStudentList) ");
+			hql.append(" AND sc.idPeriod = :idPeriod ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idPeriod", Long.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+			qo.setParameterList("idStudentList", idStudentList);
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+		}
+	}
+
+	/**
+	 * @author Miguel 17/11/2014 17:07:11
+	 */
+	public List<Long> loadStudentByResponsible(Long idSedUser) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo;
+		try {
+			hql.append(" SELECT s.id ");
+			hql.append(" FROM Student s ");
+			hql.append(" WHERE s.idSedUserResponsible = :idSedUser ");
+			hql.append(" AND s.state = :state ");
+
+			qo = getSession().createQuery(hql.toString());
+			qo.setParameter("idSedUser", idSedUser);
+			qo.setParameter("state", IState.ACTIVE);
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+		}
+	}
 }

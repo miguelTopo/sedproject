@@ -641,4 +641,33 @@ public class SedUserDAO extends HibernateDAO {
 			qo = null;
 		}
 	}
+
+	/**
+	 * @author Miguel 17/11/2014 16:10:49
+	 */
+	public List<SedUser> loadTeacherListByCourseList(List<Long> idCourseList) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo;
+		try {
+			hql.append(" SELECT DISTINCT (su.id) AS id, ");
+			hql.append(" su.name ||' '||lastName AS sedUserFullName ");
+			hql.append(" FROM SedUser su, ");
+			hql.append(" Assignment a ");
+			hql.append(" WHERE a.idSedUser = su.id ");
+			hql.append(idCourseList != null ? " AND a.idCourse IN(:idCourseList) " : "");
+			hql.append(" AND su.state = :state ");
+			hql.append(" AND a.state = :state ");
+
+			qo = getSession().createQuery(hql.toString()).setResultTransformer(Transformers.aliasToBean(SedUser.class));
+			qo.setParameter("state", IState.ACTIVE);
+			if (idCourseList != null)
+				qo.setParameterList("idCourseList", idCourseList);
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+		}
+	}
 }

@@ -296,21 +296,29 @@ function validateAddStudent() {
 			return false;
 		}	
  }
- function validateTeacherAssignment(){
+ function validateTeacherAssignment(idAssignmentType){
+	 
+	 
 	 var idForm = "selectDateForm";
+	 var typeSuccess = true;
 	 
 	 selectTeacher = addSelectValidation(idForm + ":somSedUser_input", "sedUser_DIV");
-	 selectGrade = addSelectValidation(idForm + ":somTeacherGrade_input", "teacherGrade_DIV");
-	 selectCourse = addSelectValidation(idForm + ":somTeacherCourse_input", "teacherCourse_DIV");
+	 selectAssignmentType = addSelectValidation(idForm + ":somAssignmentType_input", "teacherAssignmenType_DIV");
 	 selectDay = addSelectValidation(idForm + ":somDay_input", "day_DIV");
-	 selectSubject = addSelectValidation(idForm + ":somTeacherSubject_input", "teacherSubject_DIV");
-	 
 	 validStartDate = addTextValidation(idForm + ":tpStartDate_input", true, true, 5, 5);
 	 validEndDate = addTextValidation(idForm + ":tpEndDate_input", true, true, 5, 5);
+	 
+	 if(idAssignmentType==1){
+		 selectGrade = addSelectValidation(idForm + ":somTeacherGrade_input", "teacherGrade_DIV");
+		 selectCourse = addSelectValidation(idForm + ":somTeacherCourse_input", "teacherCourse_DIV");
+		 selectSubject = addSelectValidation(idForm + ":somTeacherSubject_input", "teacherSubject_DIV");
+		 typeSuccess = selectGrade && selectCourse && selectSubject; 
+		 }
+		   
 	
 	 valid = LiveValidation.massValidate([validStartDate, validEndDate]);
 	 
-	 if (valid && selectTeacher && selectGrade && selectCourse && selectDay && selectSubject) {
+	 if (valid && selectTeacher && selectAssignmentType && selectDay && typeSuccess) {
 			PF('statusDialog').show();
 			PrimeFaces.ab({
 				formId : idForm,
@@ -426,4 +434,46 @@ function validateRecoverPw(){
 			});
 			return false;
 		}
+}
+
+function validateFilterSchedule(scheduleOption, idSedRole){
+	var idForm = "calendarAssigmentForm";
+	var idButton = "";
+	var validOption = true;
+	var selectScheduleOption = true;
+	
+	if(scheduleOption == 1){
+		var selectAssignmentType = true;
+		idButton = "btnTeacherSearch";
+		if(idSedRole != 4 && idSedRole != 3)
+			selectAssignmentType = addSelectValidation(idForm + ":filterAssignmentType_input", "filterAssignmentType_DIV");
+				
+		selectTeacher = addSelectValidation(idForm + ":filterTeacher_input", "filterTeacher_DIV");
+		validOption = selectTeacher && selectAssignmentType;
+		selectScheduleOption = addSelectValidation(idForm + ":filterOption_input", "filterOption_DIV");
+	}else if(scheduleOption == 2){
+		idButton = "btnCourseSearch";
+		
+		selectGrade =  addSelectValidation(idForm + ":filterGrade_input", "filterGrade_DIV");
+		selectCourse =  addSelectValidation(idForm + ":filterCourse_input", "filterCourse_DIV");
+		selectScheduleOption = addSelectValidation(idForm + ":filterOption_input", "filterOption_DIV");
+		validOption = selectGrade && selectCourse; 
+	}
+
+	 if (selectScheduleOption && validOption) {
+			PF('statusDialog').show();
+			PrimeFaces.ab({
+				formId : idForm,
+				partialSubmit : true,
+				source : idForm + ':' + idButton,
+				process : '@all',
+				oncomplete : function(xhr, status, args) {
+					PF('statusDialog').hide();
+					PF('assignmentScheduleWV').update();
+				}
+			});
+			return false;
+		}
+	
+	
 }

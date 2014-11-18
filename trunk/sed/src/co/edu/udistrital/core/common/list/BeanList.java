@@ -16,6 +16,7 @@ import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.sed.api.IPeriodClose;
+import co.edu.udistrital.sed.model.AssignmentType;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
@@ -47,6 +48,7 @@ public class BeanList implements Serializable {
 	private static List<SedRole> sedRoleList;
 	private static List<QualificationType> qualificationTypeList;
 	private static List<Period> periodList;
+	private static List<AssignmentType> assignmentTypeList;
 
 	private static List<EmailTemplate> emailTemplateList;
 
@@ -70,7 +72,20 @@ public class BeanList implements Serializable {
 			loadQualificationTypeList();
 			loadKnowledgeAreaList();
 			loadPeriodList();
+			loadAssignmentTypeList();
 			updatePeriodTask();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @author Miguel 17/11/2014 10:12:31
+	 */
+	private static void loadAssignmentTypeList() {
+		try {
+			if (assignmentTypeList == null)
+				assignmentTypeList = controller.loadAssignmentTypeList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -257,4 +272,7 @@ public class BeanList implements Serializable {
 		return periodList;
 	}
 
+	public static List<AssignmentType> getAssignmentTypeList() {
+		return assignmentTypeList;
+	}
 }

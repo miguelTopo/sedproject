@@ -141,6 +141,14 @@ body,td,th {
 	background-color: #BF88E2;
 	color:black;	
 }
+.ui-attention{
+	border: 1px solid #003E5F;
+	background-color: #79CEFC;
+	color:black;
+	font-weight: bold;
+}
+
+
 .fc-event-title{
 	font-size: 13px;
 	color: #4D4646;

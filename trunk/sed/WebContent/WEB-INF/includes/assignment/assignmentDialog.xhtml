@@ -4,19 +4,23 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<o:importConstants type="co.edu.udistrital.sed.api.IAssignmentType" var="IAssignmentType"/>
+	
 	<p:dialog id="dlgSelectDate" widgetVar="dlgSelectDateWV" header="#{bundle['page.assignment.labelTeacherProgramming']}" modal="true" 
 		resizable="false" width="700" showEffect="slide" hideEffect="clip">
 		<h:form id="selectDateForm">
 			<table>
 				<tr>
-					<td style="width:5%"/>
-					<td style="width:18%"/>
+					<td style="width:4%"/>
+					<td style="width:20%"/>
 					<td style="width:25%"/>
 					<td style="width:4%"/>
 					<td style="width:18%"/>
 					<td style="width:25%"/>
-					<td style="width:5%"/>
+					<td style="width:4%"/>
 				</tr>
 				<tr>
 					<td/>
@@ -34,7 +38,7 @@
 					<td>
 						*#{bundle['page.sed.labelTeacher']}:
 					</td>
-					<td>
+					<td colspan="4">
 						<p:selectOneMenu id="somSedUser" value="#{assignmentBean.assignment.idSedUser}" filter="#{fn:length(assignmentBean.teacherList)>10 ? 'true' : 'else'}" 
 							filterMatchMode="startsWith" style="width:98%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
@@ -43,31 +47,19 @@
 						<div id="sedUser_DIV" class="ui-invalid-field"/>
 					</td>
 					<td/>
-					<td>
-						*#{bundle['page.sed.labelGrade']}:
-					</td>
-					<td>
-						<p:selectOneMenu id="somTeacherGrade" value="#{assignmentBean.assignment.idGrade}" style="width:98%">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-							<f:selectItems value="#{assignmentBean.gradeTmpList}" itemValue="#{g.id}" itemLabel="#{g.name}" var="g"/>
-							<p:ajax process="@this" listener="#{assignmentBean.handleGradeChange(true)}" 
-								update=":selectDateForm:somTeacherCourse :selectDateForm:somTeacherSubject"/>
-						</p:selectOneMenu>
-						<div id="teacherGrade_DIV" class="ui-invalid-field"/>
-					</td>
 				</tr>
 				<tr>
 					<td/>
 					<td>
-						*#{bundle['page.sed.labelCourse']}:
+						* #{bundle['page.assignment.labelAssignmenType']}:
 					</td>
 					<td>
-						<p:selectOneMenu id="somTeacherCourse" value="#{assignmentBean.assignment.idCourse}" 
-							disabled="#{empty assignmentBean.courseTmpList}" style="width:98%">
+						<p:selectOneMenu id="somAssignmentType" value="#{assignmentBean.assignment.idAssignmentType}" style="width:98%">
 							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
-							<f:selectItems value="#{assignmentBean.courseTmpList}" itemValue="#{c.id}" itemLabel="#{c.name}" var="c"/>
+							<f:selectItems value="#{assignmentBean.assignmentTypeList}" var="al" itemLabel="#{al.name}" itemValue="#{al.id}"/>
+							<p:ajax process="@this" update=":selectDateForm:gradeOp :selectDateForm:selGradeOp :selectDateForm:courseOp :selectDateForm:selCourseOp :selectDateForm:subjectOp :selectDateForm:selSubjectOp :selectDateForm:btnTeacherAssignment"/>
 						</p:selectOneMenu>
-						<div id="teacherCourse_DIV" class="ui-invalid-field"/>
+						<div id="teacherAssignmenType_DIV" class="ui-invalid-field"/>
 					</td>
 					<td/>
 					<td>
@@ -83,6 +75,73 @@
 							<f:selectItem itemLabel="#{bundle['page.core.labelFriday']}" itemValue="6" />
 						</p:selectOneMenu>
 						<div id="day_DIV" class="ui-invalid-field"/>
+					</td>
+				</tr>
+				
+					<tr>
+						<td/>
+						<td>
+							<p:outputPanel id="gradeOp">
+							<p:outputPanel rendered="#{assignmentBean.assignment.idAssignmentType eq IAssignmentType.TIME}">
+								*#{bundle['page.sed.labelGrade']}:
+							</p:outputPanel>
+							</p:outputPanel>
+						</td>
+						<td>
+							<p:outputPanel id="selGradeOp">
+							<p:outputPanel rendered="#{assignmentBean.assignment.idAssignmentType eq IAssignmentType.TIME}">
+								<p:selectOneMenu id="somTeacherGrade" value="#{assignmentBean.assignment.idGrade}" style="width:98%">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{assignmentBean.gradeTmpList}" itemValue="#{g.id}" itemLabel="#{g.name}" var="g"/>
+									<p:ajax process="@this" listener="#{assignmentBean.handleGradeChange(true)}" 
+										update=":selectDateForm:somTeacherCourse :selectDateForm:somTeacherSubject"/>
+								</p:selectOneMenu>
+								<div id="teacherGrade_DIV" class="ui-invalid-field"/>
+							</p:outputPanel>
+							</p:outputPanel>
+						</td>
+						<td/>
+						<td>
+							<p:outputPanel id="courseOp">
+							<p:outputPanel rendered="#{assignmentBean.assignment.idAssignmentType eq IAssignmentType.TIME}">
+								*#{bundle['page.sed.labelCourse']}:
+							</p:outputPanel>
+							</p:outputPanel>
+						</td>
+						<td>
+							<p:outputPanel id="selCourseOp">
+							<p:outputPanel rendered="#{assignmentBean.assignment.idAssignmentType eq IAssignmentType.TIME}">
+								<p:selectOneMenu id="somTeacherCourse" value="#{assignmentBean.assignment.idCourse}" 
+									disabled="#{empty assignmentBean.courseTmpList}" style="width:98%">
+									<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0"/>
+									<f:selectItems value="#{assignmentBean.courseTmpList}" itemValue="#{c.id}" itemLabel="#{c.name}" var="c"/>
+								</p:selectOneMenu>
+								<div id="teacherCourse_DIV" class="ui-invalid-field"/>
+							</p:outputPanel>
+							</p:outputPanel>
+						</td>
+					</tr>
+				
+				<tr>
+					<td/>
+					<td>
+						<p:outputPanel id="subjectOp">
+							<p:outputPanel rendered="#{assignmentBean.assignment.idAssignmentType eq IAssignmentType.TIME}">
+								*#{bundle['page.sed.labelSubject']}:
+							</p:outputPanel>
+						</p:outputPanel>
+					</td>
+					<td colspan="4">
+						<p:outputPanel id="selSubjectOp">
+							<p:outputPanel rendered="#{assignmentBean.assignment.idAssignmentType eq IAssignmentType.TIME}">
+						<p:selectOneMenu id="somTeacherSubject" style="width:98%;" value="#{assignmentBean.assignment.idSubject}" 
+							disabled="#{empty assignmentBean.subjectList}">
+							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
+							<f:selectItems value="#{assignmentBean.subjectList}" itemLabel="#{s.name}" itemValue="#{s.id}" var="s"/>
+						</p:selectOneMenu>
+						<div id="teacherSubject_DIV" class="ui-invalid-field"/>
+						</p:outputPanel>
+						</p:outputPanel>
 					</td>
 				</tr>
 				<tr>
@@ -107,27 +166,18 @@
 				</tr>
 				<tr>
 					<td/>
-					<td>
-						*#{bundle['page.sed.labelSubject']}:
-					</td>
-					<td>
-						<p:selectOneMenu id="somTeacherSubject" style="width:98%;" value="#{assignmentBean.assignment.idSubject}" 
-							disabled="#{empty assignmentBean.subjectList}">
-							<f:selectItem itemLabel="#{bundle['page.core.labelSelectOne']}" itemValue="0" />
-							<f:selectItems value="#{assignmentBean.subjectList}" itemLabel="#{s.name}" itemValue="#{s.id}" var="s"/>
-						</p:selectOneMenu>
-						<div id="teacherSubject_DIV" class="ui-invalid-field"/>
-					</td>
+		
 				</tr>
 			</table>
 	
 		<div style="text-align:center;padding-top: 30px;">
 			<p:commandButton id="btnTeacherAssignment" value="#{assignmentBean.eventAdd ? bundle['page.core.labelProgramme'] : bundle['page.core.labelSaveChange']}" 
-				action="#{assignmentBean.saveTeacherAssignment}" onclick="validateTeacherAssignment()" type="button"/>
+				action="#{assignmentBean.saveTeacherAssignment}" icon="ui-icon-disk"/>
 			<p:spacer width="5"/>
-			<p:commandButton value="#{bundle['page.core.labelDelete']}" rendered="#{!assignmentBean.eventAdd}" onclick="PF('dlgAssignmentDeleteWV').show();"/>
+			<p:commandButton value="#{bundle['page.core.labelDelete']}" rendered="#{!assignmentBean.eventAdd}" onclick="PF('dlgAssignmentDeleteWV').show();"
+				icon="ui-icon-trash"/>
 			<p:spacer width="5" rendered="#{!assignmentBean.eventAdd}"/>
-			<p:commandButton value="#{bundle['page.core.labelCancel']}" type="button" onclick="PF('dlgSelectDateWV').hide();"/>
+			<p:commandButton value="#{bundle['page.core.labelCancel']}" type="button" onclick="PF('dlgSelectDateWV').hide();" icon="ui-icon-close"/>
 		</div>
 	</h:form>
 	</p:dialog>

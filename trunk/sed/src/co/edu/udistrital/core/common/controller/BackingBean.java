@@ -13,13 +13,12 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 
-import com.ocpsoft.pretty.PrettyContext;
-
 import co.edu.udistrital.core.common.list.BeanList;
 import co.edu.udistrital.core.login.controller.PanelStackBean;
 import co.edu.udistrital.core.login.model.SedRole;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.core.login.model.TreeSedRole;
+import co.edu.udistrital.sed.model.AssignmentType;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
 import co.edu.udistrital.sed.model.IdentificationType;
@@ -27,7 +26,6 @@ import co.edu.udistrital.sed.model.KnowledgeArea;
 import co.edu.udistrital.sed.model.Period;
 import co.edu.udistrital.sed.model.QualificationType;
 import co.edu.udistrital.sed.model.Subject;
-import co.edu.udistrital.session.common.SedSession;
 import co.edu.udistrital.session.common.User;
 
 public abstract class BackingBean implements Serializable {
@@ -234,6 +232,23 @@ public abstract class BackingBean implements Serializable {
 	}
 
 
+	/** @author MTorres 17/11/2014 18:07:11 */
+	public List<Course> loadCourseListByIdCourse(Long idGrade, List<Long> idCourseList) throws Exception {
+		try {
+			List<Course> courseList = new ArrayList<Course>();
+			if (idCourseList != null) {
+				for (Course c : getCourseList()) {
+					if (c.getIdGrade().equals(idGrade) && idCourseList.contains(c.getId()))
+						courseList.add(c);
+				}
+				return courseList;
+			}
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	/**
 	 * @author MTorres
 	 * @throws Exception
@@ -418,6 +433,7 @@ public abstract class BackingBean implements Serializable {
 			throw e;
 		}
 	}
+
 	public List<Period> getPeriodList() throws Exception {
 		try {
 			return BeanList.getPeriodList();
@@ -453,6 +469,14 @@ public abstract class BackingBean implements Serializable {
 	public List<KnowledgeArea> getKnowledgeAreaList() throws Exception {
 		try {
 			return BeanList.getKnowledgeAreaList();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public List<AssignmentType> getAssignmentTypeList() throws Exception {
+		try {
+			return BeanList.getAssignmentTypeList();
 		} catch (Exception e) {
 			throw e;
 		}
