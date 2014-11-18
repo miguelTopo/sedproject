@@ -9,11 +9,16 @@ import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.LongType;
+import org.hibernate.type.StringType;
 
 import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.connection.HibernateDAO;
+import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
+import co.edu.udistrital.sed.api.IAssignmentType;
+import co.edu.udistrital.session.common.User;
 
 public class AssignmentDAO extends HibernateDAO {
 
@@ -129,7 +134,7 @@ public class AssignmentDAO extends HibernateDAO {
 	}
 
 	/** @author MTorres 28/7/2014 23:56:47 */
-	public List<Assignment> loadAssignmentListByTeacher(Long idSedUser) throws Exception {
+	public List<Assignment> loadAssignmentListByTeacher(Long idSedUser, Long idSedRole) throws Exception {
 		StringBuilder hql = new StringBuilder();
 		Query qo = null;
 		try {
@@ -188,6 +193,7 @@ public class AssignmentDAO extends HibernateDAO {
 			hql.append(" a.idSedUser AS idSedUser, ");
 			hql.append(" a.idPeriod AS idPeriod, ");
 			hql.append(" a.idCourse AS idCourse, ");
+			hql.append(" a.idAssignmentType AS idAssignmentType, ");
 			hql.append(" a.idSubject AS idSubject, ");
 			hql.append(" a.idDay AS idDay, ");
 			hql.append(" a.startHour AS startHour, ");
@@ -290,4 +296,125 @@ public class AssignmentDAO extends HibernateDAO {
 		}
 	}
 
+	/**
+	 * @author Miguel 17/11/2014 13:03:21
+	 */
+	public List<Assignment> loadAssignmentDefault(User sedUser) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo;
+		try {
+			hql.append(" SELECT a.id AS id, ");
+			hql.append(" a.idSedUser AS idSedUser, ");
+			hql.append(" a.idPeriod AS idPeriod, ");
+			hql.append(" a.idCourse AS idCourse, ");
+			hql.append(" a.idAssignmentType AS idAssignmentType, ");
+			hql.append(" a.idSubject AS idSubject, ");
+			hql.append(" a.idDay AS idDay, ");
+			hql.append(" a.startHour AS startHour, ");
+			hql.append(" a.endHour AS endHour, ");
+			hql.append(" a.userCreation AS userCreation, ");
+			hql.append(" a.dateCreation AS dateCreation, ");
+			hql.append(" a.state AS state, ");
+			hql.append(" s.name AS subjectName, ");
+			hql.append(" CASE WHEN s.styleClass IS NULL THEN 'ui-attention' ELSE s.styleClass END AS subjectStyleClass, ");
+			hql.append(" su.id AS idTeacher, ");
+			hql.append(" su.name ||' '|| su.lastName AS teacherFullName, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" g.id AS idGrade ");
+			hql.append(" FROM lifemena.Assignment a ");
+			hql.append(" LEFT JOIN lifemena.Subject s ");
+			hql.append(" ON s.id = a.idSubject ");
+			hql.append(" LEFT JOIN lifemena.SedUser su ");
+			hql.append(" ON su.id = a.idSedUser ");
+			hql.append(" LEFT JOIN lifemena.Course c ");
+			hql.append(" ON c.id = a.idCourse ");
+			hql.append(" LEFT JOIN lifemena.Grade g ");
+			hql.append(" ON g.id = c.idGrade ");
+			hql.append(" WHERE a.state = :state ");
+			hql.append(" AND su.id = :idSedUser ");
+
+			qo =
+				getSession().createSQLQuery(hql.toString()).addScalar("id", LongType.INSTANCE).addScalar("idSedUser", LongType.INSTANCE)
+					.addScalar("idPeriod", LongType.INSTANCE).addScalar("idCourse", LongType.INSTANCE)
+					.addScalar("idAssignmentType", LongType.INSTANCE).addScalar("idSubject", LongType.INSTANCE).addScalar("idDay", LongType.INSTANCE)
+					.addScalar("startHour", StringType.INSTANCE).addScalar("endHour", StringType.INSTANCE)
+					.addScalar("userCreation", StringType.INSTANCE).addScalar("dateCreation", StringType.INSTANCE)
+					.addScalar("state", LongType.INSTANCE).addScalar("subjectName", StringType.INSTANCE)
+					.addScalar("subjectStyleClass", StringType.INSTANCE).addScalar("teacherFullName", StringType.INSTANCE)
+					.addScalar("courseName", StringType.INSTANCE).addScalar("idGrade", LongType.INSTANCE)
+					.setResultTransformer(Transformers.aliasToBean(Assignment.class));
+
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setParameter("idSedUser", sedUser.getIdSedUser());
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+		}
+	}
+
+	/**
+	 * @author Miguel 17/11/2014 15:08:18
+	 */
+	public List<Assignment> loadAssignmentBySedUser(Long idSedUser, Long idSedRole, Long idAssignmentType) throws Exception {
+		StringBuilder hql = new StringBuilder();
+		Query qo;
+		try {
+			hql.append(" SELECT a.id AS id, ");
+			hql.append(" a.idSedUser AS idSedUser, ");
+			hql.append(" a.idPeriod AS idPeriod, ");
+			hql.append(" a.idCourse AS idCourse, ");
+			hql.append(" a.idAssignmentType AS idAssignmentType, ");
+			hql.append(" a.idSubject AS idSubject, ");
+			hql.append(" a.idDay AS idDay, ");
+			hql.append(" a.startHour AS startHour, ");
+			hql.append(" a.endHour AS endHour, ");
+			hql.append(" a.userCreation AS userCreation, ");
+			hql.append(" a.dateCreation AS dateCreation, ");
+			hql.append(" a.state AS state, ");
+			hql.append(" s.name AS subjectName, ");
+			hql.append(" CASE WHEN s.styleClass IS NULL THEN 'ui-attention' ELSE s.styleClass END AS subjectStyleClass, ");
+			hql.append(" su.id AS idTeacher, ");
+			hql.append(" su.name ||' '|| su.lastName AS teacherFullName, ");
+			hql.append(" c.name AS courseName, ");
+			hql.append(" g.id AS idGrade ");
+			hql.append(" FROM lifemena.Assignment a ");
+			hql.append(" LEFT JOIN lifemena.Subject s ");
+			hql.append(" ON s.id = a.idSubject ");
+			hql.append(" LEFT JOIN lifemena.SedUser su ");
+			hql.append(" ON su.id = a.idSedUser ");
+			hql.append(" LEFT JOIN lifemena.Course c ");
+			hql.append(" ON c.id = a.idCourse ");
+			hql.append(" LEFT JOIN lifemena.Grade g ");
+			hql.append(" ON g.id = c.idGrade ");
+			hql.append(" WHERE a.state = :state ");
+			hql.append(idAssignmentType != null && !idAssignmentType.equals(IAssignmentType.ALL) ? " AND a.idAssignmentType = :idAssignmentType "
+				: "");
+			hql.append(" AND su.id = :idSedUser ");
+
+			qo =
+				getSession().createSQLQuery(hql.toString()).addScalar("id", LongType.INSTANCE).addScalar("idSedUser", LongType.INSTANCE)
+					.addScalar("idPeriod", LongType.INSTANCE).addScalar("idCourse", LongType.INSTANCE)
+					.addScalar("idAssignmentType", LongType.INSTANCE).addScalar("idSubject", LongType.INSTANCE).addScalar("idDay", LongType.INSTANCE)
+					.addScalar("startHour", StringType.INSTANCE).addScalar("endHour", StringType.INSTANCE)
+					.addScalar("userCreation", StringType.INSTANCE).addScalar("dateCreation", StringType.INSTANCE)
+					.addScalar("state", LongType.INSTANCE).addScalar("subjectName", StringType.INSTANCE)
+					.addScalar("subjectStyleClass", StringType.INSTANCE).addScalar("teacherFullName", StringType.INSTANCE)
+					.addScalar("courseName", StringType.INSTANCE).addScalar("idGrade", LongType.INSTANCE)
+					.setResultTransformer(Transformers.aliasToBean(Assignment.class));
+
+			qo.setParameter("state", IState.ACTIVE);
+			qo.setParameter("idSedUser", idSedUser);
+			if (idAssignmentType != null && !idAssignmentType.equals(IAssignmentType.ALL))
+				qo.setParameter("idAssignmentType", idAssignmentType);
+
+			return qo.list();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			hql = null;
+		}
+	}
 }

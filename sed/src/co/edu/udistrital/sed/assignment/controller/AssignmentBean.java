@@ -21,6 +21,7 @@ import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
+import co.edu.udistrital.sed.api.IAssignmentType;
 import co.edu.udistrital.sed.model.Assignment;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Grade;
@@ -58,6 +59,9 @@ public class AssignmentBean extends BackingBean {
 	private ScheduleModel model;
 	private ScheduleEvent event;
 
+	// Object Java List
+	private List<Long> idCourseList;
+
 	// User List
 	private List<SedUser> teacherList;
 	private List<Subject> subjectList;
@@ -74,6 +78,8 @@ public class AssignmentBean extends BackingBean {
 
 	public AssignmentBean() throws Exception {
 		try {
+			this.assignment = new Assignment();
+			this.assignmentFilter = new Assignment();
 			this.model = new DefaultScheduleModel();
 			loadAssignmentView();
 			setShowAssigment(true);
@@ -82,50 +88,90 @@ public class AssignmentBean extends BackingBean {
 		}
 	}
 
-	@PostConstruct
-	public void init() {
+	/** @author MTorres 18/11/2014 8:28:12 */
+	private void loadSedUserSchedule() throws Exception {
 		try {
+			this.assignmentList = null;
+			this.sheduleOption = null;
 			this.model = new DefaultScheduleModel();
+			if (!getUserSession().getIdSedRole().equals(ISedRole.STUDENT) && !getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE))
+				this.assignmentList = this.controller.loadAssignmentDefault(getUserSession());
+			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT)) {
+				Long idCourse = this.controller.loadStudentCourse(getUserSession().getIdStudent());
+				this.assignmentList = this.controller.loadAssignmentListByCourse(idCourse);
+			}
+			loadScheduleData();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/** @author MTorres 18/11/2014 8:18:43 */
+	public void loadScheduleUserDefault() {
+		try {
+			this.assignment = new Assignment();
+			this.assignmentFilter = new Assignment();
+			this.model = new DefaultScheduleModel();
+			loadAssignmentView();
+			loadSedUserSchedule();
+			// getRequestContext().execute("PF('assignmentScheduleWV').update();");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	@PostConstruct
+	public void init() {
+		try {
+			loadSedUserSchedule();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	/** @author MTorres 29/7/2014 21:03:14 */
 	private void loadScheduleData() {
 		try {
 
 			this.model = new DefaultScheduleModel();
-			for (Assignment a : this.assignmentList) {
+			if (this.assignmentList != null && !this.assignmentList.isEmpty()) {
+				for (Assignment a : this.assignmentList) {
 
-				Calendar cStartHour = Calendar.getInstance();
-				Date startHour = ManageDate.stringToDate(a.getStartHour(), ManageDate.HH_MM_SS_24);
-				Calendar auxCal = Calendar.getInstance();
-				auxCal.setTime(startHour);
+					Calendar cStartHour = Calendar.getInstance();
+					Date startHour = ManageDate.stringToDate(a.getStartHour(), ManageDate.HH_MM_SS_24);
+					Calendar auxCal = Calendar.getInstance();
+					auxCal.setTime(startHour);
 
-				cStartHour.set(Calendar.DAY_OF_WEEK, Integer.parseInt(a.getIdDay().toString()));
-				cStartHour.set(Calendar.HOUR_OF_DAY, auxCal.get(Calendar.HOUR_OF_DAY));
-				cStartHour.set(Calendar.MINUTE, auxCal.get(Calendar.MINUTE));
-				cStartHour.set(Calendar.SECOND, 0);
+					cStartHour.set(Calendar.DAY_OF_WEEK, Integer.parseInt(a.getIdDay().toString()));
+					cStartHour.set(Calendar.HOUR_OF_DAY, auxCal.get(Calendar.HOUR_OF_DAY));
+					cStartHour.set(Calendar.MINUTE, auxCal.get(Calendar.MINUTE));
+					cStartHour.set(Calendar.SECOND, 0);
 
-				Calendar cEndHour = Calendar.getInstance();
-				Date endHour = ManageDate.stringToDate(a.getEndHour(), ManageDate.HH_MM_SS_24);
-				auxCal = Calendar.getInstance();
-				auxCal.setTime(endHour);
+					Calendar cEndHour = Calendar.getInstance();
+					Date endHour = ManageDate.stringToDate(a.getEndHour(), ManageDate.HH_MM_SS_24);
+					auxCal = Calendar.getInstance();
+					auxCal.setTime(endHour);
 
-				cEndHour.set(Calendar.DAY_OF_WEEK, Integer.parseInt(a.getIdDay().toString()));
-				cEndHour.set(Calendar.HOUR_OF_DAY, auxCal.get(Calendar.HOUR_OF_DAY));
-				cEndHour.set(Calendar.MINUTE, auxCal.get(Calendar.MINUTE));
-				cEndHour.set(Calendar.SECOND, 0);
+					cEndHour.set(Calendar.DAY_OF_WEEK, Integer.parseInt(a.getIdDay().toString()));
+					cEndHour.set(Calendar.HOUR_OF_DAY, auxCal.get(Calendar.HOUR_OF_DAY));
+					cEndHour.set(Calendar.MINUTE, auxCal.get(Calendar.MINUTE));
+					cEndHour.set(Calendar.SECOND, 0);
 
-				DefaultScheduleEvent dse =
-					new DefaultScheduleEvent(a.getTeacherFullName() + " " + a.getSubjectName() + " " + a.getCourseName(), cStartHour.getTime(),
-						cEndHour.getTime(), a.getSubjectStyleClass());
-				dse.setData(a);
 
-				this.model.addEvent(dse);
+					String data = a.getTeacherFullName() + " ";
+					data += a.getSubjectName() != null ? a.getSubjectName() : "HORARIO DE ATENCIÓN";
+					data += " ";
+					data += a.getCourseName() != null ? a.getCourseName() : "";
 
+					DefaultScheduleEvent dse = new DefaultScheduleEvent(data, cStartHour.getTime(), cEndHour.getTime(), a.getSubjectStyleClass());
+					dse.setData(a);
+
+					this.model.addEvent(dse);
+
+				}
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -166,23 +212,32 @@ public class AssignmentBean extends BackingBean {
 			} else if (this.assignment.getIdSedUser() == null || this.assignment.getIdSedUser().equals(0L)) {
 				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnTeacher"));
 				return false;
-			} else if (this.assignment.getIdGrade() == null || this.assignment.getIdGrade().equals(0L)) {
-				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnGrade"));
-				return false;
-			} else if (this.assignment.getIdCourse() == null || this.assignment.getIdCourse().equals(0L)) {
-				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnCourse"));
-				return false;
-			} else if (this.assignStartDate == null) {
-				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnStartHour"));
-				return false;
-			} else if (this.assignEndDate == null) {
-				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnEndHour"));
+			} else if (this.assignment.getIdAssignmentType() == null || this.assignment.getIdAssignmentType().equals(0L)) {
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), "Por favor seleccione el tipo de asignación.");
 				return false;
 			} else if (this.idDay == null || this.idDay.equals(0L)) {
 				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnDay"));
 				return false;
-			} else if (this.assignment.getIdSubject() == null || this.assignment.getIdSubject().equals(0L)) {
-				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnSubject"));
+			}
+
+			if (this.assignment.getIdAssignmentType().equals(IAssignmentType.TIME)) {
+				if (this.assignment.getIdGrade() == null || this.assignment.getIdGrade().equals(0L)) {
+					addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnGrade"));
+					return false;
+				} else if (this.assignment.getIdCourse() == null || this.assignment.getIdCourse().equals(0L)) {
+					addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnCourse"));
+					return false;
+				} else if (this.assignment.getIdSubject() == null || this.assignment.getIdSubject().equals(0L)) {
+					addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnSubject"));
+					return false;
+				}
+			}
+
+			if (this.assignStartDate == null) {
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnStartHour"));
+				return false;
+			} else if (this.assignEndDate == null) {
+				addWarnMessage(getMessage("page.assignment.labelTeacherProgramming"), getMessage("page.assignment.warnEndHour"));
 				return false;
 			} else if (!handleAssignDateChange()) {
 				return false;
@@ -213,10 +268,17 @@ public class AssignmentBean extends BackingBean {
 
 			if (idAssignment != null) {
 
+
 				String teacher = loadTeacherFullNameById(this.assignment.getIdSedUser());
-				String subjectName = loadSubjectById(this.assignment.getIdSubject()).getName();
-				String courseName = loadCourseById(this.assignment.getIdCourse()).getName();
-				String eventStyle = loadSubjectById(this.assignment.getIdSubject()).getStyleClass();
+				String subjectName = "";
+				String courseName = "";
+				String eventStyle = "";
+				if (this.assignment.getIdAssignmentType().equals(IAssignmentType.TIME)) {
+					subjectName = loadSubjectById(this.assignment.getIdSubject()).getName();
+					courseName = loadCourseById(this.assignment.getIdCourse()).getName();
+					eventStyle = loadSubjectById(this.assignment.getIdSubject()).getStyleClass();
+				} else
+					eventStyle = "ui-attention";
 
 				if (!this.eventAdd) {
 					deleteObjectScheduleModel(this.assignment);
@@ -231,9 +293,12 @@ public class AssignmentBean extends BackingBean {
 				this.assignment.setCourseName(courseName);
 				this.assignment.setSubjectStyleClass(eventStyle);
 
-				DefaultScheduleEvent ev =
-					new DefaultScheduleEvent(teacher + " " + subjectName + " " + courseName, this.startDate.getTime(), this.endDate.getTime(),
-						eventStyle);
+				String data = teacher + " ";
+				data += subjectName != null ? subjectName : "";
+				data += " ";
+				data += courseName != null ? courseName : "";
+
+				DefaultScheduleEvent ev = new DefaultScheduleEvent(data, this.startDate.getTime(), this.endDate.getTime(), eventStyle);
 				ev.setData(this.assignment);
 
 				this.model.addEvent(ev);
@@ -285,13 +350,23 @@ public class AssignmentBean extends BackingBean {
 
 	}
 
+	/** @author MTorres 17/11/2014 13:22:43 */
 	private void loadAssignmentView() {
 		try {
 			this.controller = new AssignmentController();
-			this.teacherList = this.controller.loadSedUserByRole(ISedRole.TEACHER);
-			this.gradeTmpList = getGradeList();
-			this.assignment = new Assignment();
-			this.assignmentFilter = new Assignment();
+			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT) || getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
+				idCourseList = null;
+				idCourseList =
+					this.controller.loadStudentCourse(getUserSession().getIdSedUser(), getUserSession().getIdStudent(), getUserSession()
+						.getIdSedRole());
+				this.teacherList = this.controller.loadTeacherListByCourseList(idCourseList);
+				this.gradeTmpList = this.controller.loadGradeListByCourseList(idCourseList);
+			} else if (getUserSession().getIdSedRole().equals(ISedRole.ADMINISTRATOR)) {
+				this.teacherList = this.controller.loadSedUserByRole(ISedRole.TEACHER);
+				this.gradeTmpList = getGradeList();
+			}
+			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT))
+				this.sheduleOption = Long.valueOf(1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -596,7 +671,9 @@ public class AssignmentBean extends BackingBean {
 				switch (this.sheduleOption.intValue()) {
 					case 1:
 						if (this.assignmentFilter.getIdSedUser() != null && !this.assignmentFilter.getIdSedUser().equals(0L)) {
-							this.assignmentList = this.controller.loadAssignmentListByTeacher(this.assignmentFilter.getIdSedUser());
+							this.assignmentList =
+								this.controller.loadAssignmentBySedUser(this.assignmentFilter.getIdSedUser(), getUserSession().getIdSedRole(),
+									this.assignmentFilter.getIdAssignmentType());
 							if (this.assignmentList == null || this.assignmentList.isEmpty())
 								addWarnMessage(getMessage("page.assignment.labelAcademicSchedule"),
 									getMessage("page.assignment.labelEmptyAssignment"));
@@ -636,7 +713,10 @@ public class AssignmentBean extends BackingBean {
 					this.subjectList = loadSubjectListByGrade(this.assignment.getIdGrade());
 				}
 			} else {
-				if (this.assignmentFilter.getIdGrade() != null && !this.assignmentFilter.getIdGrade().equals(0L))
+
+				if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE) && this.idCourseList != null && !this.idCourseList.isEmpty())
+					this.courseTmpList = loadCourseListByIdCourse(this.assignmentFilter.getIdGrade(), this.idCourseList);
+				else if (this.assignmentFilter.getIdGrade() != null && !this.assignmentFilter.getIdGrade().equals(0L))
 					this.courseTmpList = loadCourseListByGrade(this.assignmentFilter.getIdGrade());
 			}
 		} catch (Exception e) {
@@ -651,7 +731,7 @@ public class AssignmentBean extends BackingBean {
 			this.assignmentFilter = null;
 			this.assignmentFilter = new Assignment();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 

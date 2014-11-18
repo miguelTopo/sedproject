@@ -24,6 +24,7 @@ public class Assignment implements Serializable, Cloneable {
 	private Long idSubject;
 	private Long idDay;
 	private Long state;
+	private Long idAssignmentType;
 	private String startHour;
 	private String endHour;
 	private String userCreation;
@@ -87,7 +88,7 @@ public class Assignment implements Serializable, Cloneable {
 		this.idPeriod = idPeriod;
 	}
 
-	@Column(name = "idCourse", nullable = false)
+	@Column(name = "idCourse")
 	public Long getIdCourse() {
 		return idCourse;
 	}
@@ -96,7 +97,7 @@ public class Assignment implements Serializable, Cloneable {
 		this.idCourse = idCourse;
 	}
 
-	@Column(name = "idSubject", nullable = false)
+	@Column(name = "idSubject")
 	public Long getIdSubject() {
 		return idSubject;
 	}
@@ -175,6 +176,15 @@ public class Assignment implements Serializable, Cloneable {
 
 	public void setState(Long state) {
 		this.state = state;
+	}
+	
+	@Column(name = "idAssignmentType", nullable = false)
+	public Long getIdAssignmentType() {
+		return idAssignmentType;
+	}
+
+	public void setIdAssignmentType(Long idAssignmentType) {
+		this.idAssignmentType = idAssignmentType;
 	}
 
 	@Transient

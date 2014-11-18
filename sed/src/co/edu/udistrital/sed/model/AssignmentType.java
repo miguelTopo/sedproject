@@ -1,4 +1,9 @@
+/**
+ * @author Miguel 17/11/2014 10:09:59
+ */
 package co.edu.udistrital.sed.model;
+
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,15 +12,20 @@ import javax.persistence.Table;
 
 import co.edu.udistrital.core.common.model.AParameter;
 
+/**
+ * AssignmentType.java
+ * 
+ * @author Miguel 17/11/2014 10:09:59
+ */
+/**
+ * @author Miguel 17/11/2014 10:09:59
+ * 
+ */
 @Entity
-@Table(name = "period", schema = "lifemena")
-public class Period extends AParameter {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4362377407663768778L;
-
+@Table(name = "AssignmentType", schema = "lifemena")
+public class AssignmentType extends AParameter implements Serializable {
+	
+	
 	@Id
 	@Column(name = "id", nullable = false, unique = true)
 	public Long getId() {
@@ -81,5 +91,4 @@ public class Period extends AParameter {
 	public void setDateChange(String dateChange) {
 		this.dateChange = dateChange;
 	}
-
 }

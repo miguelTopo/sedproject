@@ -74,7 +74,7 @@
 			</table>
 			<div style="text-align:center;padding-bottom: 20px;">
 				<p:commandButton id="btnTracingSearch" value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
-					onclick="validateTracingSearch()" type="button"/>
+					onclick="validateTracingSearch()" type="button" icon="ui-icon-search"/>
 			</div>
 			<p:outputPanel id="studentListOp">
 				<p:outputPanel rendered="#{!empty tracingBean.studentList}">

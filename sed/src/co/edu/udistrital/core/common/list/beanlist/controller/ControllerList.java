@@ -17,6 +17,8 @@ import co.edu.udistrital.core.login.model.TreeSedRole;
 import co.edu.udistrital.core.login.model.TreeSedRoleDAO;
 import co.edu.udistrital.sed.api.IGrade;
 import co.edu.udistrital.sed.api.IQualificationType;
+import co.edu.udistrital.sed.model.AssignmentType;
+import co.edu.udistrital.sed.model.AssignmentTypeDAO;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.CourseDAO;
 import co.edu.udistrital.sed.model.Grade;
@@ -325,6 +327,22 @@ public class ControllerList extends Controller {
 			return null;
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+
+	/**
+	 * @author Miguel 17/11/2014 10:14:12
+	 */
+	public List<AssignmentType> loadAssignmentTypeList() throws Exception{
+		AssignmentTypeDAO dao = new AssignmentTypeDAO();
+		try {
+			return dao.findAll();
+		} catch (Exception e) {
+			dao.getSession().cancelQuery();
+			throw e;
+		}finally{
+			dao.getSession().close();
+			dao = null;
 		}
 	}
 }
