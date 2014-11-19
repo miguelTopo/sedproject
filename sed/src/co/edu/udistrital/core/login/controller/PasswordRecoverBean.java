@@ -62,7 +62,7 @@ public class PasswordRecoverBean implements Serializable {
 				if (user != null) {
 					String password = RandomPassword.getPassword(7);
 					if (this.controller.updateSedUserPassword(user.getId(), password)) {
-						sendEmailRecoverPassword(user, password);
+						threadEmailRecoverPassword(user, password);
 						cleanVar();
 						BackingBean.addInfoMessage(BackingBean.getMessage("page.password.resetPassword"),
 							BackingBean.getMessage("page.password.labelSuccessResetPassword"));
@@ -80,16 +80,39 @@ public class PasswordRecoverBean implements Serializable {
 		}
 	}
 
-	private void sendEmailRecoverPassword(SedUser sedUser, String password) {
+	private void sendEmailRecoverPassword(final SedUser sedUser, final String password, final String userMail) {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.PASSWORD_RECOVER);
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), sedUser.getName()
-				+ " " + sedUser.getLastName(), sedUser.getIdentification(), password), this.userEmail.trim().toLowerCase());
+				+ " " + sedUser.getLastName(), sedUser.getIdentification(), password), userMail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	/** @author MTorres 19/11/2014 17:20:49 */
+	private void threadEmailRecoverPassword(final SedUser su, final String pw) throws Exception {
+		try {
+			final String userMail = this.userEmail.trim().toLowerCase();
+			final SedUser sedUser = su;
+			final String password = pw;
+
+			new Thread(new Runnable() {
+
+				public void run() {
+					try {
+						sendEmailRecoverPassword(sedUser, password, userMail);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	private void cleanVar() {
