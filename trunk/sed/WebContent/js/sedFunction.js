@@ -422,15 +422,12 @@ function validateRecoverPw(){
 	valid = LiveValidation.massValidate([valEmail]);
 	
 	 if (valid) {
-			PF('statusDialog').show();
 			PrimeFaces.ab({
 				formId : idForm,
 				partialSubmit : true,
 				source : idForm + ':btnRecoverPw',
 				process : '@all',
-				oncomplete : function(xhr, status, args) {
-					PF('statusDialog').hide();
-				}
+				update :'forgetPasswordForm'
 			});
 			return false;
 		}

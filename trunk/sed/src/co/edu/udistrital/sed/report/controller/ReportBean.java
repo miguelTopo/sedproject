@@ -134,8 +134,11 @@ public class ReportBean extends BackingBean implements IReport {
 
 			// Cargar calificaciones de estudiantes en cursos
 			List<Qualification> qualificationList = this.controller.loadQualificationList(idStudentCourseList);
-
-			buildReport(qualificationList);
+			if (qualificationList == null || qualificationList.isEmpty()) {
+				this.studentList = null;
+				addWarnMessage("Cargar Reporte", "No se han encontrado calificaciones para el grado seleccionado.");
+			} else
+				buildReport(qualificationList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,8 +175,8 @@ public class ReportBean extends BackingBean implements IReport {
 				subjectCount++;
 			}
 			// rowFrom, rowTo, colFrom, colTo
-			
-			
+
+
 			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 7));
 			sheet.addMergedRegion(new CellRangeAddress(1, 1, 1, 7));
@@ -255,7 +258,7 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(4);
-			cell.setCellValue(teacher != null ? teacher.getIdPeriod().toString() : "Sin Información");
+			cell.setCellValue(teacher != null ? teacher.getIdPeriod().toString() : getMessage("page.core.labelNoInformation"));
 
 			cell = data2.createCell(5);
 			cell.setCellValue(getMessage("page.report.labelGroupManage"));
@@ -336,7 +339,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 			Cell cell = studentRow.createCell(0);
 			cell.setCellStyle(cellStyle);
-			cell.setCellValue(getMessage("page.report.labelNumber"));
+			cell.setCellValue(s.getCourseName());
 
 			cell = studentRow.createCell(1);
 			cell.setCellStyle(cellStyle);
@@ -461,7 +464,7 @@ public class ReportBean extends BackingBean implements IReport {
 			f.setBoldweight((short) 2);
 			CellStyle headerInfoStyle = this.wb.createCellStyle();
 			headerInfoStyle.setAlignment(CellStyle.ALIGN_CENTER);
-			
+
 			headerInfoStyle.setBorderBottom(CellStyle.BORDER_THIN);
 			headerInfoStyle.setBorderLeft(CellStyle.BORDER_THIN);
 			headerInfoStyle.setBorderRight(CellStyle.BORDER_THIN);
@@ -471,7 +474,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 			Cell cell = rowHeader.createCell(0);
 			cell.setCellStyle(headerInfoStyle);
-			cell.setCellValue(getMessage("page.report.labelNumber"));
+			cell.setCellValue(getMessage("page.sed.labelCourse"));
 
 			cell = rowHeader.createCell(1);
 			cell.setCellStyle(headerInfoStyle);

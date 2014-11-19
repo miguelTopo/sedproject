@@ -186,6 +186,7 @@ body,td,th {
 	width: 25%;
 	height: 100%;
 	margin-top: 8px;
+	padding-top: 10px;
 }
 .ui-lifemena-header{
 	height: 10%; 
