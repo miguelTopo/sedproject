@@ -7,6 +7,7 @@ import javax.faces.bean.ViewScoped;
 
 import co.edu.udistrital.core.common.api.IEmailTemplate;
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
 import co.edu.udistrital.core.common.util.RandomPassword;
@@ -34,7 +35,7 @@ public class PasswordRecoverBean implements Serializable {
 		try {
 			this.controller = new PasswordRecoverController();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -50,7 +51,7 @@ public class PasswordRecoverBean implements Serializable {
 					setInvalidEmail(true);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 
 	}
@@ -76,18 +77,18 @@ public class PasswordRecoverBean implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
-	private void sendEmailRecoverPassword(final SedUser sedUser, final String password, final String userMail) {
+	private void sendEmailRecoverPassword(final SedUser sedUser, final String password, final String userMail) throws Exception {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.PASSWORD_RECOVER);
 			SMTPEmail e = new SMTPEmail();
 			e.sendProcessMail(null, t.getSubject(), MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), sedUser.getName()
 				+ " " + sedUser.getLastName(), sedUser.getIdentification(), password), userMail);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 	}
@@ -105,7 +106,7 @@ public class PasswordRecoverBean implements Serializable {
 					try {
 						sendEmailRecoverPassword(sedUser, password, userMail);
 					} catch (Exception e) {
-						e.printStackTrace();
+						ErrorNotificacion.handleErrorMailNotification(e, this);
 					}
 				}
 			}).start();
@@ -115,13 +116,13 @@ public class PasswordRecoverBean implements Serializable {
 		}
 	}
 
-	private void cleanVar() {
+	private void cleanVar() throws Exception {
 		try {
 			this.userEmail = null;
 			setExitUserEmail(true);
 			setInvalidEmail(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

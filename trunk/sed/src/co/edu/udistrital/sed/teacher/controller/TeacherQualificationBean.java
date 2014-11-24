@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.sed.api.IQualificationType;
 import co.edu.udistrital.sed.api.IQualificationValue;
@@ -51,7 +52,7 @@ public class TeacherQualificationBean extends BackingBean {
 			this.controller = new TeacherQualificationController();
 			this.courseTeacherList = this.controller.loadCourseListByTeacher(getUserSession().getIdSedUser());
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -61,7 +62,7 @@ public class TeacherQualificationBean extends BackingBean {
 			this.studentList = null;
 			this.studentFilterList = null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -73,7 +74,7 @@ public class TeacherQualificationBean extends BackingBean {
 			if (this.idCourse != null && !this.idCourse.equals(0L))
 				this.subjectTeacherList = this.controller.loadSubjectListByTeacherCourse(getUserSession().getIdSedUser(), this.idCourse);
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -218,7 +219,7 @@ public class TeacherQualificationBean extends BackingBean {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -305,7 +306,7 @@ public class TeacherQualificationBean extends BackingBean {
 				this.studentFilterList = this.studentList;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -320,7 +321,6 @@ public class TeacherQualificationBean extends BackingBean {
 			} else
 				return false;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}

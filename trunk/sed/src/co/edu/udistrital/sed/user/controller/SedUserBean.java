@@ -8,6 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import co.edu.udistrital.core.common.api.IEmailTemplate;
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
 import co.edu.udistrital.core.common.util.ManageDate;
@@ -68,7 +69,7 @@ public class SedUserBean extends BackingBean {
 			this.sedUserList = this.sedUserFilteredList = this.controller.loadSedUserList();
 			setShowList(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 
 		}
 	}
@@ -88,7 +89,7 @@ public class SedUserBean extends BackingBean {
 			}
 		} catch (Exception e) {
 			addErrorMessage(getMessage("page.core.labelHeaderError"), getMessage("page.core.labelSummaryError"));
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -132,7 +133,7 @@ public class SedUserBean extends BackingBean {
 					try {
 						sendMailUpdateSedLogin(su, password);
 					} catch (Exception e) {
-						e.printStackTrace();
+						ErrorNotificacion.handleErrorMailNotification(e, this);
 					}
 				}
 			}).start();
@@ -181,7 +182,7 @@ public class SedUserBean extends BackingBean {
 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -219,7 +220,7 @@ public class SedUserBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -284,7 +285,7 @@ public class SedUserBean extends BackingBean {
 					try {
 						sendNewSedUserAccount(su, pw);
 					} catch (Exception e) {
-						e.printStackTrace();
+						ErrorNotificacion.handleErrorMailNotification(e, this);
 					}
 				}
 			}).start();
@@ -294,7 +295,7 @@ public class SedUserBean extends BackingBean {
 	}
 
 	/** @author MTorres */
-	private void sendNewSedUserAccount(final SedUser su, final String userPassword) {
+	private void sendNewSedUserAccount(final SedUser su, final String userPassword) throws Exception {
 		try {
 			EmailTemplate t = MailGeneratorFunction.getEmailTemplate(IEmailTemplate.NEW_SEDUSER_ACCOUNT);
 			SMTPEmail e = new SMTPEmail();
@@ -304,7 +305,7 @@ public class SedUserBean extends BackingBean {
 				MailGeneratorFunction.createGenericMessage(t.getBody(), t.getAnalyticsCode(), su.getName() + " " + su.getLastName(),
 					su.getIdentification(), userPassword), su.getEmail());
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -320,7 +321,7 @@ public class SedUserBean extends BackingBean {
 				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -348,7 +349,7 @@ public class SedUserBean extends BackingBean {
 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -367,7 +368,7 @@ public class SedUserBean extends BackingBean {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -427,7 +428,7 @@ public class SedUserBean extends BackingBean {
 		try {
 			setRandomPassword(!isRandomPassword());
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -439,7 +440,7 @@ public class SedUserBean extends BackingBean {
 				&& this.sedUser.getIdStudentCourse() != null && !this.sedUser.getIdStudentCourse().equals(0L))
 				this.studentList = this.controller.loadStudentList(this.sedUser.getIdStudentCourse());
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -458,7 +459,7 @@ public class SedUserBean extends BackingBean {
 				this.studentSelected = new Student();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -468,7 +469,7 @@ public class SedUserBean extends BackingBean {
 			this.studentList = null;
 			this.studentList = new ArrayList<Student>();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -485,7 +486,7 @@ public class SedUserBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -498,7 +499,7 @@ public class SedUserBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -512,7 +513,7 @@ public class SedUserBean extends BackingBean {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -526,7 +527,7 @@ public class SedUserBean extends BackingBean {
 			this.studentList = null;
 			this.studentList = new ArrayList<Student>();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -540,11 +541,11 @@ public class SedUserBean extends BackingBean {
 			this.student = new Student();
 			setPanelView("addSedUser", "Agregar Usuario", "SedUserBean");
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
-	private void cleanVar() {
+	private void cleanVar() throws Exception {
 		try {
 			this.sedUser = null;
 			this.sedUser = new SedUser();
@@ -552,7 +553,7 @@ public class SedUserBean extends BackingBean {
 			this.confirmPassword = null;
 			setRandomPassword(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -590,7 +591,7 @@ public class SedUserBean extends BackingBean {
 				setPanelView("detailSedUser", "Detallar Usuario", "SedUserBean");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -606,8 +607,7 @@ public class SedUserBean extends BackingBean {
 			getRequestContext().execute("PF('sedUserTableWV').clearFilters();");
 			setPanelView("sedUserList", "Lista de Usuarios", "SedUserBean");
 		} catch (Exception e) {
-
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -622,12 +622,12 @@ public class SedUserBean extends BackingBean {
 			loadAdditionalData();
 			setPanelView("addSedUser", "Editar Usuario", "SedUserBean");
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
 	/** @author MTorres */
-	private void hideAll() {
+	private void hideAll() throws Exception {
 		try {
 			setShowAdd(false);
 			setShowDetail(false);
@@ -635,7 +635,7 @@ public class SedUserBean extends BackingBean {
 			setShowList(false);
 			this.sedUserCopy = null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -651,7 +651,6 @@ public class SedUserBean extends BackingBean {
 				return false;
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}

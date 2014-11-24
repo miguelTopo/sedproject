@@ -26,6 +26,7 @@ import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.util.IOUtils;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.sed.api.IQualificationType;
 import co.edu.udistrital.sed.api.IQualitativeQualification;
@@ -142,7 +143,7 @@ public class ReportBean extends BackingBean implements IReport {
 				buildReport(qualificationList);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -290,7 +291,6 @@ public class ReportBean extends BackingBean implements IReport {
 
 			return sheet;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -327,7 +327,7 @@ public class ReportBean extends BackingBean implements IReport {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -707,7 +707,6 @@ public class ReportBean extends BackingBean implements IReport {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}

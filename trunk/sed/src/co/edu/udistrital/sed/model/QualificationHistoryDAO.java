@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 
-import co.edu.udistrital.core.common.controller.IState;
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.connection.HibernateDAO;
 
 public class QualificationHistoryDAO extends HibernateDAO {

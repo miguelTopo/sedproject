@@ -8,7 +8,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
 
-import co.edu.udistrital.core.common.controller.IState;
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.connection.HibernateDAO;
 
 public class QualificationDAO extends HibernateDAO {

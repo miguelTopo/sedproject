@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.common.controller.ManageCookie;
 import co.edu.udistrital.core.login.model.Tree;
 import co.edu.udistrital.session.common.User;
@@ -64,9 +65,10 @@ public class LoginBean extends BackingBean implements Serializable {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
+
 	/** @author MTorres 11/10/2014 16:43:12 */
 	private void loadEffectSwitch() throws Exception {
 		try {
@@ -126,8 +128,8 @@ public class LoginBean extends BackingBean implements Serializable {
 			if (validLogin)
 				getRequestContext().addCallbackParam("view", "menu");
 		} catch (Exception e) {
-			e.printStackTrace();
 			setUserSession(null);
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -140,7 +142,7 @@ public class LoginBean extends BackingBean implements Serializable {
 			ManageCookie.removeCookieByName("locate");
 			this.validLogin = false;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -153,7 +155,6 @@ public class LoginBean extends BackingBean implements Serializable {
 			ManageCookie.addCookie("uID", getUserSession().getId().toString(), 30, "user", true);
 			ManageCookie.addCookie("locate", "es_co", 30, "user", true);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -173,7 +174,6 @@ public class LoginBean extends BackingBean implements Serializable {
 			} else
 				return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -183,7 +183,7 @@ public class LoginBean extends BackingBean implements Serializable {
 		try {
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 			throw e;
 		}
 	}

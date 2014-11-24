@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.hibernate.Transaction;
 
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.common.controller.Controller;
-import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.CourseDAO;
 import co.edu.udistrital.sed.model.Qualification;

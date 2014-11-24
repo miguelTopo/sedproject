@@ -34,7 +34,7 @@ public class BeanList implements Serializable {
 	 */
 	private static final long serialVersionUID = 6631727569215723693L;
 
-	private static ManageProperties properties;
+	public static ManageProperties properties;
 
 	private static ControllerList controller;
 
