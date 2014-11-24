@@ -5,18 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui">
 <f:view>
-	<style type="text/css">
-		#tracingSection article{
-		width: 280px;
-		padding: 10px;
-		border: 1px solid white;
-		margin: 2px;
-		display: inline-block;
-		color: black;
-			}
-	</style>
 	<h:form id="tracingForm">
-		<p:panel header="Seguimiento a Estudiantes">
+		<p:panel header="#{bundle['page.tracing.labelStudentTrancing']}">
 			<table>
 				<tr>
 					<td style="width:5%"/>
@@ -32,7 +22,7 @@
 					<td/>
 					<td colspan="6">
 						<p>
-							Para verificar el proceso histórico del estudiante, por favor seleccione el periodo o año en el que el estudiante estaba activo, si tiene la información del grado y curso respectivos seleccione dichos campos; de no contar con dichos datos, puede seleccionar buscar y realizar filtros en la tabla resultante. 
+							#{bundle['page.tracing.labelGuide']} 
 						</p>
 						<p>
 							#{bundle['page.core.labelDataObligatory']}	
@@ -72,7 +62,7 @@
 					</td>
 				</tr>
 			</table>
-			<div style="text-align:center;padding-bottom: 20px;">
+			<div style="text-align:center;padding-bottom: 20px;padding-top: 20px;">
 				<p:commandButton id="btnTracingSearch" value="#{bundle['page.core.labelSearch']}" action="#{tracingBean.loadStudentList}" 
 					onclick="validateTracingSearch()" type="button" icon="ui-icon-search"/>
 			</div>
@@ -81,19 +71,19 @@
 					<p:dataTable value="#{tracingBean.studentList}" var="s" filteredValue="#{tracingBean.studentFilteringList}"
 						scrollable="true" scrollHeight="500" emptyMessage="No se encontraron resultados">
 						
-						<p:column headerText="Curso" filterBy="#{s.courseName}" sortBy="#{s.courseName}" filterMatchMode="contains">
+						<p:column headerText="#{bundle['page.sed.labelCourse']}" filterBy="#{s.courseName}" sortBy="#{s.courseName}" filterMatchMode="contains" style="text-align:center;">
 							#{s.courseName}
 						</p:column>
-						<p:column headerText="Identificación" filterBy="#{s.identification}" sortBy="#{s.identification}" filterMatchMode="contains">
+						<p:column headerText="#{bundle['page.student.labelStudentIdentification']}" filterBy="#{s.identification}" sortBy="#{s.identification}" filterMatchMode="contains" style="text-align:center;">
 							#{s.identification}
 						</p:column>
-						<p:column headerText="Apellidos" filterBy="#{s.lastName}" sortBy="#{s.lastName}" filterMatchMode="contains">
+						<p:column headerText="#{bundle['page.student.labelStudentLastName']}" filterBy="#{s.lastName}" sortBy="#{s.lastName}" filterMatchMode="contains">
 							#{s.lastName}
 						</p:column>
-						<p:column headerText="Nombres" filterBy="#{s.name}" sortBy="#{s.name}" filterMatchMode="contains">
+						<p:column headerText="#{bundle['page.student.labelStudentName']}" filterBy="#{s.name}" sortBy="#{s.name}" filterMatchMode="contains">
 							#{s.name}
 						</p:column>
-						<p:column headerText="Acudiente" filterBy="#{s.sedUserResponsibleFullName}" sortBy="#{s.sedUserResponsibleFullName}" filterMatchMode="contains">
+						<p:column headerText="#{bundle['page.student.labelStudentResponsible']}" filterBy="#{s.sedUserResponsibleFullName}" sortBy="#{s.sedUserResponsibleFullName}" filterMatchMode="contains">
 							#{!empty s.sedUserResponsibleFullName ? s.sedUserResponsibleFullName : bundle['page.core.labelNotRegister']}
 						</p:column>
 						<p:column style="width:25px">

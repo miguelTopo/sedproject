@@ -12,5 +12,10 @@
 			<ui:include src="/WEB-INF/includes/tracing/tracingStudentDetail.xhtml"/>
 		</p:outputPanel>
 	</p:outputPanel>
+	
+	<p:outputPanel rendered="#{!sedUserBean.validateSedUserRole}">
+		<ui:include src="/WEB-INF/includes/externalUser/error/404.xhtml" />
+	</p:outputPanel>
+	
 </f:view>
 </html>
