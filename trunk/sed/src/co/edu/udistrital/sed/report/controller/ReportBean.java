@@ -10,9 +10,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
-import org.apache.poi.hssf.record.cf.CellRangeUtil;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hssf.util.HSSFRegionUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -140,7 +137,7 @@ public class ReportBean extends BackingBean implements IReport {
 			List<Qualification> qualificationList = this.controller.loadQualificationList(idStudentCourseList);
 			if (qualificationList == null || qualificationList.isEmpty()) {
 				this.studentList = null;
-				addWarnMessage("Cargar Reporte", "No se han encontrado calificaciones para el grado seleccionado.");
+				addWarnMessage(getMessage("page.report.labelLoadReport"), getMessage("page.report.labelEmptyQualificationList"));
 			} else
 				buildReport(qualificationList);
 

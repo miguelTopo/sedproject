@@ -6,7 +6,7 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
 
-<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="Seleccionar Estudiante" modal="true" resizable="false" width="720"
+<p:dialog id="dlgStudentSelect" widgetVar="dlgStudentSelectWV" header="#{bundle['page.seduser.labelStudentSelect']}" modal="true" resizable="false" width="720"
 	showEffect="slide" hideEffect="clip" height="550">
 	<h:form id="dlgStdSelectForm">
 		<p:outputPanel id="studentSelectOp">
@@ -56,10 +56,10 @@
 						<p:dataTable id="stdResponsibleTable" value="#{sedUserBean.studentList}" var="s"
 							emptyMessage="#{bundle['page.student.labelEmptyList']}" scrollable="true" scrollHeight="250">
 							
-							<p:column headerText="Apellidos" width="150">
+							<p:column headerText="#{bundle['page.student.labelStudentLastName']}" width="150">
 								#{s.lastName}	
 							</p:column>
-							<p:column headerText="Nombres" width="150">
+							<p:column headerText="#{bundle['page.student.labelStudentName']}" width="150">
 								#{s.name}	
 							</p:column>
 							<p:column style="text-align:center" width="35">

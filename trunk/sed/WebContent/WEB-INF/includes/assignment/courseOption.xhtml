@@ -43,7 +43,7 @@
 		</tr>
 	</table>
 	<div style="text-align: center;padding-top: 20px;">
-		<p:commandButton id="btnCourseSearch" value="Buscar" action="#{assignmentBean.filterScheduleOption}" icon="ui-icon-search"
+		<p:commandButton id="btnCourseSearch" value="#{bundle['page.core.labelSearch']}" action="#{assignmentBean.filterScheduleOption}" icon="ui-icon-search"
 			onclick="validateFilterSchedule(#{assignmentBean.sheduleOption}, #{assignmentBean.userSession.idSedRole})" type="button"/>
 	</div>
 </f:view>

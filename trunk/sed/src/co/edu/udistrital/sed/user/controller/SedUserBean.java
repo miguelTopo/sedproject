@@ -219,8 +219,6 @@ public class SedUserBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			addFatalMessage("Guardar Usuario",
-				"Ocurri� un error inesperado y no fu� posible agregar el usuario. Por favor consulte al administrador del sistema.");
 			e.printStackTrace();
 		}
 	}
@@ -253,13 +251,13 @@ public class SedUserBean extends BackingBean {
 		try {
 			if (!isRandomPassword()) {
 				if (this.userPassword == null || this.userPassword.trim().isEmpty()) {
-					addWarnMessage(getMessage("page.seduser.labelAddUser"), "Por favor diligencie la contrase�a.");
+					addWarnMessage(getMessage("page.seduser.labelAddUser"), getMessage("page.seduser.warnPassword"));
 					return false;
 				} else if (this.confirmPassword == null || this.confirmPassword.trim().isEmpty()) {
-					addWarnMessage(getMessage("page.seduser.labelAddUser"), "Por favor repita la contrase�a.");
+					addWarnMessage(getMessage("page.seduser.labelAddUser"), getMessage("page.seduser.warnRetryPassword"));
 					return false;
 				} else if (!this.userPassword.equals(this.confirmPassword)) {
-					addWarnMessage(getMessage("page.seduser.labelAddUser"), "Las contrase�as no coinciden, por favor verifique.");
+					addWarnMessage(getMessage("page.seduser.labelAddUser"), getMessage("page.seduser.warnPasswordMatch"));
 					return false;
 				} else
 					return true;
@@ -316,9 +314,9 @@ public class SedUserBean extends BackingBean {
 			if (this.studentResponsibleList != null && !this.studentResponsibleList.isEmpty()) {
 				getRequestContext().update(":addSedUserForm:studentRespListOp");
 				getRequestContext().execute("PF('dlgStudentSelectWV').hide();");
-				addInfoMessage("Agregar Estudiante(s)", "Estudiantes seleccionados correctamente.");
+				addInfoMessage(getMessage("page.seduser.labelAddStudentList"), getMessage("page.seduser.labelSuccessAddStudent"));
 			} else {
-				addWarnMessage("Agregar Estudiante(s)", "No ha seleccionado ningún estudiante.");
+				addWarnMessage(getMessage("page.seduser.labelAddStudentList"), getMessage("page.seduser.labelNotSelectStudent"));
 				return;
 			}
 		} catch (Exception e) {
@@ -832,6 +830,4 @@ public class SedUserBean extends BackingBean {
 	public void setStudentSelected(Student studentSelected) {
 		this.studentSelected = studentSelected;
 	}
-
-
 }
