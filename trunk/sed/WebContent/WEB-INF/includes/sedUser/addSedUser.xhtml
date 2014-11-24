@@ -218,7 +218,7 @@
 				<p:commandButton id="btnAddSedUser" value="#{bundle['page.seduser.labelAddUser']}" onclick="validateAddSedUser(#{sedUserBean.randomPassword}, #{sedUserBean.sedUser.idSedRole});" 
 					type="button" styleClass="ui-priority-primary" action="#{sedUserBean.saveSedUser}" rendered="#{sedUserBean.showAdd}" />
 					
-				<p:commandButton id="btnUpdateSedUser" value="Guardar Cambios" action="#{sedUserBean.updateSedUser}" rendered="#{sedUserBean.showEdit}" 
+				<p:commandButton id="btnUpdateSedUser" value="#{bundle['page.core.labelSaveChange']}" action="#{sedUserBean.updateSedUser}" rendered="#{sedUserBean.showEdit}" 
 					onclick="validateUpdateSedUser(#{sedUserBean.sedUser.idSedRole})" type="button"/>
 			</div>
 			<div style="text-align: right;">
