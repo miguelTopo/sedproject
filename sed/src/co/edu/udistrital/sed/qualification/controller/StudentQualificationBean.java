@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.sed.model.Qualification;
 import co.edu.udistrital.sed.model.Student;
@@ -77,7 +78,7 @@ public class StudentQualificationBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -103,12 +104,12 @@ public class StudentQualificationBean extends BackingBean {
 			else
 				addInfoMessage(getMessage("page.qualification.labelQualification"), getMessage("page.qualification.sq.labelEmptyQualification"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
 	/** @author MTorres 7/06/2014 */
-	private void orderQualificationList(List<Qualification> qualificationList) {
+	private void orderQualificationList(List<Qualification> qualificationList) throws Exception {
 		try {
 			if (qualificationList != null && !qualificationList.isEmpty()) {
 
@@ -176,7 +177,7 @@ public class StudentQualificationBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -214,7 +215,7 @@ public class StudentQualificationBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 
 	}

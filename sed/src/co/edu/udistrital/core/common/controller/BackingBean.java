@@ -58,22 +58,15 @@ public abstract class BackingBean implements Serializable {
 				this.validLogin = false;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
 	public static void redirectToLogin() throws Exception {
 		try {
-			// String requestUrl = PrettyContext.getCurrentInstance().getRequestURL().toURL();
-			// if (requestUrl != null && !requestUrl.trim().isEmpty() &&
-			// !requestUrl.endsWith("login")) {
-			// // redirect to login
 			redirect("/portal/login");
-			// getSession(false).setAttribute("requestPath", requestUrl);
-			// }
-
 		} catch (Exception e) {
-			throw e;
+			ErrorNotificacion.handleErrorMailNotification(e, BackingBean.class);
 		}
 	}
 
@@ -84,34 +77,34 @@ public abstract class BackingBean implements Serializable {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail));
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, BackingBean.class);
 		}
 	}
 
 	/** @author MTorres */
-	public static void addWarnMessage(String summary, String detail) {
+	public static void addWarnMessage(String summary, String detail) throws Exception {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
 	/** @author MTorres */
-	public static void addErrorMessage(String summary, String detail) {
+	public static void addErrorMessage(String summary, String detail) throws Exception {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail));
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
 	/** @author MTorres */
-	public static void addFatalMessage(String summary, String detail) {
+	public static void addFatalMessage(String summary, String detail) throws Exception {
 		try {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, summary, detail));
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -123,13 +116,12 @@ public abstract class BackingBean implements Serializable {
 		try {
 			return FacesContext.getCurrentInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
 
 	/** @author MTorres */
-	public void setPanelView(String page, String title, String beanName) {
+	public void setPanelView(String page, String title, String beanName) throws Exception {
 		try {
 			String prefix = null;
 			if (page.startsWith("/"))
@@ -143,7 +135,7 @@ public abstract class BackingBean implements Serializable {
 				getRequestContext().update("panelStack");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -155,12 +147,11 @@ public abstract class BackingBean implements Serializable {
 		try {
 			return RequestContext.getCurrentInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
 
-	public static void redirect(String facesPattern) {
+	public static void redirect(String facesPattern) throws Exception {
 		try {
 			String url = null;
 			ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -174,7 +165,7 @@ public abstract class BackingBean implements Serializable {
 			context.redirect(url + facesPattern);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -182,7 +173,6 @@ public abstract class BackingBean implements Serializable {
 		try {
 			return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -202,7 +192,6 @@ public abstract class BackingBean implements Serializable {
 		try {
 			return (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -222,7 +211,6 @@ public abstract class BackingBean implements Serializable {
 			}
 			return panelStackBean;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -295,7 +283,6 @@ public abstract class BackingBean implements Serializable {
 			}
 			return subjectGradeList;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -388,7 +375,6 @@ public abstract class BackingBean implements Serializable {
 			}
 			return treeRoleList;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}

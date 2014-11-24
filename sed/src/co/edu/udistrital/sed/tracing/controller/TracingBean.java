@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.sed.model.Course;
 import co.edu.udistrital.sed.model.Qualification;
@@ -87,7 +88,7 @@ public class TracingBean extends BackingBean {
 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -115,7 +116,7 @@ public class TracingBean extends BackingBean {
 				buildQualificationStudentList(qualificationList);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -125,7 +126,7 @@ public class TracingBean extends BackingBean {
 			hideAll();
 			this.showStudentList = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -136,7 +137,7 @@ public class TracingBean extends BackingBean {
 			if (this.idGrade != null && !this.idGrade.equals(0L))
 				this.courseTmpList = loadCourseListByGrade(this.idGrade);
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 

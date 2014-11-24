@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 
-import co.edu.udistrital.core.common.controller.IState;
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.connection.HibernateDAO;

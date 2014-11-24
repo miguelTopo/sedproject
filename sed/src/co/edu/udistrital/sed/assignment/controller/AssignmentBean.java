@@ -16,8 +16,9 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.common.controller.BackingBean;
-import co.edu.udistrital.core.common.controller.IState;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.login.api.ISedRole;
 import co.edu.udistrital.core.login.model.SedUser;
@@ -114,9 +115,8 @@ public class AssignmentBean extends BackingBean {
 			this.model = new DefaultScheduleModel();
 			loadAssignmentView();
 			loadSedUserSchedule();
-			// getRequestContext().execute("PF('assignmentScheduleWV').update();");
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -125,13 +125,13 @@ public class AssignmentBean extends BackingBean {
 		try {
 			loadSedUserSchedule();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
 
 	/** @author MTorres 29/7/2014 21:03:14 */
-	private void loadScheduleData() {
+	private void loadScheduleData() throws Exception {
 		try {
 
 			this.model = new DefaultScheduleModel();
@@ -173,7 +173,7 @@ public class AssignmentBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -311,7 +311,7 @@ public class AssignmentBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -351,7 +351,7 @@ public class AssignmentBean extends BackingBean {
 	}
 
 	/** @author MTorres 17/11/2014 13:22:43 */
-	private void loadAssignmentView() {
+	private void loadAssignmentView() throws Exception {
 		try {
 			this.controller = new AssignmentController();
 			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT) || getUserSession().getIdSedRole().equals(ISedRole.STUDENT_RESPONSIBLE)) {
@@ -368,7 +368,7 @@ public class AssignmentBean extends BackingBean {
 			if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT))
 				this.sheduleOption = Long.valueOf(1);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -382,7 +382,7 @@ public class AssignmentBean extends BackingBean {
 
 			this.eventDelete = false;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -410,7 +410,7 @@ public class AssignmentBean extends BackingBean {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -500,7 +500,7 @@ public class AssignmentBean extends BackingBean {
 			this.event = event.getScheduleEvent();
 			validateResizeMove();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -515,7 +515,7 @@ public class AssignmentBean extends BackingBean {
 			this.event = event.getScheduleEvent();
 			validateResizeMove();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -562,7 +562,7 @@ public class AssignmentBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -582,7 +582,7 @@ public class AssignmentBean extends BackingBean {
 			this.assignment = null;
 			this.assignment = new Assignment();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -611,7 +611,7 @@ public class AssignmentBean extends BackingBean {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -657,7 +657,7 @@ public class AssignmentBean extends BackingBean {
 			}
 			return false;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 			throw e;
 		}
 	}
@@ -698,7 +698,7 @@ public class AssignmentBean extends BackingBean {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 
@@ -720,7 +720,7 @@ public class AssignmentBean extends BackingBean {
 					this.courseTmpList = loadCourseListByGrade(this.assignmentFilter.getIdGrade());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 
 	}
@@ -731,7 +731,7 @@ public class AssignmentBean extends BackingBean {
 			this.assignmentFilter = null;
 			this.assignmentFilter = new Assignment();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 

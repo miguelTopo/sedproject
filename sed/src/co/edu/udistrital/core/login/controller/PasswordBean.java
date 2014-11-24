@@ -5,6 +5,7 @@ import javax.faces.bean.ViewScoped;
 
 import co.edu.udistrital.core.common.api.IEmailTemplate;
 import co.edu.udistrital.core.common.controller.BackingBean;
+import co.edu.udistrital.core.common.controller.ErrorNotificacion;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.common.model.EmailTemplate;
 import co.edu.udistrital.core.common.util.FieldValidator;
@@ -100,7 +101,7 @@ public class PasswordBean extends BackingBean {
 					try {
 						sendMailPasswordUpdate(userName, passUser, userEmail);
 					} catch (Exception e) {
-						e.printStackTrace();
+						ErrorNotificacion.handleErrorMailNotification(e, this);
 					}
 				}
 			}).start();
@@ -123,7 +124,7 @@ public class PasswordBean extends BackingBean {
 				addErrorMessage(getMessage("page.login.labelPasswordUpdate"), getMessage("page.password.errorUpdate"));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorNotificacion.handleErrorMailNotification(e, this);
 		}
 	}
 

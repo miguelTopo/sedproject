@@ -1,4 +1,4 @@
-package co.edu.udistrital.core.common.controller;
+package co.edu.udistrital.core.common.api;
 
 public interface IState {
 	

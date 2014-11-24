@@ -2,7 +2,7 @@ package co.edu.udistrital.core.common.model;
 
 import java.io.Serializable;
 
-import co.edu.udistrital.core.common.controller.IState;
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.common.util.ManageDate;
 
 public abstract class ASEDModel implements Serializable {

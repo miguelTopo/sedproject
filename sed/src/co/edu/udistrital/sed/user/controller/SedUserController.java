@@ -7,8 +7,8 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 
+import co.edu.udistrital.core.common.api.IState;
 import co.edu.udistrital.core.common.controller.Controller;
-import co.edu.udistrital.core.common.controller.IState;
 import co.edu.udistrital.core.common.encryption.ManageMD5;
 import co.edu.udistrital.core.common.util.ManageDate;
 import co.edu.udistrital.core.login.api.ISedRole;
