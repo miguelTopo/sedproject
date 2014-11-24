@@ -9,7 +9,7 @@
 		<ui:repeat var="rootTree" value="#{loginBean.treeList}">
 			<p:fieldset legend="#{rootTree.name}" toggleable="true"
 				toggleSpeed="500" style="text-align:center !important;">
-				<div align="center">
+				<div style="text-align:center">
 					<p:dataGrid var="leafTree" columns="#{fn:length(rootTree.leafTreeList)}" value="#{rootTree.leafTreeList}"
 						style="border-style:none !important;">
 						<div style="width: 150px; height: 150px;text-align: center;margin:0 auto;">

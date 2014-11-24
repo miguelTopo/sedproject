@@ -138,7 +138,6 @@ public class PasswordBean extends BackingBean {
 	}
 
 	public boolean getValidateSedUserRole() throws Exception {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

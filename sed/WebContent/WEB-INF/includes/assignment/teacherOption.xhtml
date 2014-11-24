@@ -33,13 +33,14 @@
 			</td>
 			<td/>
 			<td>
-				<h:outputText rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.STUDENT_RESPONSIBLE and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}" value="Tipo de busqueda:"/>
+				<h:outputText rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.STUDENT_RESPONSIBLE and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}" 
+					value="#{bundle['page.assignment.labelSearchType']}:"/>
 			</td>
 			<td>
 				<p:selectOneMenu id="filterAssignmentType" value="#{assignmentBean.assignmentFilter.idAssignmentType}" style="width:98%"
 					rendered="#{assignmentBean.userSession.idSedRole ne ISedRole.STUDENT_RESPONSIBLE and assignmentBean.userSession.idSedRole ne ISedRole.STUDENT}">
 					<f:selectItem itemValue="0" itemLabel="#{bundle['page.core.labelSelectOne']}" noSelectionOption="#{true}"/>
-					<f:selectItem itemValue="3" itemLabel="Completo" />
+					<f:selectItem itemValue="3" itemLabel="#{bundle['page.assignment.labelFullAssignment']}" />
 					<f:selectItems value="#{assignmentBean.assignmentTypeList}" var="a" itemValue="#{a.id}" itemLabel="#{a.name}"/>
 				</p:selectOneMenu>
 				<div id="filterAssignmentType_DIV" class="ui-invalid-field"/>
@@ -47,7 +48,7 @@
 		</tr>
 	</table>
 	<div style="text-align: center;padding-top: 20px;">
-		<p:commandButton id="btnTeacherSearch" value="Buscar" action="#{assignmentBean.filterScheduleOption}" icon="ui-icon-search"
+		<p:commandButton id="btnTeacherSearch" value="#{bundle['page.core.labelSearch']}" action="#{assignmentBean.filterScheduleOption}" icon="ui-icon-search"
 			onclick="validateFilterSchedule(#{assignmentBean.sheduleOption}, #{assignmentBean.userSession.idSedRole})" type="button"/>
 	</div>
 </f:view>
