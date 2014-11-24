@@ -6,97 +6,70 @@
 	xmlns:o="http://omnifaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <f:view>
-	<style type="text/css">
-		#tracingDetailSection article{
-		display: inline-block;
-		width: 450px;
-		}
-		table{
-			width: 100%;
-		}
-	</style>
 	<h:form id="tracingStudentForm">
-		<p:panel header="Reporte Personal">
+		<p:panel header="#{bundle['page.tracing.labelPersonalReport']}">
 		<div style="padding: 30px;">
-		<section id="tracingDetailSection">
-			<article>
-				<table>
-					<tr>
-						<td style="width:30%">
-							<strong>
-								Apellidos:
-							</strong>
-						</td>
-						<td style="width:70%">
-							#{tracingBean.studentSelected.lastName}
-						</td>
-					</tr>
-				</table>
-			</article>
-			<article>
-				<table>
-					<tr>
-						<td style="width:30%">
-							<strong>
-								Nombres:
-							</strong>
-						</td>
-						<td style="width:70%">
-							#{tracingBean.studentSelected.name}
-						</td>
-					</tr>
-				</table>
-			</article>
-			<article>
-				<table>
-					<tr>
-						<td style="width:30%">
-							<strong>
-								Tipo de identificación:
-							</strong>
-						</td>
-						<td style="width:70%">
-							#{tracingBean.studentSelected.identificationTypeName}
-						</td>
-					</tr>
-				</table>
-			</article>
-			<article>
-				<table>
-					<tr>
-						<td style="width:30%">
-							<strong>
-								Identificación:
-							</strong>
-						</td>
-						<td style="width:70%">
-							#{tracingBean.studentSelected.identification}
-						</td>
-					</tr>
-				</table>
-			</article>
-			<article>
-				<table>
-					<tr>
-						<td style="width:30%">
-							<strong>
-								Acudiente:
-							</strong>
-						</td>
-						<td style="width:70%">
-							#{tracingBean.studentSelected.sedUserResponsibleFullName}
-						</td>
-					</tr>
-				</table>
-			</article>
-		</section>
+		
+		<table style="width:100%">
+			<tr>
+				<td style="width: 5%"/>
+				<td style="width: 18%"/>
+				<td style="width: 25%"/>
+				<td style="width: 4%"/>
+				<td style="width: 18%"/>
+				<td style="width: 25%"/>
+				<td style="width: 5%"/>
+			</tr>
+			<tr>
+				<td/>
+				<td>
+					#{bundle['page.student.labelStudentLastName']}:
+				</td>
+				<td>
+					#{tracingBean.studentSelected.lastName}
+				</td>
+				<td/>
+				<td>
+					#{bundle['page.student.labelStudentName']}:
+				</td>
+				<td>
+					#{tracingBean.studentSelected.name}
+				</td>
+			</tr>
+			<tr>
+				<td/>
+				<td>
+					#{bundle['page.student.labelIdentificationType']}:
+				</td>
+				<td>
+					#{tracingBean.studentSelected.identificationTypeName}
+				</td>
+				<td/>
+				<td>
+					#{bundle['page.student.labelStudentIdentification']}:
+				</td>
+				<td>
+					#{tracingBean.studentSelected.identification}
+				</td>
+			</tr>
+			<tr>
+				<td/>
+				<td>
+					#{bundle['page.student.labelStudentResponsible']}:
+				</td>
+				<td>
+					<h:outputText value="#{!empty tracingBean.studentSelected.sedUserResponsibleFullName ? tracingBean.studentSelected.sedUserResponsibleFullName : bundle['page.core.labelNotRegister']}"/>
+				</td>
+			</tr>
+		</table>
 		</div>
 		<div>
-			<p:dataTable value="#{tracingBean.qualificationUtilList}" var="qu" style="width:500px;" scrollable="true" scrollWidth="100%;">
-				<p:column headerText="Área de Conocimiento" style="width:350px;text-align:center;">
+			<p:dataTable value="#{tracingBean.qualificationUtilList}" var="qu" style="width:500px;" scrollable="true" scrollWidth="100%;" 
+				emptyMessage="#{bundle['page.tracing.labelEmptyQualificationList']}">
+				<p:column headerText="#{bundle['page.sed.labelKnowledgeArea']}" style="width:350px;text-align:center;">
 					#{qu.knowledgeAreaName}
 				</p:column>
-				<p:column headerText="Materia" style="width:200px;text-align:center;">
+				<p:column headerText="#{bundle['page.sed.labelSubject']}" style="width:200px;text-align:center;">
 					#{qu.subjectName}
 				</p:column>
 				

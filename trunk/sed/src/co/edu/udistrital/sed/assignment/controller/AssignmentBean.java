@@ -785,6 +785,8 @@ public class AssignmentBean extends BackingBean {
 	}
 
 	public Long getSheduleOption() {
+		if (getUserSession().getIdSedRole().equals(ISedRole.STUDENT))
+			sheduleOption = Long.valueOf(1);
 		return sheduleOption;
 	}
 

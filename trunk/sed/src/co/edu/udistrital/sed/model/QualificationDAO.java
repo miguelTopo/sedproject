@@ -210,6 +210,7 @@ public class QualificationDAO extends HibernateDAO {
 				hql.append(" AND sc.idCourse = :idCourse ");
 			else if (idCourseList != null && !idCourseList.isEmpty())
 				hql.append(" AND sc.idCourse IN(:idCourseList) ");
+			hql.append(" ORDER BY sc.idCourse ");
 
 			qo =
 				getSession().createSQLQuery(hql.toString()).addScalar("sedUserResponsibleFullName", StringType.INSTANCE)
