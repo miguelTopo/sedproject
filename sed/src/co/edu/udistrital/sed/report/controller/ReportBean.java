@@ -10,6 +10,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
+import org.apache.poi.hssf.record.cf.CellRangeUtil;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.HSSFRegionUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -22,6 +25,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.util.IOUtils;
 
 import co.edu.udistrital.core.common.controller.BackingBean;
@@ -158,7 +162,8 @@ public class ReportBean extends BackingBean implements IReport {
 			sheet.setColumnWidth(4, 4550);
 			sheet.setColumnWidth(5, 5170);
 			sheet.setColumnWidth(6, 3250);
-			sheet.setColumnWidth(7, 3875);
+			
+//			sheet.setColumnWidth(7, 3875);
 
 			int subjectCount = 0;
 			int knowledgeAreaCount = 0;
@@ -175,6 +180,7 @@ public class ReportBean extends BackingBean implements IReport {
 				subjectCount++;
 			}
 			// rowFrom, rowTo, colFrom, colTo
+
 
 
 			sheet.addMergedRegion(new CellRangeAddress(0, 5, 0, 0));
@@ -239,7 +245,7 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellValue(getMessage("page.report.labelLifemenaSchoolLower"));
 
 			cell = data1.createCell(3);
-			cell.setCellValue(getMessage(getMessage("page.report.labelWorkday")));
+			cell.setCellValue(getMessage("page.report.labelWorkday"));
 			cell.setCellStyle(infoStyle);
 
 			cell = data1.createCell(4);
@@ -251,21 +257,21 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(2);
-			cell.setCellValue(teacher != null ? teacher.getCourseName() : getMessage("page.core.labelNoInformation"));
+			cell.setCellValue(teacher != null ? teacher.getCourseName() : "");
 
 			cell = data2.createCell(3);
 			cell.setCellValue(getMessage("page.report.labelPeriod"));
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(4);
-			cell.setCellValue(teacher != null ? teacher.getIdPeriod().toString() : getMessage("page.core.labelNoInformation"));
+			cell.setCellValue(teacher != null ? teacher.getIdPeriod().toString() : "");
 
 			cell = data2.createCell(5);
 			cell.setCellValue(getMessage("page.report.labelGroupManage"));
 			cell.setCellStyle(infoStyle);
 
 			cell = data2.createCell(6);
-			cell.setCellValue(teacher != null ? teacher.getTeacherFullName() : getMessage("page.core.labelNoInformation"));
+			cell.setCellValue(teacher != null ? teacher.getTeacherFullName() : "");
 
 			ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 			// Paint Image header
@@ -321,6 +327,7 @@ public class ReportBean extends BackingBean implements IReport {
 				}
 
 
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -349,15 +356,23 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellStyle(cellStyle);
 			cell.setCellValue(s.getLastName() + " " + s.getName());
 
-			cell = studentRow.createCell(7);
-			cell.setCellStyle(cellStyle);
-			cell.setCellValue(getMessage("page.report.labelStand"));
-			// rowFrom, rowTo, colFrom, colTo
-			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 3));
-			sheet.addMergedRegion(new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 4, 6));
+			CellRangeAddress identificationRange = new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 1, 3);
+			CellRangeAddress nameRange = new CellRangeAddress(studentRow.getRowNum(), studentRow.getRowNum(), 4, 6);
 
+			sheet.addMergedRegion(identificationRange);
+			sheet.addMergedRegion(nameRange);
 
-			int indexQ = 8;
+			RegionUtil.setBorderBottom(1, identificationRange, sheet, this.wb);
+			RegionUtil.setBorderLeft(1, identificationRange, sheet, this.wb);
+			RegionUtil.setBorderRight(1, identificationRange, sheet, this.wb);
+			RegionUtil.setBorderTop(1, identificationRange, sheet, this.wb);
+
+			RegionUtil.setBorderBottom(1, nameRange, sheet, this.wb);
+			RegionUtil.setBorderLeft(1, nameRange, sheet, this.wb);
+			RegionUtil.setBorderRight(1, nameRange, sheet, this.wb);
+			RegionUtil.setBorderTop(1, nameRange, sheet, this.wb);
+
+			int indexQ = 7;
 
 			Long idKnowledgeArea = s.getQualificationList().get(0).getIdKnowledgeArea();
 			Long idSubject = s.getQualificationList().get(0).getIdSubject();
@@ -451,10 +466,15 @@ public class ReportBean extends BackingBean implements IReport {
 		try {
 			Row rowHeader = sheet.createRow((short) 6);
 
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 0, 0));
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 1, 3));
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 4, 6));
-			sheet.addMergedRegion(new CellRangeAddress(6, 8, 7, 7));
+			// rowFrom, rowTo, colFrom, colTo
+
+			CellRangeAddress a = new CellRangeAddress(6, 8, 0, 0);
+			CellRangeAddress b = new CellRangeAddress(6, 8, 1, 3);
+			CellRangeAddress c = new CellRangeAddress(6, 8, 4, 6);
+
+			sheet.addMergedRegion(a);
+			sheet.addMergedRegion(b);
+			sheet.addMergedRegion(c);
 
 			Row rowSubject = sheet.createRow((short) 7);
 			Row rowQualificationType = sheet.createRow((short) 8);
@@ -484,28 +504,40 @@ public class ReportBean extends BackingBean implements IReport {
 			cell.setCellStyle(headerInfoStyle);
 			cell.setCellValue(getMessage("page.report.labelStudent"));
 
-			cell = rowHeader.createCell(7);
-			cell.setCellStyle(headerInfoStyle);
-			cell.setCellValue(getMessage("page.report.labelStand"));
-
-			int indexHeader = 7;
-			int indexSubject = 7;
-			int indexQt = 8;
+			int indexHeader = 6;
+			int indexSubject = 6;
+			int indexQt = 7;
 			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
 				cell = rowHeader.createCell(indexHeader + 1);
 				cell.setCellValue(ka.getName());
 				cell.setCellStyle(headerInfoStyle);
 				// rowFrom, rowTo, colFrom, colTo
 				int finalIndex = (indexHeader + (getQualificationTypeList().size() * ka.getSubjectList().size()));
-				sheet.addMergedRegion(new CellRangeAddress(rowHeader.getRowNum(), rowHeader.getRowNum(), indexHeader + 1, finalIndex));
+
+				CellRangeAddress kaRange = new CellRangeAddress(rowHeader.getRowNum(), rowHeader.getRowNum(), indexHeader + 1, finalIndex);
+				sheet.addMergedRegion(kaRange);
 				indexHeader = finalIndex;
+				RegionUtil.setBorderBottom(1, kaRange, sheet, this.wb);
+				RegionUtil.setBorderTop(1, kaRange, sheet, this.wb);
+				RegionUtil.setBorderLeft(1, kaRange, sheet, this.wb);
+				RegionUtil.setBorderRight(1, kaRange, sheet, this.wb);
 
 				for (Subject s : ka.getSubjectList()) {
 					cell = rowSubject.createCell(indexSubject + 1);
-					cell.setCellStyle(headerInfoStyle);
+					// cell.setCellStyle(headerInfoStyle);
 					cell.setCellValue(s.getName());
+					cell.setCellStyle(headerInfoStyle);
 					int finalSubIndex = indexSubject + getQualificationTypeList().size();
-					sheet.addMergedRegion(new CellRangeAddress(rowSubject.getRowNum(), rowSubject.getRowNum(), indexSubject + 1, finalSubIndex));
+
+					CellRangeAddress subjectRange =
+						new CellRangeAddress(rowSubject.getRowNum(), rowSubject.getRowNum(), indexSubject + 1, finalSubIndex);
+					sheet.addMergedRegion(subjectRange);
+
+					RegionUtil.setBorderBottom(1, subjectRange, sheet, this.wb);
+					RegionUtil.setBorderTop(1, subjectRange, sheet, this.wb);
+					RegionUtil.setBorderLeft(1, subjectRange, sheet, this.wb);
+					RegionUtil.setBorderRight(1, subjectRange, sheet, this.wb);
+
 					indexSubject = finalSubIndex;
 
 					for (QualificationType qt : getQualificationTypeList()) {
@@ -522,13 +554,34 @@ public class ReportBean extends BackingBean implements IReport {
 			headerInfoStyle.setWrapText(true);
 
 			for (KnowledgeArea ka : this.knowledgeAreaGradeList) {
-				sheet.addMergedRegion(new CellRangeAddress(6, 8, indexQt, indexQt));
+				CellRangeAddress cra = new CellRangeAddress(6, 8, indexQt, indexQt);
+				sheet.addMergedRegion(cra);
 				cellAux = rowHeader.createCell(indexQt);
-				cellAux.setCellStyle(headerInfoStyle);
 				cellAux.setCellValue(ka.getName());
+				cellAux.setCellStyle(headerInfoStyle);
+				RegionUtil.setBorderBottom(1, cra, sheet, this.wb);
+				RegionUtil.setBorderTop(1, cra, sheet, this.wb);
+				RegionUtil.setBorderLeft(1, cra, sheet, this.wb);
+				RegionUtil.setBorderRight(1, cra, sheet, this.wb);
 				indexQt++;
 
 			}
+
+
+			RegionUtil.setBorderBottom(1, a, sheet, this.wb);
+			RegionUtil.setBorderBottom(1, b, sheet, this.wb);
+			RegionUtil.setBorderBottom(1, c, sheet, this.wb);
+			RegionUtil.setBorderTop(1, a, sheet, this.wb);
+			RegionUtil.setBorderTop(1, b, sheet, this.wb);
+			RegionUtil.setBorderTop(1, c, sheet, this.wb);
+
+			RegionUtil.setBorderLeft(1, a, sheet, this.wb);
+			RegionUtil.setBorderLeft(1, b, sheet, this.wb);
+			RegionUtil.setBorderLeft(1, c, sheet, this.wb);
+
+			RegionUtil.setBorderRight(1, a, sheet, this.wb);
+			RegionUtil.setBorderRight(1, b, sheet, this.wb);
+			RegionUtil.setBorderRight(1, c, sheet, this.wb);
 
 			return sheet;
 		} catch (Exception e) {
